@@ -54,11 +54,8 @@
 .vs
 .vscode
 
-# Ignore Saved folder
-Saved/**/*.png
-Saved/Logs/
-
 # Ignore Other folder
 Intermediate
 DerivedDataCache
 Binaries
+Saved
