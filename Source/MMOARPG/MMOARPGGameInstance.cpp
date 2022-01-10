@@ -4,6 +4,7 @@
 #include "MMOARPGGameInstance.h"
 
 #include "Global/SimpleNetGlobalInfo.h"
+#include "ThreadManage.h"
 
 void UMMOARPGGameInstance::Init()
 {
@@ -15,6 +16,7 @@ void UMMOARPGGameInstance::Tick(float DeltaTime)
 	if (NetClient)
 	{
 		NetClient->Tick(DeltaTime);
+		GThread::Get()->Tick(DeltaTime);
 	}
 }
 
@@ -30,6 +32,7 @@ void UMMOARPGGameInstance::Shutdown()
 	if (NetClient)
 	{
 		FSimpleNetManage::Destroy(NetClient);
+		GThread::Destroy();
 	}
 }
 

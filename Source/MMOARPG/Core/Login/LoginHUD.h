@@ -21,7 +21,7 @@ public:
 	ALoginHUD();
 
 	// Called when the game starts or when spawned
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 private:
 	UUI_LoginMain* m_UI_LoginMain_BP;
 };
