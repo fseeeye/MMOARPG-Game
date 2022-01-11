@@ -13,6 +13,8 @@ void UUI_LoginMain::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	UI_Login->SetWidgetParent(this);
+
 	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 	{
 		// Create Client
@@ -41,6 +43,24 @@ void UUI_LoginMain::NativeDestruct()
 			InGameInstance->GetNetClient()->GetController()->RecvDelegate.Remove(RecvDelegate);
 		}
 	}
+}
+
+void UUI_LoginMain::SignIn(const FString& InAccount, const FString& InPassword)
+{
+	PrintMsgLog("Logging in...");
+}
+
+// TODO
+void UUI_LoginMain::SignUp()
+{
+
+}
+
+void UUI_LoginMain::PrintMsgLog(const FString& InMsg)
+{
+	// TODO: play animation
+
+	MsgLog->SetText(FText::FromString(InMsg));
 }
 
 void UUI_LoginMain::BindClientRcvLoop()
@@ -79,7 +99,7 @@ void UUI_LoginMain::LinkServerInfo(ESimpleNetErrorType InType, const FString& In
 {
 	if (InType == ESimpleNetErrorType::HAND_SHAKE_SUCCESS)
 	{
-		// if handshake success, hide Link UI widget
-		UI_LinkWidget->SetVisibility(ESlateVisibility::Collapsed);
+		// if handshake success, hide Loading UI widget
+		UI_Loading->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }

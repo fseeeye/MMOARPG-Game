@@ -16,8 +16,12 @@ class MMOARPG_API UUI_Base : public UUserWidget
 {
 	GENERATED_BODY()
 	
-protected:
+public:
+	inline void SetWidgetParent(UWidget* InWidget) { ParentWidget = InWidget; }
+	template<class T>
+	inline T* GetWidgetParent() { return Cast<T>(ParentWidget); }
 
+protected:
 	template<class T>
 	T* GetGameInstance()
 	{
@@ -40,4 +44,8 @@ protected:
 
 protected:
 	virtual void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel) {}
+
+protected:
+	UPROPERTY()
+	UWidget* ParentWidget;
 };

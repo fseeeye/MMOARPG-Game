@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Core/UI_Base.h"
 
+#include "Components/TextBlock.h"
 #include "SimpleNetChannelType.h"
+
+#include "../Core/UI_Base.h"
+#include "UI_Login.h"
 
 #include "UI_LoginMain.generated.h"
 
@@ -18,14 +21,30 @@ class MMOARPG_API UUI_LoginMain : public UUI_Base
 {
 	GENERATED_BODY()
 
-	// Link UI Widget
+	// Import Loading UI Widget
 	UPROPERTY(meta = (BindWidget))
-	UUserWidget* UI_LinkWidget;
+	UUserWidget* UI_Loading;
+
+	// Import Login UI Widget
+	UPROPERTY(meta = (BindWidget))
+	UUI_Login* UI_Login;
 	
+	// Import Login UI Widget
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MsgLog;
+
 public:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeDestruct() override;
+
+public:
+	void SignIn(const FString& InAccount, const FString& InPassword);
+
+	// TODO
+	void SignUp();
+
+	void PrintMsgLog(const FString& InMsg);
 
 protected:
 	void BindClientRcvLoop();
