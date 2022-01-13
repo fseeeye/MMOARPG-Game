@@ -39,7 +39,7 @@ public:
 	virtual void NativeDestruct() override;
 
 public:
-	void SignIn(const FString& InAccount, const FString& InPassword);
+	void SignIn(FString& InAccount, FString& InPassword);
 
 	// TODO
 	void SignUp();

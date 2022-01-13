@@ -6,7 +6,10 @@
 #include "ThreadManage.h"
 #include "UObject/SimpleController.h"
 
+#include "Protocol/LoginProtocol.h" // Plugin: MMOARPGComm
+
 #include "../../MMOARPGGameInstance.h"
+#include "../../MMOARPGMacro.h"
 
 // run when UI created
 void UUI_LoginMain::NativeConstruct()
@@ -45,9 +48,12 @@ void UUI_LoginMain::NativeDestruct()
 	}
 }
 
-void UUI_LoginMain::SignIn(const FString& InAccount, const FString& InPassword)
+void UUI_LoginMain::SignIn(FString& InAccount, FString& InPassword)
 {
 	PrintMsgLog("Logging in...");
+
+	// Send login info to Login Server
+	SEND_DATA(SP_LoginRequests, InAccount, InPassword);
 }
 
 // TODO
@@ -92,7 +98,15 @@ void UUI_LoginMain::BindClientRcvLoop()
 
 void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 {
+	switch (ProtocolNumber)
+	{
+		case SP_LoginResponses:
+		{
 
+			break;
+		}
+		
+	}
 }
 
 void UUI_LoginMain::LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg)
