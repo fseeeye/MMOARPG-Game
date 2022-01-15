@@ -7,7 +7,6 @@
 #include "UObject/SimpleController.h"
 
 #include "Protocol/LoginProtocol.h" // Plugin: MMOARPGComm
-#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
 
 #include "../../MMOARPGGameInstance.h"
 #include "../../MMOARPGMacro.h"
@@ -105,13 +104,24 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 		{
 			// Get Response Msg
 			ELoginType ResponseType = ELoginType::DB_ERROR;
-			FString BackMsg;
-			SIMPLE_PROTOCOLS_RECEIVE(SP_LoginResponses, ResponseType, BackMsg);
+			FString UserDataJson;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_LoginResponses, ResponseType, UserDataJson, GateStatus);
 
 			switch (ResponseType)
 			{
 			case LOGIN_SUCCESS:
 				PrintMsgLog(TEXT("Login Success. Welcome~"));
+
+				// Save User Data to Game Instance
+				if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+				{
+					if (UserDataJson != TEXT("{}"))
+					{
+						NetDataParser::JsonToUserdata(UserDataJson, InGameInstance->GetUserData());
+						// TODO: Jump to Hall
+					}
+				}
+
 				break;
 			case LOGIN_ACCOUNT_ERROR:
 				PrintMsgLog(TEXT("Wrong Account!"));

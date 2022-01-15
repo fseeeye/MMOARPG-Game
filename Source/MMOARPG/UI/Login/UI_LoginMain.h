@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 
 #include "Components/TextBlock.h"
-#include "SimpleNetChannelType.h"
+#include "SimpleNetChannelType.h" // Plugin: SimpleNetChannel
+#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
 
 #include "../Core/UI_Base.h"
 #include "UI_Login.h"
@@ -55,4 +56,5 @@ protected:
 	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 private:
 	FDelegateHandle RecvDelegate;
+	FMMOARPGGateStatus GateStatus;
 };
