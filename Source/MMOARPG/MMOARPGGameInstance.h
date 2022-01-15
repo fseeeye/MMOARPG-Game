@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "SimpleNetManage.h"
-
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+
+#include "SimpleNetManage.h"
+#include "MMOARPGCommType.h"
 
 #include "MMOARPGGameInstance.generated.h"
 
@@ -31,7 +32,9 @@ public:
 	void LinkServer();
 
 	inline FSimpleNetManage* GetNetClient() { return NetClient; }
+	inline FMMOARPGUserData& GetUserData() { return UserData; }
 
 private:
 	FSimpleNetManage* NetClient;
+	FMMOARPGUserData UserData;
 };
