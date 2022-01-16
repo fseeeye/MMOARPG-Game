@@ -45,7 +45,8 @@ public:
 	// TODO
 	void SignUp();
 
-	void PrintMsgLog(const FString& InMsg);
+	void PrintMsgLog(const FString& InMsgString);
+	void PrintMsgLog(const FText& InMsgText);
 
 protected:
 	void BindClientRcvLoop();

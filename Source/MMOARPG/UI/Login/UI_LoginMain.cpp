@@ -32,6 +32,12 @@ void UUI_LoginMain::NativeConstruct()
 			BindClientRcvLoop();
 		}
 	}
+
+	// Read Account & encrypted Passwd from local path
+	if (!UI_Login->DecryptFromLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
+	{
+		PrintMsgLog(TEXT("No logged account detected."));
+	}
 }
 
 // run when UI closed
@@ -62,11 +68,18 @@ void UUI_LoginMain::SignUp()
 
 }
 
-void UUI_LoginMain::PrintMsgLog(const FString& InMsg)
+void UUI_LoginMain::PrintMsgLog(const FString& InMsgString)
 {
 	// TODO: play animation
 
-	MsgLog->SetText(FText::FromString(InMsg));
+	PrintMsgLog(FText::FromString(InMsgString));
+}
+
+void UUI_LoginMain::PrintMsgLog(const FText& InMsgText)
+{
+	// TODO: play animation
+
+	MsgLog->SetText(InMsgText);
 }
 
 void UUI_LoginMain::BindClientRcvLoop()
@@ -110,8 +123,6 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 			switch (ResponseType)
 			{
 			case LOGIN_SUCCESS:
-				PrintMsgLog(TEXT("Login Success. Welcome~"));
-
 				// Save User Data to Game Instance
 				if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 				{
@@ -120,6 +131,16 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 						NetDataParser::JsonToUserdata(UserDataJson, InGameInstance->GetUserData());
 						// TODO: Jump to Hall
 					}
+				}
+
+				// Encrypt Passwd and Store Account & encrypted Passwd to local path
+				if (!UI_Login->EncryptToLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
+				{
+					PrintMsgLog(TEXT("Password storage failed!"));
+				}
+				else
+				{
+					PrintMsgLog(TEXT("Login Success. Welcome~"));
 				}
 
 				break;

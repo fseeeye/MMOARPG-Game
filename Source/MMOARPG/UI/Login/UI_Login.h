@@ -33,6 +33,10 @@ public:
 
 	virtual void NativeDestruct() override;
 
+	bool EncryptToLocal(const FString& Path); // encrypt correct passwd to local path
+	bool DecryptFromLocal(const FString& Path); // decrypt passwd from local path
+
+protected:
 	UFUNCTION()
 	void SignIn();
 
