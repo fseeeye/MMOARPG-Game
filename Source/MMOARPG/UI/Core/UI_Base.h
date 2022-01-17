@@ -45,6 +45,9 @@ protected:
 protected:
 	virtual void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel) {}
 
+	UWidgetAnimation* GetWidgetAnmi(const FString &InWidgetAnmiName);
+	void PlayWidgetAnim(const FString& InWidgetAnmiName);
+
 protected:
 	UPROPERTY()
 	UWidget* ParentWidget;

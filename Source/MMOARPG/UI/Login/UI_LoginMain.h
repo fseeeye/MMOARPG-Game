@@ -10,6 +10,7 @@
 
 #include "../Core/UI_Base.h"
 #include "UI_Login.h"
+#include "../Universal/UI_MsgLog.h"
 
 #include "UI_LoginMain.generated.h"
 
@@ -24,15 +25,15 @@ class MMOARPG_API UUI_LoginMain : public UUI_Base
 
 	// Import Loading UI Widget
 	UPROPERTY(meta = (BindWidget))
-	UUserWidget* UI_Loading;
+	UUserWidget* UI_LoginLoading;
 
 	// Import Login UI Widget
 	UPROPERTY(meta = (BindWidget))
 	UUI_Login* UI_Login;
-	
-	// Import Login UI Widget
+
+	// Import MsgLog UI Widget
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* MsgLog;
+	UUI_MsgLog* UI_MsgLog;
 
 public:
 	virtual void NativeConstruct() override;

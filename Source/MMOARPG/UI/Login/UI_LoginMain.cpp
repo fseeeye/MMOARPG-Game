@@ -36,8 +36,15 @@ void UUI_LoginMain::NativeConstruct()
 	// Read Account & encrypted Passwd from local path
 	if (!UI_Login->DecryptFromLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
 	{
-		PrintMsgLog(TEXT("No logged account detected."));
+		PrintMsgLog(TEXT("No logged account detected. Please input account & password."));
 	}
+	else
+	{
+		PrintMsgLog(TEXT("Autoload saved account."));
+	}
+
+	// Play MsgLog showup animation
+	PlayWidgetAnim(TEXT("ShowUp"));
 }
 
 // run when UI closed
@@ -70,16 +77,14 @@ void UUI_LoginMain::SignUp()
 
 void UUI_LoginMain::PrintMsgLog(const FString& InMsgString)
 {
-	// TODO: play animation
-
 	PrintMsgLog(FText::FromString(InMsgString));
 }
 
 void UUI_LoginMain::PrintMsgLog(const FText& InMsgText)
 {
-	// TODO: play animation
+	UI_MsgLog->PlayTextAnim();
 
-	MsgLog->SetText(InMsgText);
+	UI_MsgLog->SetText(InMsgText);
 }
 
 void UUI_LoginMain::BindClientRcvLoop()
@@ -143,6 +148,9 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 					PrintMsgLog(TEXT("Login Success. Welcome~"));
 				}
 
+				// Play MsgLog showoff animation
+				PlayWidgetAnim(TEXT("ShowOff"));
+
 				break;
 			case LOGIN_ACCOUNT_ERROR:
 				PrintMsgLog(TEXT("Wrong Account!"));
@@ -165,6 +173,6 @@ void UUI_LoginMain::LinkServerInfo(ESimpleNetErrorType InType, const FString& In
 	if (InType == ESimpleNetErrorType::HAND_SHAKE_SUCCESS)
 	{
 		// if handshake success, hide Loading UI widget
-		UI_Loading->SetVisibility(ESlateVisibility::Collapsed);
+		UI_LoginLoading->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
