@@ -50,7 +50,7 @@ public:
 	void PrintMsgLog(const FText& InMsgText);
 
 protected:
-	void BindClientRcvLoop();
+	void BindNetClientRcv();
 
 	virtual void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel) override;
 
@@ -58,5 +58,4 @@ protected:
 	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 private:
 	FDelegateHandle RecvDelegate;
-	FMMOARPGGateStatus GateStatus;
 };

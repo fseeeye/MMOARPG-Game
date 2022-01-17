@@ -7,6 +7,7 @@
 
 #include "SimpleNetManage.h"
 #include "MMOARPGCommType.h"
+#include "Protocol/LoginProtocol.h" // Plugin: MMOARPGComm
 
 #include "MMOARPGGameInstance.generated.h"
 
@@ -33,8 +34,10 @@ public:
 
 	inline FSimpleNetManage* GetNetClient() { return NetClient; }
 	inline FMMOARPGUserData& GetUserData() { return UserData; }
+	inline FMMOARPGGateStatus& GetGateStatus() { return GateStatus; }
 
 private:
 	FSimpleNetManage* NetClient;
 	FMMOARPGUserData UserData;
+	FMMOARPGGateStatus GateStatus;
 };

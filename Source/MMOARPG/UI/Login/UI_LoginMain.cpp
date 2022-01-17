@@ -3,10 +3,10 @@
 
 #include "UI_LoginMain.h"
 
-#include "ThreadManage.h"
-#include "UObject/SimpleController.h"
+#include "ThreadManage.h" // Plugin: SimpleThread
+#include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
 
-#include "Protocol/LoginProtocol.h" // Plugin: MMOARPGComm
+#include "Kismet/GameplayStatics.h"
 
 #include "../../MMOARPGGameInstance.h"
 #include "../../MMOARPGMacro.h"
@@ -22,6 +22,7 @@ void UUI_LoginMain::NativeConstruct()
 	{
 		// Create Client
 		InGameInstance->CreateNetClient();
+
 		if (InGameInstance->GetNetClient())
 		{
 			// Bind Client Handshake Handler
@@ -29,7 +30,7 @@ void UUI_LoginMain::NativeConstruct()
 			// Link to Server
 			InGameInstance->LinkServer();
 			// Bind Client Recv
-			BindClientRcvLoop();
+			BindNetClientRcv();
 		}
 	}
 
@@ -82,12 +83,12 @@ void UUI_LoginMain::PrintMsgLog(const FString& InMsgString)
 
 void UUI_LoginMain::PrintMsgLog(const FText& InMsgText)
 {
-	UI_MsgLog->PlayTextAnim();
-
 	UI_MsgLog->SetText(InMsgText);
+
+	UI_MsgLog->PlayTextAnim();
 }
 
-void UUI_LoginMain::BindClientRcvLoop()
+void UUI_LoginMain::BindNetClientRcv()
 {
 	// Wait for Game Instance complete creation, and then, bind client recv channel
 	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
@@ -103,14 +104,14 @@ void UUI_LoginMain::BindClientRcvLoop()
 		}
 		else
 		{
-			// coroutine
-			GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindClientRcvLoop(); });
+			// coroutine: wait for 0.5s and try again
+			GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
 		}
 	}
 	else
 	{
-		// coroutine
-		GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindClientRcvLoop(); });
+		// coroutine: wait for 0.5s and try again
+		GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
 	}
 }
 
@@ -123,34 +124,56 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 			// Get Response Msg
 			ELoginType ResponseType = ELoginType::DB_ERROR;
 			FString UserDataJson;
+			FMMOARPGGateStatus GateStatus;
+
 			SIMPLE_PROTOCOLS_RECEIVE(SP_LoginResponses, ResponseType, UserDataJson, GateStatus);
 
 			switch (ResponseType)
 			{
 			case LOGIN_SUCCESS:
 				// Save User Data to Game Instance
-				if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+				if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 				{
 					if (UserDataJson != TEXT("{}"))
 					{
-						NetDataParser::JsonToUserdata(UserDataJson, InGameInstance->GetUserData());
-						// TODO: Jump to Hall
+						NetDataParser::JsonToUserdata(UserDataJson, MMOARPGGameInstance->GetUserData());
+					}
+
+					// Encrypt Passwd and Store Account & encrypted Passwd to local path
+					if (!UI_Login->EncryptToLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
+					{
+						PrintMsgLog(TEXT("Password storage failed!"));
+					}
+					else
+					{
+						PrintMsgLog(TEXT("Login Success. Welcome~"));
+					}
+
+					if (GateStatus.GateConnectionNum == INDEX_NONE)
+					{
+						PrintMsgLog(TEXT("Server Online is FULL! Please try again later."));
+					}
+					else
+					{
+						MMOARPGGameInstance->GetGateStatus() = GateStatus;
+
+						// Play MsgLog showoff animation
+						PlayWidgetAnim(TEXT("ShowOff"));
+
+						// Switch to Role Hall
+						// Step1: close net client to login server
+						if (MMOARPGGameInstance->GetNetClient() && MMOARPGGameInstance->GetNetClient()->GetChannel())
+						{
+							MMOARPGGameInstance->GetNetClient()->GetChannel()->DestroySelf();
+						}
+						// Step2: coroutine to switch to Role Hall Level
+						GThread::Get()->GetCoroutines().BindLambda(2.f, [&]()
+							{
+								UGameplayStatics::OpenLevel(GetWorld(), TEXT("RoleHallMap"));
+							}
+						);
 					}
 				}
-
-				// Encrypt Passwd and Store Account & encrypted Passwd to local path
-				if (!UI_Login->EncryptToLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
-				{
-					PrintMsgLog(TEXT("Password storage failed!"));
-				}
-				else
-				{
-					PrintMsgLog(TEXT("Login Success. Welcome~"));
-				}
-
-				// Play MsgLog showoff animation
-				PlayWidgetAnim(TEXT("ShowOff"));
-
 				break;
 			case LOGIN_ACCOUNT_ERROR:
 				PrintMsgLog(TEXT("Wrong Account!"));

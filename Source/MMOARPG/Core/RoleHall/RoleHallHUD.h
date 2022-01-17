@@ -5,25 +5,25 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 
-#include "../../UI/Login/UI_LoginMain.h"
+#include "../../UI/RoleHall/UI_RoleHallMain.h"
 
-#include "LoginHUD.generated.h"
+#include "RoleHallHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MMOARPG_API ALoginHUD : public AHUD
+class MMOARPG_API ARoleHallHUD : public AHUD
 {
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	TSubclassOf<UUI_LoginMain> LoginMain_BP_Class;
+	TSubclassOf<UUI_RoleHallMain> RoleHallMain_BP_Class;
 public:
-	ALoginHUD();
+	ARoleHallHUD();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 private:
-	UUI_LoginMain* m_LoginMain;
+	UUI_RoleHallMain* m_RoleHallMain;
 };
