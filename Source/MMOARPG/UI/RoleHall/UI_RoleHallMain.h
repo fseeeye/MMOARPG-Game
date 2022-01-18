@@ -8,6 +8,7 @@
 #include "SimpleNetChannelType.h" // Plugin: SimpleNetChannel
 
 #include "../Universal/UI_MsgLog.h"
+#include "Elements/UI_CharacterSelectionList.h"
 
 #include "UI_RoleHallMain.generated.h"
 
@@ -22,6 +23,10 @@ class MMOARPG_API UUI_RoleHallMain : public UUI_Base
 	// Import MsgLog UI Widget
 	UPROPERTY(meta = (BindWidget))
 	UUI_MsgLog* UI_MsgLog;
+
+	// Import Character Selection List UI Widget
+	UPROPERTY(meta = (BindWidget))
+	UUI_CharacterSelectionList* UI_CharacterSelectionList;
 
 public:
 	virtual void NativeConstruct() override;

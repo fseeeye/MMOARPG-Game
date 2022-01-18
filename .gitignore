@@ -54,6 +54,10 @@
 .vs
 .vscode
 
+# Ignore private content
+Content/FemaleMilitaryOfficer/
+Content/StylizedCharactersPack/
+
 # Ignore Other folder
 Intermediate
 DerivedDataCache
