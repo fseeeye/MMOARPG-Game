@@ -6,6 +6,7 @@
 #include "RoleHallHUD.h"
 #include "RoleHallPawn.h"
 #include "RoleHallPlayerController.h"
+#include "RoleHallPlayerState.h"
 
 ARoleHallGameMode::ARoleHallGameMode()
 {
@@ -15,4 +16,6 @@ ARoleHallGameMode::ARoleHallGameMode()
 	DefaultPawnClass = ARoleHallPawn::StaticClass();
 	// Register PlayerController
 	PlayerControllerClass = ARoleHallPlayerController::StaticClass();
+	// Register PlayerState
+	PlayerStateClass = ARoleHallPlayerState::StaticClass();
 }

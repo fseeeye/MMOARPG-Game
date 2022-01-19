@@ -3,6 +3,12 @@
 
 #include "UI_CharacterButton.h"
 
+#include "Components/Button.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
+#include "Components/VerticalBox.h"
+#include "../../../Core/RoleHall/RoleHallPawn.h"
+
 void UUI_CharacterButton::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -21,5 +27,26 @@ void UUI_CharacterButton::NativeDestruct()
 
 void UUI_CharacterButton::ClickedCharacterButton()
 {
+	// Get RoleHall Pawn
+	if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+	{
+		if (RoleHallCharacterStageClass)
+		{
+			// if Character already exits, destroy it.
+			if (RoleHallPawn->RoleHallCharacterStage)
+			{
+				RoleHallPawn->RoleHallCharacterStage->Destroy();
+				RoleHallPawn->RoleHallCharacterStage = nullptr;
+			}
 
+			// Spawn Showing Character in World
+			RoleHallPawn->RoleHallCharacterStage =
+				GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
+
+			if (RoleHallPawn->RoleHallCharacterStage)
+			{
+
+			}
+		}
+	}
 }

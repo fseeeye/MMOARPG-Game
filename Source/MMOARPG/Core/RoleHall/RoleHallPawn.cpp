@@ -3,12 +3,15 @@
 
 #include "RoleHallPawn.h"
 
+#include "Character/RoleHallCharacterStage.h"
+
 // Sets default values
 ARoleHallPawn::ARoleHallPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RoleHallCharacterStage = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +19,16 @@ void ARoleHallPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ARoleHallPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (RoleHallCharacterStage)
+	{
+		RoleHallCharacterStage->Destroy();
+	}
 }
 
 // Called every frame

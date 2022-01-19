@@ -5,10 +5,7 @@
 #include "CoreMinimal.h"
 #include "../../Core/UI_Base.h"
 
-#include "Components/Button.h"
-#include "Components/Image.h"
-#include "Components/TextBlock.h"
-#include "Components/VerticalBox.h"
+#include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
 
 #include "UI_CharacterButton.generated.h"
 
@@ -21,22 +18,28 @@ class MMOARPG_API UUI_CharacterButton : public UUI_Base
 	GENERATED_BODY()
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton* CharacterButton;
+	class UButton* CharacterButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* CreationIcon;
+	class UImage* CreationIcon;
 
 	UPROPERTY(meta = (BindWidget))
-	UVerticalBox* CharacterInfo;
+	class UVerticalBox* CharacterInfo;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* CharacterAvatar;
+	class UImage* CharacterAvatar;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CharacterName;
+	class UTextBlock* CharacterName;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CreationTime;
+	class UTextBlock* CreationTime;
+
+	UPROPERTY(EditDefaultsOnly, Category="AssociationCharacter")
+	TSubclassOf<ARoleHallCharacterStage> RoleHallCharacterStageClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="AssociationCharacter")
+	FVector RoleHallCharacterSpawnPoint;
 
 public:
 	virtual void NativeConstruct() override;
