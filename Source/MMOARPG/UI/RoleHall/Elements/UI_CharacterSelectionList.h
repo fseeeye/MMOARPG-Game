@@ -8,6 +8,7 @@
 #include "Components/TextBlock.h"
 #include "Components/ScrollBox.h"
 #include "UI_CharacterButton.h"
+#include "UI_KneadFace.h"
 
 #include "UI_CharacterSelectionList.generated.h"
 
@@ -26,10 +27,16 @@ class MMOARPG_API UUI_CharacterSelectionList : public UUI_Base
 	UScrollBox* List;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUI_CharacterButton> UI_CharacterButtonClass;
+	TSubclassOf<UUI_CharacterButton> UI_CharacterButtonSubClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUI_KneadFace> UI_KneadFaceSubClass;
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	void CreateKneadFacePanel();
+	void RecreateCharacterButtons();
 
 protected:
 	void InitCharacterButtons(const int32 InNumber);

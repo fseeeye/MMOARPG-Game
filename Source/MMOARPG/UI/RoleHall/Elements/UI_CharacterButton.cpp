@@ -7,7 +7,11 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+
 #include "../../../Core/RoleHall/RoleHallPawn.h"
+#include "UI_CharacterSelectionList.h"
+#include "../UI_RoleHallMain.h"
+
 
 void UUI_CharacterButton::NativeConstruct()
 {
@@ -27,25 +31,42 @@ void UUI_CharacterButton::NativeDestruct()
 
 void UUI_CharacterButton::ClickedCharacterButton()
 {
-	// Get RoleHall Pawn
-	if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+	// TODO
+	if (1)
 	{
+		// Step1: Generate Character
 		if (RoleHallCharacterStageClass)
 		{
-			// if Character already exits, destroy it.
-			if (RoleHallPawn->RoleHallCharacterStage)
+			// Get RoleHall Pawn
+			if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
 			{
-				RoleHallPawn->RoleHallCharacterStage->Destroy();
-				RoleHallPawn->RoleHallCharacterStage = nullptr;
+				// if Character already exits, destroy it.
+				if (RoleHallPawn->RoleHallCharacterStage)
+				{
+					RoleHallPawn->RoleHallCharacterStage->Destroy();
+					RoleHallPawn->RoleHallCharacterStage = nullptr;
+				}
+
+				// Spawn Showing Character in World
+				RoleHallPawn->RoleHallCharacterStage =
+					GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
+
+				if (RoleHallPawn->RoleHallCharacterStage)
+				{
+
+				}
 			}
+		}
 
-			// Spawn Showing Character in World
-			RoleHallPawn->RoleHallCharacterStage =
-				GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
+		if (auto UI_CharacterSelectionList = GetWidgetParent<UUI_CharacterSelectionList>())
+		{
+			// Step2: Switch Selection List to show Knead Face Widget
+			UI_CharacterSelectionList->CreateKneadFacePanel();
 
-			if (RoleHallPawn->RoleHallCharacterStage)
+			// Step3: Play NameBox ShowUp animation.
+			if (auto UI_RoleHallMain = UI_CharacterSelectionList->GetWidgetParent<UUI_RoleHallMain>())
 			{
-
+				UI_RoleHallMain->PlayNameBoxShowUpAnim();
 			}
 		}
 	}

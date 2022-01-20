@@ -9,8 +9,10 @@
 
 #include "../Universal/UI_MsgLog.h"
 #include "Elements/UI_CharacterSelectionList.h"
+#include "Elements/UI_NameBox.h"
 
 #include "UI_RoleHallMain.generated.h"
+
 
 /**
  * 
@@ -28,13 +30,22 @@ class MMOARPG_API UUI_RoleHallMain : public UUI_Base
 	UPROPERTY(meta = (BindWidget))
 	UUI_CharacterSelectionList* UI_CharacterSelectionList;
 
+	// Import Character Name Box UI Widget
+	UPROPERTY(meta = (BindWidget))
+	UUI_NameBox* UI_NameBox;
+
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 public:
-	void PrintMsgLog(const FString& InMsgString);
+	void PrintMsgLog(const FString& InMsgString) { PrintMsgLog(FText::FromString(InMsgString)); }
 	void PrintMsgLog(const FText& InMsgText);
+
+	inline void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
+	inline void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
+
+	inline void ResetCharacterSelectionList() { UI_CharacterSelectionList->RecreateCharacterButtons(); }
 
 protected:
 	void BindNetClientRcv();

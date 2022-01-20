@@ -9,10 +9,16 @@
 #include "ThreadManage.h" // Plugin: SimpleThread
 #include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
 
+
 void UUI_RoleHallMain::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// Set Widgets parent to RoleHall
+	UI_CharacterSelectionList->SetWidgetParent(this); 
+	UI_NameBox->SetWidgetParent(this);
+
+	// Init Gate Server Connection
 	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 	{
 		if (MMOARPGGameInstance->GetNetClient())
@@ -36,11 +42,6 @@ void UUI_RoleHallMain::NativeDestruct()
 			MMOARPGGameInstance->GetNetClient()->GetController()->RecvDelegate.Remove(RecvDelegate);
 		}
 	}
-}
-
-void UUI_RoleHallMain::PrintMsgLog(const FString& InMsgString)
-{
-	PrintMsgLog(FText::FromString(InMsgString));
 }
 
 void UUI_RoleHallMain::PrintMsgLog(const FText& InMsgText)
