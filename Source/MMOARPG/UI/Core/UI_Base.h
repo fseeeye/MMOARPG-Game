@@ -42,6 +42,14 @@ protected:
 			: nullptr;
 	}
 
+	template<class T>
+	T* GetPlayerState()
+	{
+		return GetWorld() != nullptr ?
+			(GetWorld()->GetFirstPlayerController() != nullptr ? GetWorld()->GetFirstPlayerController()->GetPlayerState<T>() : nullptr)
+			: nullptr;
+	}
+
 public:
 	void PlayWidgetAnim(const FString& InWidgetAnmiName);
 

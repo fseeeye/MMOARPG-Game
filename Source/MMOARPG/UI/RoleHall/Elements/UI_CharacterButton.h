@@ -7,6 +7,8 @@
 
 #include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
 
+#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
+
 #include "UI_CharacterButton.generated.h"
 
 /**
@@ -33,7 +35,7 @@ class MMOARPG_API UUI_CharacterButton : public UUI_Base
 	class UTextBlock* CharacterName;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* CreationTime;
+	class UTextBlock* CreationDate;
 
 	UPROPERTY(EditDefaultsOnly, Category="AssociationCharacter")
 	TSubclassOf<ARoleHallCharacterStage> RoleHallCharacterStageClass;
@@ -45,7 +47,14 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	inline void SetSlotPosition(const int32 InNewPos) { SlotPosition = InNewPos; }
+
+	void InitWithCA(const FMMOARPGCharacterAppearance& InCA);
+
 protected:
 	UFUNCTION()
 	void ClickedCharacterButton();
+
+protected:
+	int32 SlotPosition;
 };

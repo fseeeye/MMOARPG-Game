@@ -9,6 +9,7 @@
 #include "Components/ScrollBox.h"
 #include "UI_CharacterButton.h"
 #include "UI_KneadFace.h"
+#include "MMOARPGCommType.h"
 
 #include "UI_CharacterSelectionList.generated.h"
 
@@ -36,8 +37,8 @@ public:
 	virtual void NativeDestruct() override;
 
 	void CreateKneadFacePanel();
-	void RecreateCharacterButtons();
+	void CreateCharacterButtons();
 
 protected:
-	void InitCharacterButtons(const int32 InNumber);
+	void InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs);
 };

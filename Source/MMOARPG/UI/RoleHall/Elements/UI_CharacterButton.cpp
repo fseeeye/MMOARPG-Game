@@ -17,6 +17,8 @@ void UUI_CharacterButton::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	SlotPosition = INDEX_NONE;
+
 	CharacterButton->OnReleased.AddDynamic(this, &UUI_CharacterButton::ClickedCharacterButton);
 
 	// Set Widgets default Visibility
@@ -27,6 +29,20 @@ void UUI_CharacterButton::NativeConstruct()
 void UUI_CharacterButton::NativeDestruct()
 {
 	Super::NativeDestruct();
+}
+
+void UUI_CharacterButton::InitWithCA(const FMMOARPGCharacterAppearance& InCA)
+{
+	if (InCA.SlotPos != INDEX_NONE)
+	{
+		// Set Character Appearance Widget Visible
+		CreationIcon->SetVisibility(ESlateVisibility::Collapsed);
+		CharacterInfo->SetVisibility(ESlateVisibility::Visible);
+
+		// Set Character Appearance info to Widgets
+		CharacterName->SetText(FText::FromString(InCA.Name));
+		CreationDate->SetText(FText::FromString(InCA.CreationDate));
+	}
 }
 
 void UUI_CharacterButton::ClickedCharacterButton()

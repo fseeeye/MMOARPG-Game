@@ -45,11 +45,14 @@ public:
 	inline void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
 	inline void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
 
-	inline void ResetCharacterSelectionList() { UI_CharacterSelectionList->RecreateCharacterButtons(); }
+	inline void ResetCharacterSelectionList() { UI_CharacterSelectionList->CreateCharacterButtons(); }
 
 protected:
 	void BindNetClientRcv();
 	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
+
+	UFUNCTION()
+	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 
 private:
 	FDelegateHandle RecvDelegate;

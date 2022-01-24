@@ -3,9 +3,12 @@
 
 #include "UI_RoleHallMain.h"
 
+#include "../../MMOARPGMacro.h"
 #include "../../MMOARPGGameInstance.h"
+#include "../../Core/RoleHall/RoleHallPlayerState.h"
 
 #include "MMOARPGCommType.h" // Plugin: MMOARPGComm
+#include "Protocol/RoleHallProtocol.h" // Plugin: MMOARPGComm
 #include "ThreadManage.h" // Plugin: SimpleThread
 #include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
 
@@ -23,6 +26,8 @@ void UUI_RoleHallMain::NativeConstruct()
 	{
 		if (MMOARPGGameInstance->GetNetClient())
 		{
+			// Bind Client Handshake Handler
+			MMOARPGGameInstance->GetNetClient()->NetManageMsgDelegate.BindUObject(this, &UUI_RoleHallMain::LinkServerInfo);
 			// Connect to Gate Server
 			MMOARPGGameInstance->GetNetClient()->Init(MMOARPGGameInstance->GetGateStatus().GateAddrInfo.Addr);
 
@@ -79,9 +84,39 @@ void UUI_RoleHallMain::BindNetClientRcv()
 
 void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 {
-	//switch (ProtocolNumber)
-	//{
-	//default:
-	//	break;
-	//}
+	switch (ProtocolNumber)
+	{
+	case SP_CharacterAppearancesResponses:
+	{
+		FString CharacterAppearancesJson;
+		SIMPLE_PROTOCOLS_RECEIVE(SP_CharacterAppearancesResponses, CharacterAppearancesJson);
+
+		if (!CharacterAppearancesJson.IsEmpty())
+		{
+			if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+			{
+				// Deserialize and save character appearances to Player State
+				NetDataParser::JsonToCharacterAppearances(CharacterAppearancesJson, RoleHallPlayerState->GetCharacterAppearances());
+				// Create Character Buttons
+				UI_CharacterSelectionList->CreateCharacterButtons();
+			}
+		}
+
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void UUI_RoleHallMain::LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg)
+{
+	if (InType == ESimpleNetErrorType::HAND_SHAKE_SUCCESS)
+	{
+		if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+		{
+			// if handshake success, request character appearances.
+			SEND_DATA(SP_CharacterAppearancesRequests, MMOARPGGameInstance->GetUserData().ID);
+		}
+	}
 }

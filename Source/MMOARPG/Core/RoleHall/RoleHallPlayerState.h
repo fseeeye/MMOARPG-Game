@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+
+#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
+
 #include "RoleHallPlayerState.generated.h"
 
 /**
@@ -13,5 +16,10 @@ UCLASS()
 class MMOARPG_API ARoleHallPlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
+public:
+	inline FMMOARPGCharacterAppearances& GetCharacterAppearances() { return CharacterAppearances; }
 	
+private:
+	FMMOARPGCharacterAppearances CharacterAppearances;
 };
