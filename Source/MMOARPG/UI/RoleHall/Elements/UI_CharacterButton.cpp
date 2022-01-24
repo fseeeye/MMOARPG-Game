@@ -7,8 +7,10 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+#include <Kismet/GameplayStatics.h>
 
 #include "../../../Core/RoleHall/RoleHallPawn.h"
+#include "../../../Core/RoleHall/RoleHallPlayerState.h"
 #include "UI_CharacterSelectionList.h"
 #include "../UI_RoleHallMain.h"
 
@@ -47,43 +49,33 @@ void UUI_CharacterButton::InitWithCA(const FMMOARPGCharacterAppearance& InCA)
 
 void UUI_CharacterButton::ClickedCharacterButton()
 {
-	// TODO
-	if (1)
+	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
 	{
-		// Step1: Generate Character
-		if (RoleHallCharacterStageClass)
-		{
-			// Get RoleHall Pawn
-			if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
-			{
-				// if Character already exits, destroy it.
-				if (RoleHallPawn->RoleHallCharacterStage)
-				{
-					RoleHallPawn->RoleHallCharacterStage->Destroy();
-					RoleHallPawn->RoleHallCharacterStage = nullptr;
-				}
-
-				// Spawn Showing Character in World
-				RoleHallPawn->RoleHallCharacterStage =
-					GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
-
-				if (RoleHallPawn->RoleHallCharacterStage)
-				{
-
-				}
-			}
-		}
-
 		if (auto UI_CharacterSelectionList = GetWidgetParent<UUI_CharacterSelectionList>())
 		{
-			// Step2: Switch Selection List to show Knead Face Widget
-			UI_CharacterSelectionList->CreateKneadFacePanel();
-
-			// Step3: Play NameBox ShowUp animation.
-			if (auto UI_RoleHallMain = UI_CharacterSelectionList->GetWidgetParent<UUI_RoleHallMain>())
+			// if this button slot is an empty button, get into Knead Face UI
+			if (!RoleHallPlayerState->IsCharacterExistInSlot(SlotPosition))
 			{
-				UI_RoleHallMain->PlayNameBoxShowUpAnim();
+				// Step1: Generate Character
+
+				// Step2: Switch Selection List to show Knead Face Widget
+				UI_CharacterSelectionList->CreateKneadFacePanel();
+
+				// Step3: Play NameBox ShowUp animation.
+				if (auto UI_RoleHallMain = UI_CharacterSelectionList->GetWidgetParent<UUI_RoleHallMain>())
+				{
+					UI_RoleHallMain->PlayNameBoxShowUpAnim();
+				}
 			}
+			else // or, get into the Game Level
+			{
+				// TODO: connect to DS Server
+
+				// switch to Game Level
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameMap"));
+			}
+
+			UI_CharacterSelectionList->SetCurrentSlotPos(SlotPosition);
 		}
 	}
 }

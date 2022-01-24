@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "../../Core/UI_Base.h"
 
+// Components & UObject
 #include "Components/TextBlock.h"
 #include "Components/ScrollBox.h"
 #include "UI_CharacterButton.h"
 #include "UI_KneadFace.h"
+#include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
+
+// Plugins
 #include "MMOARPGCommType.h"
 
 #include "UI_CharacterSelectionList.generated.h"
@@ -32,6 +36,12 @@ class MMOARPG_API UUI_CharacterSelectionList : public UUI_Base
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUI_KneadFace> UI_KneadFaceSubClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AssociationCharacter")
+	TSubclassOf<ARoleHallCharacterStage> RoleHallCharacterStageClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AssociationCharacter")
+	FVector RoleHallCharacterSpawnPoint;
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -39,6 +49,14 @@ public:
 	void CreateKneadFacePanel();
 	void CreateCharacterButtons();
 
+	inline void SetCurrentSlotPos(const int32 InSlotPos) { CurrentSelectedSlotPos = InSlotPos; }
+	void SpawnCharacterStage(const int32 InSlotPos);
+	void SpawnCharacterStage(const FMMOARPGCharacterAppearance* InCA);
+	void SpawnCharacterStage();
+
 protected:
 	void InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs);
+
+protected:
+	int32 CurrentSelectedSlotPos;
 };

@@ -5,12 +5,17 @@
 
 #include "Components/ScrollBoxSlot.h"
 #include "UI_KneadFace.h"
+
+#include "../../../Core/RoleHall/RoleHallPawn.h"
 #include "../../../Core/RoleHall/RoleHallPlayerState.h"
+#include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
 
 
 void UUI_CharacterSelectionList::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	CurrentSelectedSlotPos = 0;
 }
 
 void UUI_CharacterSelectionList::NativeDestruct()
@@ -50,6 +55,51 @@ void UUI_CharacterSelectionList::CreateCharacterButtons()
 	}
 }
 
+void UUI_CharacterSelectionList::SpawnCharacterStage(const int32 InSlotPos)
+{
+	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+	{
+		SpawnCharacterStage(RoleHallPlayerState->GetCharacterAppearances().FindByPredicate([&](const FMMOARPGCharacterAppearance& InCA)
+		{
+			return InCA.SlotPos == InSlotPos;
+		}));
+	}
+}
+
+void UUI_CharacterSelectionList::SpawnCharacterStage()
+{
+	SpawnCharacterStage(CurrentSelectedSlotPos);
+}
+
+void UUI_CharacterSelectionList::SpawnCharacterStage(const FMMOARPGCharacterAppearance* InCA)
+{
+	if (InCA)
+	{
+		if (RoleHallCharacterStageClass)
+		{
+			// Get RoleHall Pawn
+			if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+			{
+				// if Character already exits, destroy it.
+				if (RoleHallPawn->RoleHallCharacterStage)
+				{
+					RoleHallPawn->RoleHallCharacterStage->Destroy();
+					RoleHallPawn->RoleHallCharacterStage = nullptr;
+				}
+
+				// Spawn Showing Character in World
+				RoleHallPawn->RoleHallCharacterStage =
+					GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
+
+				if (RoleHallPawn->RoleHallCharacterStage)
+				{
+
+				}
+			}
+		}
+	}
+}
+
 void UUI_CharacterSelectionList::InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs)
 {
 	// Clean List
@@ -62,15 +112,16 @@ void UUI_CharacterSelectionList::InitCharacterButtons(FMMOARPGCharacterAppearanc
 		{
 			if (auto CharacterButton = CreateWidget<UUI_CharacterButton>(GetWorld(), UI_CharacterButtonSubClass))
 			{
-				CharacterButton->SetSlotPosition(i);
-				// Switch Button's parent from World to CharacterList
-				CharacterButton->SetWidgetParent(this);
-
 				if (UScrollBoxSlot* ScrollBoxSlot = Cast<UScrollBoxSlot>(List->AddChild(CharacterButton)))
 				{
 					// Set slot padding
 					ScrollBoxSlot->SetPadding(10.f);
 				}
+
+				// Set Button Slot
+				CharacterButton->SetSlotPosition(i);
+				// Set Button's parent to CharacterList
+				CharacterButton->SetWidgetParent(this);
 
 				if (const FMMOARPGCharacterAppearance* CharacterAppearance =
 					InCAs.FindByPredicate([&](const FMMOARPGCharacterAppearance& InCharacterAppearance)

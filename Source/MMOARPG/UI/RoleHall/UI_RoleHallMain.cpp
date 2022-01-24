@@ -99,6 +99,8 @@ void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 				NetDataParser::JsonToCharacterAppearances(CharacterAppearancesJson, RoleHallPlayerState->GetCharacterAppearances());
 				// Create Character Buttons
 				UI_CharacterSelectionList->CreateCharacterButtons();
+				// Spawn recent played Character
+				SpawnRecentCharacter();
 			}
 		}
 
@@ -117,6 +119,18 @@ void UUI_RoleHallMain::LinkServerInfo(ESimpleNetErrorType InType, const FString&
 		{
 			// if handshake success, request character appearances.
 			SEND_DATA(SP_CharacterAppearancesRequests, MMOARPGGameInstance->GetUserData().ID);
+		}
+	}
+}
+
+void UUI_RoleHallMain::SpawnRecentCharacter()
+{
+	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+	{
+		// Get & Spawn recent character appearance
+		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacter())
+		{
+			UI_CharacterSelectionList->SpawnCharacterStage(RecentCA);
 		}
 	}
 }

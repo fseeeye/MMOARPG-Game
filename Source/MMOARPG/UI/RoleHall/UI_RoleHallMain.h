@@ -54,6 +54,9 @@ protected:
 	UFUNCTION()
 	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 
+protected:
+	void SpawnRecentCharacter();
+
 private:
 	FDelegateHandle RecvDelegate;
 };

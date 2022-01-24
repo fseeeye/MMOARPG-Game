@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "../../Core/UI_Base.h"
 
-#include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
-
 #include "MMOARPGCommType.h" // Plugin: MMOARPGComm
 
 #include "UI_CharacterButton.generated.h"
@@ -36,12 +34,6 @@ class MMOARPG_API UUI_CharacterButton : public UUI_Base
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CreationDate;
-
-	UPROPERTY(EditDefaultsOnly, Category="AssociationCharacter")
-	TSubclassOf<ARoleHallCharacterStage> RoleHallCharacterStageClass;
-
-	UPROPERTY(EditDefaultsOnly, Category="AssociationCharacter")
-	FVector RoleHallCharacterSpawnPoint;
 
 public:
 	virtual void NativeConstruct() override;

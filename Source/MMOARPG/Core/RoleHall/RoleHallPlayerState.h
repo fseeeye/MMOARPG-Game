@@ -19,6 +19,10 @@ class MMOARPG_API ARoleHallPlayerState : public APlayerState
 
 public:
 	inline FMMOARPGCharacterAppearances& GetCharacterAppearances() { return CharacterAppearances; }
+
+	bool IsCharacterExistInSlot(const int32 InSlotPos);
+
+	FMMOARPGCharacterAppearance* GetRecentCharacter();
 	
 private:
 	FMMOARPGCharacterAppearances CharacterAppearances;
