@@ -45,19 +45,19 @@ void UUI_NameBox::ClickedCancel()
 {
 	if (auto UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
 	{
+		//// Destory character
+		//if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+		//{
+		//	// if Character already exits, destroy it.
+		//	if (RoleHallPawn->RoleHallCharacterStage)
+		//	{
+		//		RoleHallPawn->RoleHallCharacterStage->Destroy();
+		//		RoleHallPawn->RoleHallCharacterStage = nullptr;
+		//	}
+		//}
 		// Play Name Box Show Off animation
 		UI_RoleHallMain->PlayNameBoxShowOffAnim();
-		// Reset Selection List
+		// Reset Selection List & Spawn recent Character
 		UI_RoleHallMain->ResetCharacterSelectionList();
-		// Destory character
-		if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
-		{
-			// if Character already exits, destroy it.
-			if (RoleHallPawn->RoleHallCharacterStage)
-			{
-				RoleHallPawn->RoleHallCharacterStage->Destroy();
-				RoleHallPawn->RoleHallCharacterStage = nullptr;
-			}
-		}
 	}
 }

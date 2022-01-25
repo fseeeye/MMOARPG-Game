@@ -49,10 +49,31 @@ public:
 	void CreateKneadFacePanel();
 	void CreateCharacterButtons();
 
-	inline void SetCurrentSlotPos(const int32 InSlotPos) { CurrentSelectedSlotPos = InSlotPos; }
 	void SpawnCharacterStage(const int32 InSlotPos);
 	void SpawnCharacterStage(const FMMOARPGCharacterAppearance* InCA);
 	void SpawnCharacterStage();
+	ARoleHallCharacterStage* CreateCharacterStage();
+
+	void HightLightButton(int32 InSlotPos);
+	FORCEINLINE void SetCurrentSlotPos(const int32 InSlotPos) {
+		CurrentSelectedSlotPos = InSlotPos;
+		//HightLightButton(CurrentSelectedSlotPos);
+	}
+
+	template<class T>
+	void FindByPredicateInList(TFunction<bool(T*)> InFunc)
+	{
+		for (auto& Child : List->GetAllChildren())
+		{
+			if (T* Tmp = Cast<T>(Child))
+			{
+				if (InFunc(Tmp))
+				{
+					break;
+				}
+			}
+		}
+	};
 
 protected:
 	void InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs);

@@ -35,13 +35,19 @@ class MMOARPG_API UUI_CharacterButton : public UUI_Base
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CreationDate;
 
+	UPROPERTY(EditDefaultsOnly, Category = "HightLight")
+	FLinearColor HightLightColor;
+
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	inline void SetSlotPosition(const int32 InNewPos) { SlotPosition = InNewPos; }
+	FORCEINLINE int32 GetSlotPosition() { return SlotPosition; }
+	FORCEINLINE void SetSlotPosition(const int32 InNewPos) { SlotPosition = InNewPos; }
 
 	void InitWithCA(const FMMOARPGCharacterAppearance& InCA);
+
+	void SetHighLight(bool bHighLight);
 
 protected:
 	UFUNCTION()
@@ -49,4 +55,5 @@ protected:
 
 protected:
 	int32 SlotPosition;
+	FLinearColor DefaultColor;
 };

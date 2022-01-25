@@ -42,10 +42,10 @@ public:
 	void PrintMsgLog(const FString& InMsgString) { PrintMsgLog(FText::FromString(InMsgString)); }
 	void PrintMsgLog(const FText& InMsgText);
 
-	inline void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
-	inline void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
+	FORCEINLINE void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
+	FORCEINLINE void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
 
-	inline void ResetCharacterSelectionList() { UI_CharacterSelectionList->CreateCharacterButtons(); }
+	void ResetCharacterSelectionList();
 
 protected:
 	void BindNetClientRcv();
@@ -56,6 +56,7 @@ protected:
 
 protected:
 	void SpawnRecentCharacter();
+	void HightLightDefaultSelectButton();
 
 private:
 	FDelegateHandle RecvDelegate;

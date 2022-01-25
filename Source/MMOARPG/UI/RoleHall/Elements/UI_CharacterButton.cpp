@@ -26,6 +26,9 @@ void UUI_CharacterButton::NativeConstruct()
 	// Set Widgets default Visibility
 	CreationIcon->SetVisibility(ESlateVisibility::Visible);
 	CharacterInfo->SetVisibility(ESlateVisibility::Collapsed);
+
+	// Set Button default color
+	DefaultColor = CharacterButton->WidgetStyle.Normal.TintColor.GetSpecifiedColor();
 }
 
 void UUI_CharacterButton::NativeDestruct()
@@ -47,6 +50,20 @@ void UUI_CharacterButton::InitWithCA(const FMMOARPGCharacterAppearance& InCA)
 	}
 }
 
+void UUI_CharacterButton::SetHighLight(bool bHighLight)
+{
+	if (bHighLight)
+	{
+		CharacterButton->WidgetStyle.Normal.TintColor = HightLightColor;
+		CharacterButton->SetStyle(CharacterButton->WidgetStyle);
+	}
+	else
+	{
+		CharacterButton->WidgetStyle.Normal.TintColor = DefaultColor;
+		CharacterButton->SetStyle(CharacterButton->WidgetStyle);
+	}
+}
+
 void UUI_CharacterButton::ClickedCharacterButton()
 {
 	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
@@ -56,7 +73,8 @@ void UUI_CharacterButton::ClickedCharacterButton()
 			// if this button slot is an empty button, get into Knead Face UI
 			if (!RoleHallPlayerState->IsCharacterExistInSlot(SlotPosition))
 			{
-				// Step1: Generate Character
+				// Step1: Generate a default Character
+				UI_CharacterSelectionList->CreateCharacterStage();
 
 				// Step2: Switch Selection List to show Knead Face Widget
 				UI_CharacterSelectionList->CreateKneadFacePanel();

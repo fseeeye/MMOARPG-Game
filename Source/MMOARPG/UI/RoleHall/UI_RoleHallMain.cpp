@@ -56,6 +56,16 @@ void UUI_RoleHallMain::PrintMsgLog(const FText& InMsgText)
 	UI_MsgLog->PlayTextAnim();
 }
 
+void UUI_RoleHallMain::ResetCharacterSelectionList()
+{
+	// Recreate Character Buttons
+	UI_CharacterSelectionList->CreateCharacterButtons();
+	// Highlight Button
+	HightLightDefaultSelectButton();
+	// Spawn recent Character
+	SpawnRecentCharacter();
+}
+
 void UUI_RoleHallMain::BindNetClientRcv()
 {
 	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
@@ -101,6 +111,8 @@ void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 				UI_CharacterSelectionList->CreateCharacterButtons();
 				// Spawn recent played Character
 				SpawnRecentCharacter();
+				// HightLight Button
+				HightLightDefaultSelectButton();
 			}
 		}
 
@@ -131,6 +143,18 @@ void UUI_RoleHallMain::SpawnRecentCharacter()
 		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacter())
 		{
 			UI_CharacterSelectionList->SpawnCharacterStage(RecentCA);
+		}
+	}
+}
+
+void UUI_RoleHallMain::HightLightDefaultSelectButton()
+{
+	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+	{
+		// Get recent character appearance
+		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacter())
+		{
+			UI_CharacterSelectionList->HightLightButton(RecentCA->SlotPos);
 		}
 	}
 }

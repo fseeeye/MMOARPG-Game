@@ -77,27 +77,56 @@ void UUI_CharacterSelectionList::SpawnCharacterStage(const FMMOARPGCharacterAppe
 	{
 		if (RoleHallCharacterStageClass)
 		{
-			// Get RoleHall Pawn
-			if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+			if (ARoleHallCharacterStage* RoleHallCharacterStage = CreateCharacterStage())
 			{
-				// if Character already exits, destroy it.
-				if (RoleHallPawn->RoleHallCharacterStage)
-				{
-					RoleHallPawn->RoleHallCharacterStage->Destroy();
-					RoleHallPawn->RoleHallCharacterStage = nullptr;
-				}
-
-				// Spawn Showing Character in World
-				RoleHallPawn->RoleHallCharacterStage =
-					GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
-
-				if (RoleHallPawn->RoleHallCharacterStage)
-				{
-
-				}
+				// TODO: set character property
 			}
 		}
 	}
+}
+
+ARoleHallCharacterStage* UUI_CharacterSelectionList::CreateCharacterStage()
+{
+	if (RoleHallCharacterStageClass)
+	{
+		// Get RoleHall Pawn
+		if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+		{
+			// if Character already exits, destroy it.
+			if (RoleHallPawn->RoleHallCharacterStage)
+			{
+				RoleHallPawn->RoleHallCharacterStage->Destroy();
+				RoleHallPawn->RoleHallCharacterStage = nullptr;
+			}
+
+			// Spawn Showing Character in World
+			RoleHallPawn->RoleHallCharacterStage =
+				GetWorld()->SpawnActor<ARoleHallCharacterStage>(RoleHallCharacterStageClass, RoleHallCharacterSpawnPoint, FRotator::ZeroRotator);
+
+			return RoleHallPawn->RoleHallCharacterStage;
+		}
+	}
+
+	return nullptr;
+}
+
+void UUI_CharacterSelectionList::HightLightButton(int32 InSlotPos)
+{
+	FindByPredicateInList<UUI_CharacterButton>([InSlotPos](UUI_CharacterButton* InButton) -> bool
+		{
+			if (InSlotPos == InButton->GetSlotPosition())
+			{
+				// highlight button at specific slot
+				InButton->SetHighLight(true);
+			}
+			else
+			{
+				// cancel highlight for other button
+				InButton->SetHighLight(false);
+			}
+
+			return false;
+		});
 }
 
 void UUI_CharacterSelectionList::InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs)

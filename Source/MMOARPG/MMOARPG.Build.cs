@@ -15,7 +15,9 @@ public class MMOARPG : ModuleRules
 			"InputCore",
 			"SimpleNetChannel",
 			"SimpleThread",
-			"MMOARPGComm"
+			"MMOARPGComm",
+			"Slate",
+			"SlateCore"
 		});
 	}
 }
