@@ -12,6 +12,9 @@ ARoleHallPawn::ARoleHallPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RoleHallCharacterStage = nullptr;
+
+	// tips: C++ Pawn need to create Root Component manually to move this pawn.
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
 // Called when the game starts or when spawned

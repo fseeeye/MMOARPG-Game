@@ -3,6 +3,12 @@
 
 #include "RoleHallCharacterStage.h"
 
+#include "../RoleHallPlayerController.h"
+
+// Components
+#include "Components/CapsuleComponent.h"
+
+
 // Sets default values
 ARoleHallCharacterStage::ARoleHallCharacterStage()
 {
@@ -16,6 +22,10 @@ void ARoleHallCharacterStage::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->OnClicked.AddDynamic(this, &ARoleHallCharacterStage::OnCapsuleClicked);
+	}
 }
 
 // Called every frame
@@ -30,5 +40,14 @@ void ARoleHallCharacterStage::SetupPlayerInputComponent(UInputComponent* PlayerI
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ARoleHallCharacterStage::OnCapsuleClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
+{
+	if (ARoleHallPlayerController* RoleHallPlayerController = GetWorld()->GetFirstPlayerController<ARoleHallPlayerController>())
+	{
+		RoleHallPlayerController->ResetRotateTarget(this);
+		RoleHallPlayerController->StartRotateCharacter();
+	}
 }
 

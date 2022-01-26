@@ -13,11 +13,13 @@ public class MMOARPG : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
+			"Slate",
+			"SlateCore",
+			// Plugin Modules
 			"SimpleNetChannel",
 			"SimpleThread",
 			"MMOARPGComm",
-			"Slate",
-			"SlateCore"
+			"SimpleActorBrowsing"
 		});
 	}
 }
