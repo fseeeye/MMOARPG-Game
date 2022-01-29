@@ -12,6 +12,8 @@
 #include "ThreadManage.h" // Plugin: SimpleThread
 #include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
 
+#define LOCTEXT_NAMESPACE "RoleHallMain"
+
 
 void UUI_RoleHallMain::NativeConstruct()
 {
@@ -56,14 +58,59 @@ void UUI_RoleHallMain::PrintMsgLog(const FText& InMsgText)
 	UI_MsgLog->PlayTextAnim();
 }
 
-void UUI_RoleHallMain::ResetCharacterSelectionList()
+void UUI_RoleHallMain::ResetCharacterSelectionList(bool bSpawnCharacter /*= true*/)
 {
 	// Recreate Character Buttons
 	UI_CharacterSelectionList->CreateCharacterButtons();
+
+	if (bSpawnCharacter)
+	{
+		// Spawn recent Character
+		SpawnRecentCharacter();
+	}
+
 	// Highlight Button
 	HightLightDefaultSelectButton();
-	// Spawn recent Character
-	SpawnRecentCharacter();
+}
+
+void UUI_RoleHallMain::CheckCharacterNameInServer(FString& InCharacterName)
+{
+	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+	{
+		SEND_DATA(SP_CheckCharacterNameRequests, MMOARPGGameInstance->GetUserData().ID, InCharacterName);
+	}
+}
+
+void UUI_RoleHallMain::CreateCharacterInServer(const FMMOARPGCharacterAppearance& InCA)
+{
+	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+	{
+		// send character appearance json to server
+		FString CAJson;
+		NetDataParser::CharacterAppearanceToJson(InCA, CAJson);
+		SEND_DATA(SP_CreateCharacterRequests, MMOARPGGameInstance->GetUserData().ID, CAJson);
+	}
+}
+
+void UUI_RoleHallMain::PrintMsgLogCheckName(ECheckNameType InCheckNameType)
+{
+	switch (InCheckNameType)
+	{
+	case ECheckNameType::NAME_NOT_EXIST:
+		PrintMsgLog(LOCTEXT("CHECK_NAME_NOT_EXIST", "The name is valid~"));
+		break;
+	case ECheckNameType::NAME_EXIST:
+		PrintMsgLog(LOCTEXT("CHECK_NAME_EXIST", "The name is existed!"));
+		break;
+	case ECheckNameType::DB_ERROR:
+		PrintMsgLog(LOCTEXT("CHECK_NAME_DB_ERROR", "DB check name error occured!"));
+		break;
+	case ECheckNameType::UNKNOW_ERROR:
+		PrintMsgLog(LOCTEXT("CHECK_NAME_UNKNOW_ERROR", "Unknow check name error occured!"));
+		break;
+	default:
+		break;
+	}
 }
 
 void UUI_RoleHallMain::BindNetClientRcv()
@@ -96,30 +143,74 @@ void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 {
 	switch (ProtocolNumber)
 	{
-	case SP_CharacterAppearancesResponses:
-	{
-		FString CharacterAppearancesJson;
-		SIMPLE_PROTOCOLS_RECEIVE(SP_CharacterAppearancesResponses, CharacterAppearancesJson);
-
-		if (!CharacterAppearancesJson.IsEmpty())
+		case SP_CharacterAppearancesResponses:
 		{
-			if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
-			{
-				// Deserialize and save character appearances to Player State
-				NetDataParser::JsonToCharacterAppearances(CharacterAppearancesJson, RoleHallPlayerState->GetCharacterAppearances());
-				// Create Character Buttons
-				UI_CharacterSelectionList->CreateCharacterButtons();
-				// Spawn recent played Character
-				SpawnRecentCharacter();
-				// HightLight Button
-				HightLightDefaultSelectButton();
-			}
-		}
+			FString CharacterAppearancesJson;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_CharacterAppearancesResponses, CharacterAppearancesJson);
 
-		break;
-	}
-	default:
-		break;
+			if (!CharacterAppearancesJson.IsEmpty())
+			{
+				if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+				{
+					// Deserialize and save character appearances to Player State
+					NetDataParser::JsonToCharacterAppearances(CharacterAppearancesJson, RoleHallPlayerState->GetCharacterAppearances());
+					// Create Character Buttons
+					UI_CharacterSelectionList->CreateCharacterButtons();
+					// Spawn recent played Character
+					SpawnRecentCharacter();
+					// HightLight Button
+					HightLightDefaultSelectButton();
+				}
+			}
+
+			break;
+		}
+		case SP_CheckCharacterNameResponses:
+		{
+			ECheckNameType CheckNameType = ECheckNameType::UNKNOW_ERROR;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_CheckCharacterNameResponses, CheckNameType);
+
+			PrintMsgLogCheckName(CheckNameType);
+
+			break;
+		}
+		case SP_CreateCharacterResponses:
+		{
+			ECheckNameType CheckNameType = ECheckNameType::UNKNOW_ERROR;
+			bool bCreateCharacter = false;
+			FString CharacterAppearancesJson;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_CreateCharacterResponses, CheckNameType, bCreateCharacter, CharacterAppearancesJson);
+
+			if (CheckNameType == ECheckNameType::NAME_NOT_EXIST)
+			{
+				if (bCreateCharacter)
+				{
+					FMMOARPGCharacterAppearance NewCA = FMMOARPGCharacterAppearance();
+					NetDataParser::JsonToCharacterAppearance(CharacterAppearancesJson, NewCA);
+					if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+					{
+						// Add new character appearance to PlayerState
+						RoleHallPlayerState->AddCharacterAppearance(NewCA);
+
+						// Play Name Box Show Off animation
+						PlayNameBoxShowOffAnim();
+						// Reset Selection List
+						ResetCharacterSelectionList(false);
+
+						PrintMsgLog(LOCTEXT("CREATE_CHARACTER_SUCCESS", "Create success."));
+						break;
+					}
+				}
+
+				PrintMsgLog(LOCTEXT("CREATE_CHARACTER_FAIL", "Create failed!"));
+			}
+			else
+			{
+				PrintMsgLogCheckName(CheckNameType);
+			}
+
+			break;
+		}
 	}
 }
 
@@ -140,7 +231,7 @@ void UUI_RoleHallMain::SpawnRecentCharacter()
 	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
 	{
 		// Get & Spawn recent character appearance
-		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacter())
+		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacterAppearance())
 		{
 			UI_CharacterSelectionList->SpawnCharacterStage(RecentCA);
 		}
@@ -152,9 +243,11 @@ void UUI_RoleHallMain::HightLightDefaultSelectButton()
 	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
 	{
 		// Get recent character appearance
-		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacter())
+		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacterAppearance())
 		{
 			UI_CharacterSelectionList->HightLightButton(RecentCA->SlotPos);
 		}
 	}
 }
+
+#undef LOCTEXT_NAMESPACE

@@ -5,13 +5,10 @@
 
 bool ARoleHallPlayerState::IsCharacterExistInSlot(const int32 InSlotPos)
 {
-	return CharacterAppearances.FindByPredicate([InSlotPos](const FMMOARPGCharacterAppearance& InCA)
-		{
-			return InSlotPos == InCA.SlotPos;
-		}) != nullptr;
+	return GetCharacterAppearanceWithPos(InSlotPos) != nullptr;
 }
 
-FMMOARPGCharacterAppearance* ARoleHallPlayerState::GetRecentCharacter()
+FMMOARPGCharacterAppearance* ARoleHallPlayerState::GetRecentCharacterAppearance()
 {
 	FDateTime MaxDateTime;
 	int32 MaxDateIndex = INDEX_NONE;
@@ -31,4 +28,33 @@ FMMOARPGCharacterAppearance* ARoleHallPlayerState::GetRecentCharacter()
 		return nullptr;
 	}
 	return &CharacterAppearances[MaxDateIndex];
+}
+
+FMMOARPGCharacterAppearance* ARoleHallPlayerState::GetCharacterAppearanceWithPos(const int32 InSlotPos)
+{
+	return CharacterAppearances.FindByPredicate([InSlotPos](const FMMOARPGCharacterAppearance& InCA){ return InSlotPos == InCA.SlotPos; });
+}
+
+FMMOARPGCharacterAppearance* ARoleHallPlayerState::AddCharacterAppearance(const int32 InSlotPos)
+{
+	FMMOARPGCharacterAppearance* CAptr = nullptr;
+	if (FMMOARPGCharacterAppearance* CA = GetCharacterAppearanceWithPos(InSlotPos))
+	{
+		CAptr = CA;
+	}
+	else
+	{
+		CharacterAppearances.Add(FMMOARPGCharacterAppearance());
+		FMMOARPGCharacterAppearance& NewCA = CharacterAppearances.Last();
+		NewCA.SlotPos = InSlotPos;
+		
+		CAptr = &NewCA;
+	}
+
+	return CAptr;
+}
+
+int32 ARoleHallPlayerState::AddCharacterAppearance(const FMMOARPGCharacterAppearance& InCA)
+{
+	return CharacterAppearances.Add(InCA);
 }

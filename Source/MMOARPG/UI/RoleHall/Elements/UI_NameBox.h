@@ -30,6 +30,8 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	FORCEINLINE void SetSlotPosition(const int32 InSlotPos) { SlotPosition = InSlotPos; }
+
 protected:
 	UFUNCTION()
 	void ClickedVerify();
@@ -39,4 +41,6 @@ protected:
 
 	UFUNCTION()
 	void ClickedCancel();
+protected:
+	int32 SlotPosition;
 };

@@ -79,9 +79,10 @@ void UUI_CharacterButton::ClickedCharacterButton()
 				// Step2: Switch Selection List to show Knead Face Widget
 				UI_CharacterSelectionList->CreateKneadFacePanel();
 
-				// Step3: Play NameBox ShowUp animation.
+				// Step3: Play NameBox ShowUp animation & Set slot var in it
 				if (auto UI_RoleHallMain = UI_CharacterSelectionList->GetWidgetParent<UUI_RoleHallMain>())
 				{
+					UI_RoleHallMain->SetNameBoxSlotPosition(SlotPosition);
 					UI_RoleHallMain->PlayNameBoxShowUpAnim();
 				}
 			}

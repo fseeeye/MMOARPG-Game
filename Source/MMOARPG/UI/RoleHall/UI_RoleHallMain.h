@@ -44,8 +44,13 @@ public:
 
 	FORCEINLINE void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
 	FORCEINLINE void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
+	FORCEINLINE void SetNameBoxSlotPosition(const int32 InSlotPos) { UI_NameBox->SetSlotPosition(InSlotPos); }
 
-	void ResetCharacterSelectionList();
+	void ResetCharacterSelectionList(bool bSpawnCharacter = true);
+
+	void CheckCharacterNameInServer(FString& InCharacterName);
+	void CreateCharacterInServer(const FMMOARPGCharacterAppearance& InCA);
+	void PrintMsgLogCheckName(ECheckNameType InCheckNameType);
 
 protected:
 	void BindNetClientRcv();

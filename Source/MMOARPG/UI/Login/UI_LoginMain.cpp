@@ -130,7 +130,7 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 
 			switch (ResponseType)
 			{
-			case LOGIN_SUCCESS:
+			case ELoginType::LOGIN_SUCCESS:
 				// Save User Data to Game Instance
 				if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 				{
@@ -175,13 +175,13 @@ void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 					}
 				}
 				break;
-			case LOGIN_ACCOUNT_ERROR:
+			case ELoginType::LOGIN_ACCOUNT_ERROR:
 				PrintMsgLog(TEXT("Wrong Account!"));
 				break;
-			case LOGIN_PASSWORD_ERROR:
+			case ELoginType::LOGIN_PASSWORD_ERROR:
 				PrintMsgLog(TEXT("Wrong Password!"));
 				break;
-			case DB_ERROR:
+			case ELoginType::DB_ERROR:
 				PrintMsgLog(TEXT("DB Error!"));
 				break;
 			}

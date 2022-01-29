@@ -22,7 +22,10 @@ public:
 
 	bool IsCharacterExistInSlot(const int32 InSlotPos);
 
-	FMMOARPGCharacterAppearance* GetRecentCharacter();
+	FMMOARPGCharacterAppearance* GetRecentCharacterAppearance();
+	FMMOARPGCharacterAppearance* GetCharacterAppearanceWithPos(const int32 InSlotPos);
+	FMMOARPGCharacterAppearance* AddCharacterAppearance(const int32 InSlotPos);
+	int32 AddCharacterAppearance(const FMMOARPGCharacterAppearance& InCA);
 	
 private:
 	FMMOARPGCharacterAppearances CharacterAppearances;

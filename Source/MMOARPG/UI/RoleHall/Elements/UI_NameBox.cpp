@@ -9,11 +9,15 @@
 #include "../UI_RoleHallMain.h"
 #include "../../../Core/RoleHall/RoleHallPawn.h"
 #include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
+#include "../../../Core/RoleHall/RoleHallPlayerState.h"
+#include "MMOARPGCommType.h"
 
 
 void UUI_NameBox::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	SlotPosition = INDEX_NONE;
 
 	VerifyNameButton->OnReleased.AddDynamic(this, &UUI_NameBox::ClickedVerify);
 	CreationButton->OnReleased.AddDynamic(this, &UUI_NameBox::ClickedCreate);
@@ -27,17 +31,37 @@ void UUI_NameBox::NativeDestruct()
 
 void UUI_NameBox::ClickedVerify()
 {
-
+	if (auto UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
+	{
+		FString Name = CharacterName->GetText().ToString();
+		// Send Check Character Name Request
+		UI_RoleHallMain->CheckCharacterNameInServer(Name);
+	}
 }
 
 void UUI_NameBox::ClickedCreate()
 {
 	if (auto UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
 	{
-		// Play Name Box Show Off animation
-		UI_RoleHallMain->PlayNameBoxShowOffAnim();
-		// Reset Selection List
-		UI_RoleHallMain->ResetCharacterSelectionList();
+		//if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
+		FMMOARPGCharacterAppearance CA = FMMOARPGCharacterAppearance();
+
+		// Init character appearance data
+		CA.Name = CharacterName->GetText().ToString();
+		CA.CreationDate = FDateTime::Now().ToString();
+		CA.Lv = 1;
+		CA.SlotPos = SlotPosition;
+		//...
+
+		if (CA.Name.IsEmpty())
+		{
+			UI_RoleHallMain->PrintMsgLog(TEXT("Please input characeter name."));
+		}
+		else
+		{
+			// Send Create Character Request
+			UI_RoleHallMain->CreateCharacterInServer(CA);
+		}
 	}
 }
 
@@ -45,16 +69,16 @@ void UUI_NameBox::ClickedCancel()
 {
 	if (auto UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
 	{
-		//// Destory character
-		//if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
-		//{
-		//	// if Character already exits, destroy it.
-		//	if (RoleHallPawn->RoleHallCharacterStage)
-		//	{
-		//		RoleHallPawn->RoleHallCharacterStage->Destroy();
-		//		RoleHallPawn->RoleHallCharacterStage = nullptr;
-		//	}
-		//}
+		// Destory tmp character
+		if (ARoleHallPawn* RoleHallPawn = GetPawn<ARoleHallPawn>())
+		{
+			// if Character already exits, destroy it.
+			if (RoleHallPawn->RoleHallCharacterStage)
+			{
+				RoleHallPawn->RoleHallCharacterStage->Destroy();
+				RoleHallPawn->RoleHallCharacterStage = nullptr;
+			}
+		}
 		// Play Name Box Show Off animation
 		UI_RoleHallMain->PlayNameBoxShowOffAnim();
 		// Reset Selection List & Spawn recent Character
