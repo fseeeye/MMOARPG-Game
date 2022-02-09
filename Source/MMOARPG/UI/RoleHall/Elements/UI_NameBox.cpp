@@ -43,24 +43,23 @@ void UUI_NameBox::ClickedCreate()
 {
 	if (auto UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
 	{
-		//if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
-		FMMOARPGCharacterAppearance CA = FMMOARPGCharacterAppearance();
-
-		// Init character appearance data
-		CA.Name = CharacterName->GetText().ToString();
-		CA.CreationDate = FDateTime::Now().ToString();
-		CA.Lv = 1;
-		CA.SlotPos = SlotPosition;
-		//...
-
-		if (CA.Name.IsEmpty())
+		if (auto* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
 		{
-			UI_RoleHallMain->PrintMsgLog(TEXT("Please input characeter name."));
-		}
-		else
-		{
-			// Send Create Character Request
-			UI_RoleHallMain->CreateCharacterInServer(CA);
+			if (auto* TmpCA = RoleHallPlayerState->GetTmpCharacterAppearance())
+			{
+				TmpCA->Name = CharacterName->GetText().ToString();
+				TmpCA->CreationDate = FDateTime::Now().ToString();
+
+				if (TmpCA->Name.IsEmpty())
+				{
+					UI_RoleHallMain->PrintMsgLog(TEXT("Please input characeter name."));
+				}
+				else
+				{
+					// Send Create Character Request
+					UI_RoleHallMain->CreateCharacterInServer(*TmpCA);
+				}
+			}
 		}
 	}
 }

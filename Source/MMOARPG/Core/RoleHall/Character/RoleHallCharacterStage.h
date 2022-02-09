@@ -3,11 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Character.h"
+#include "../../Common/Interface/KneadingInterface.h"
+
 #include "RoleHallCharacterStage.generated.h"
 
 UCLASS()
-class MMOARPG_API ARoleHallCharacterStage : public ACharacter
+class MMOARPG_API ARoleHallCharacterStage : public ACharacter, public IKneadingInterface
 {
 	GENERATED_BODY()
 
@@ -28,4 +31,13 @@ public:
 
 	UFUNCTION()
 	void OnCapsuleClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
+
+	virtual void UpdateKneadingModelAttributes() override;
+	virtual void UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA) override;
+
+	FORCEINLINE void SetSlotPos(const int32 InSlotPos) { SlotPos = InSlotPos; }
+	FORCEINLINE int32 GetSlotPos() const { return SlotPos; }
+
+private:
+	int32 SlotPos;
 };

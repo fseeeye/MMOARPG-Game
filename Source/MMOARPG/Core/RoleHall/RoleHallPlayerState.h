@@ -26,7 +26,10 @@ public:
 	FMMOARPGCharacterAppearance* GetCharacterAppearanceWithPos(const int32 InSlotPos);
 	FMMOARPGCharacterAppearance* AddCharacterAppearance(const int32 InSlotPos);
 	int32 AddCharacterAppearance(const FMMOARPGCharacterAppearance& InCA);
+
+	FORCEINLINE FMMOARPGCharacterAppearance* GetTmpCharacterAppearance() { return &TmpCharacterAppearance; }
 	
 private:
 	FMMOARPGCharacterAppearances CharacterAppearances;
+	FMMOARPGCharacterAppearance TmpCharacterAppearance;
 };

@@ -4,6 +4,7 @@
 #include "RoleHallCharacterStage.h"
 
 #include "../RoleHallPlayerController.h"
+#include "../RoleHallPlayerState.h"
 
 // Components
 #include "Components/CapsuleComponent.h"
@@ -11,6 +12,7 @@
 
 // Sets default values
 ARoleHallCharacterStage::ARoleHallCharacterStage()
+	: SlotPos(INDEX_NONE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,6 +28,8 @@ void ARoleHallCharacterStage::BeginPlay()
 	{
 		GetCapsuleComponent()->OnClicked.AddDynamic(this, &ARoleHallCharacterStage::OnCapsuleClicked);
 	}
+
+	InitKneadingLocation(GetMesh()->GetComponentLocation());
 }
 
 // Called every frame
@@ -51,3 +55,26 @@ void ARoleHallCharacterStage::OnCapsuleClicked(UPrimitiveComponent* TouchedCompo
 	}
 }
 
+void ARoleHallCharacterStage::UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA)
+{
+	SetLegSize(InCA.LegSize);
+	SetWaistSize(InCA.WaistSize);
+	SetArmSize(InCA.ArmSize);
+
+	// 调整 mesh 位置，防止腿部进入地面
+	ResetMeshPosition(GetMesh());
+}
+
+void ARoleHallCharacterStage::UpdateKneadingModelAttributes()
+{
+	if (SlotPos == INDEX_NONE)
+		return;
+
+	if (ARoleHallPlayerState* RoleHallPlayerState = GetWorld()->GetFirstPlayerController()->GetPlayerState<ARoleHallPlayerState>())
+	{
+		if (FMMOARPGCharacterAppearance* TmpCA = RoleHallPlayerState->GetTmpCharacterAppearance())
+		{
+			UpdateKneadingModelAttributes(*TmpCA);
+		}
+	}
+}

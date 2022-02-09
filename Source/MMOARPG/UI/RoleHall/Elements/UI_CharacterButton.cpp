@@ -74,7 +74,17 @@ void UUI_CharacterButton::ClickedCharacterButton()
 			if (!RoleHallPlayerState->IsCharacterExistInSlot(SlotPosition))
 			{
 				// Step1: Generate a default Character
-				UI_CharacterSelectionList->CreateCharacterStage();
+				if (ARoleHallCharacterStage* RoleHallCharacterStage = UI_CharacterSelectionList->CreateCharacterStage())
+				{
+					if (RoleHallPlayerState->GetTmpCharacterAppearance())
+					{
+						RoleHallPlayerState->GetTmpCharacterAppearance()->Reset();
+						RoleHallPlayerState->GetTmpCharacterAppearance()->SlotPos = SlotPosition;
+					}
+
+					RoleHallCharacterStage->SetSlotPos(SlotPosition);
+					RoleHallCharacterStage->UpdateKneadingModelAttributes();
+				}
 
 				// Step2: Switch Selection List to show Knead Face Widget
 				UI_CharacterSelectionList->CreateKneadFacePanel();

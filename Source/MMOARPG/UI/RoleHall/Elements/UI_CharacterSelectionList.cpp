@@ -79,7 +79,8 @@ void UUI_CharacterSelectionList::SpawnCharacterStage(const FMMOARPGCharacterAppe
 		{
 			if (ARoleHallCharacterStage* RoleHallCharacterStage = CreateCharacterStage())
 			{
-				// TODO: set character property
+				RoleHallCharacterStage->SetSlotPos(InCA->SlotPos);
+				RoleHallCharacterStage->UpdateKneadingModelAttributes(*InCA);
 			}
 		}
 	}

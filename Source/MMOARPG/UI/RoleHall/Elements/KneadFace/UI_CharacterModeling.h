@@ -41,14 +41,17 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
-	UFUNCTION()
-	void LegValueChanged(float InDeltaValue);
+	void UpdateCharacterStage();
+	void UpdateTextBlock(UTextBlock* InTextBlock, float InValue);
 
 	UFUNCTION()
-	void WaistValueChanged(float InDeltaValue);
+	void LegValueChanged(float InValue);
 
 	UFUNCTION()
-	void ArmValueChanged(float InDeltaValue);
+	void WaistValueChanged(float InValue);
+
+	UFUNCTION()
+	void ArmValueChanged(float InValue);
 
 	UFUNCTION()
 	void SelectModelingDefaults(FString SelectedItem, ESelectInfo::Type SelectionType);
