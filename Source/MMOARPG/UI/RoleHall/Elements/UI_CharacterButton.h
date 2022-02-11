@@ -50,7 +50,7 @@ public:
 	void SetHighLight(bool bHighLight);
 	FORCEINLINE bool IsHighLight();
 
-	void JumpIntoGameLevel();
+	void JumpIntoGameLevel(int32 InSlotPos);
 
 protected:
 	UFUNCTION()

@@ -79,6 +79,8 @@ public:
 		return nullptr;
 	};
 
+	void JoinDSServer(int32 InSlotPos);
+
 protected:
 	void InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs);
 

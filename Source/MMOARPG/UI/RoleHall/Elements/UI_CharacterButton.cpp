@@ -7,7 +7,6 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
-#include <Kismet/GameplayStatics.h>
 
 #include "../../../Core/RoleHall/RoleHallPawn.h"
 #include "../../../Core/RoleHall/RoleHallPlayerState.h"
@@ -69,12 +68,12 @@ bool UUI_CharacterButton::IsHighLight()
 	return CharacterButton->WidgetStyle.Normal.TintColor == HightLightColor;
 }
 
-void UUI_CharacterButton::JumpIntoGameLevel()
+void UUI_CharacterButton::JumpIntoGameLevel(int32 InSlotPos)
 {
-	// TODO: connect to DS Server
-
-	// Switch to Game Level
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameMap"));
+	if (UUI_CharacterSelectionList* CharacterSelectionList = GetWidgetParent<UUI_CharacterSelectionList>())
+	{
+		CharacterSelectionList->JoinDSServer(InSlotPos);
+	}
 }
 
 void UUI_CharacterButton::ClickedCharacterButton()
@@ -113,7 +112,7 @@ void UUI_CharacterButton::ClickedCharacterButton()
 			// get into the Game Level
 			else if (UI_CharacterSelectionList->GetHighlightButton() == this)
 			{
-				JumpIntoGameLevel();
+				JumpIntoGameLevel(SlotPosition);
 			}
 			// or, highlight this button & spawn character stage
 			else

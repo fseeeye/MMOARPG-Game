@@ -9,6 +9,7 @@
 #include "../../../Core/RoleHall/RoleHallPawn.h"
 #include "../../../Core/RoleHall/RoleHallPlayerState.h"
 #include "../../../Core/RoleHall/Character/RoleHallCharacterStage.h"
+#include "../UI_RoleHallMain.h"
 
 
 void UUI_CharacterSelectionList::NativeConstruct()
@@ -139,6 +140,14 @@ UUI_CharacterButton* UUI_CharacterSelectionList::GetHighlightButton()
 			else
 				return false;
 		});
+}
+
+void UUI_CharacterSelectionList::JoinDSServer(int32 InSlotPos)
+{
+	if (UUI_RoleHallMain* UI_RoleHallMain = GetWidgetParent<UUI_RoleHallMain>())
+	{
+		UI_RoleHallMain->JoinDSServer(InSlotPos);
+	}
 }
 
 void UUI_CharacterSelectionList::InitCharacterButtons(FMMOARPGCharacterAppearances& InCAs)

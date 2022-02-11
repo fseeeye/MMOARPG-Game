@@ -52,6 +52,8 @@ public:
 	void CreateCharacterInServer(const FMMOARPGCharacterAppearance& InCA);
 	void PrintMsgLogCheckName(ECheckNameType InCheckNameType);
 
+	void JoinDSServer(int32 InSlotPos);
+
 protected:
 	void BindNetClientRcv();
 	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
