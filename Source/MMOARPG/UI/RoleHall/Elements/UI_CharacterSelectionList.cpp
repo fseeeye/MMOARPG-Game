@@ -111,7 +111,7 @@ ARoleHallCharacterStage* UUI_CharacterSelectionList::CreateCharacterStage()
 	return nullptr;
 }
 
-void UUI_CharacterSelectionList::HightLightButton(int32 InSlotPos)
+void UUI_CharacterSelectionList::HighlightButton(int32 InSlotPos)
 {
 	FindByPredicateInList<UUI_CharacterButton>([InSlotPos](UUI_CharacterButton* InButton) -> bool
 		{
@@ -127,6 +127,17 @@ void UUI_CharacterSelectionList::HightLightButton(int32 InSlotPos)
 			}
 
 			return false;
+		});
+}
+
+UUI_CharacterButton* UUI_CharacterSelectionList::GetHighlightButton()
+{
+	return FindByPredicateInList<UUI_CharacterButton>([](UUI_CharacterButton* InButton) -> bool
+		{
+			if (InButton->IsHighLight())
+				return true;
+			else
+				return false;
 		});
 }
 

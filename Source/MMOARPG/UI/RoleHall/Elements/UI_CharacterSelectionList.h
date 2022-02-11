@@ -54,14 +54,16 @@ public:
 	void SpawnCharacterStage();
 	ARoleHallCharacterStage* CreateCharacterStage();
 
-	void HightLightButton(int32 InSlotPos);
+	void HighlightButton(int32 InSlotPos);
+	UUI_CharacterButton* GetHighlightButton();
+
 	FORCEINLINE void SetCurrentSlotPos(const int32 InSlotPos) {
 		CurrentSelectedSlotPos = InSlotPos;
 		//HightLightButton(CurrentSelectedSlotPos);
 	}
 
 	template<class T>
-	void FindByPredicateInList(TFunction<bool(T*)> InFunc)
+	T* FindByPredicateInList(TFunction<bool(T*)> InFunc)
 	{
 		for (auto& Child : List->GetAllChildren())
 		{
@@ -69,10 +71,12 @@ public:
 			{
 				if (InFunc(Tmp))
 				{
-					break;
+					return Tmp;
 				}
 			}
 		}
+
+		return nullptr;
 	};
 
 protected:

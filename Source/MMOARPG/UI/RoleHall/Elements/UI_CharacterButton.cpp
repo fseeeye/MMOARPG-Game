@@ -64,10 +64,24 @@ void UUI_CharacterButton::SetHighLight(bool bHighLight)
 	}
 }
 
+bool UUI_CharacterButton::IsHighLight()
+{
+	return CharacterButton->WidgetStyle.Normal.TintColor == HightLightColor;
+}
+
+void UUI_CharacterButton::JumpIntoGameLevel()
+{
+	// TODO: connect to DS Server
+
+	// Switch to Game Level
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameMap"));
+}
+
 void UUI_CharacterButton::ClickedCharacterButton()
 {
 	if (ARoleHallPlayerState* RoleHallPlayerState = GetPlayerState<ARoleHallPlayerState>())
 	{
+		// create character stage
 		if (auto UI_CharacterSelectionList = GetWidgetParent<UUI_CharacterSelectionList>())
 		{
 			// if this button slot is an empty button, get into Knead Face UI
@@ -96,12 +110,21 @@ void UUI_CharacterButton::ClickedCharacterButton()
 					UI_RoleHallMain->PlayNameBoxShowUpAnim();
 				}
 			}
-			else // or, get into the Game Level
+			// get into the Game Level
+			else if (UI_CharacterSelectionList->GetHighlightButton() == this)
 			{
-				// TODO: connect to DS Server
+				JumpIntoGameLevel();
+			}
+			// or, highlight this button & spawn character stage
+			else
+			{
+				UI_CharacterSelectionList->GetHighlightButton()->SetHighLight(false);
+				SetHighLight(true);
 
-				// switch to Game Level
-				UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameMap"));
+				if (FMMOARPGCharacterAppearance* CA = RoleHallPlayerState->GetCharacterAppearanceWithPos(SlotPosition))
+				{
+					UI_CharacterSelectionList->SpawnCharacterStage(CA);
+				}
 			}
 
 			UI_CharacterSelectionList->SetCurrentSlotPos(SlotPosition);

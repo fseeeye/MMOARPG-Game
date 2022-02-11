@@ -48,6 +48,9 @@ public:
 	void InitWithCA(const FMMOARPGCharacterAppearance& InCA);
 
 	void SetHighLight(bool bHighLight);
+	FORCEINLINE bool IsHighLight();
+
+	void JumpIntoGameLevel();
 
 protected:
 	UFUNCTION()

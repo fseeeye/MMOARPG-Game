@@ -245,7 +245,7 @@ void UUI_RoleHallMain::HightLightDefaultSelectButton()
 		// Get recent character appearance
 		if (FMMOARPGCharacterAppearance* RecentCA = RoleHallPlayerState->GetRecentCharacterAppearance())
 		{
-			UI_CharacterSelectionList->HightLightButton(RecentCA->SlotPos);
+			UI_CharacterSelectionList->HighlightButton(RecentCA->SlotPos);
 		}
 	}
 }
