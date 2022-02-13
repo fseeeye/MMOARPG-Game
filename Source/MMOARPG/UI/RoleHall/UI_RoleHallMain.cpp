@@ -9,6 +9,7 @@
 
 #include "Kismet/GameplayStatics.h"
 
+// Plugins
 #include "MMOARPGCommType.h" // Plugin: MMOARPGComm
 #include "Protocol/RoleHallProtocol.h" // Plugin: MMOARPGComm
 #include "ThreadManage.h" // Plugin: SimpleThread
@@ -20,6 +21,9 @@
 void UUI_RoleHallMain::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	// Play show up anim
+	RoleHallMainShowUp();
 
 	// Set Widgets parent to RoleHall
 	UI_CharacterSelectionList->SetWidgetParent(this); 
@@ -122,6 +126,16 @@ void UUI_RoleHallMain::JoinDSServer(int32 InSlotPos)
 		// if handshake success, request character appearances.
 		SEND_DATA(SP_LoginToDSServerRequests, MMOARPGGameInstance->GetUserData().ID, InSlotPos);
 	}
+}
+
+void UUI_RoleHallMain::RoleHallMainShowUp()
+{
+	PlayWidgetAnim(TEXT("HallMainShowUp"));
+}
+
+void UUI_RoleHallMain::RoleHallMainShowOff()
+{
+	PlayWidgetAnim(TEXT("HallMainShowOff"));
 }
 
 void UUI_RoleHallMain::BindNetClientRcv()
@@ -228,7 +242,13 @@ void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 			SIMPLE_PROTOCOLS_RECEIVE(SP_LoginToDSServerResponses, DSServerAddr);
 
 			// Switch to Game Level
-			UGameplayStatics::OpenLevel(GetWorld(), TEXT("GameMap"));
+			FString DSAddrString = FSimpleNetManage::GetAddrString(DSServerAddr);
+			GThread::Get()->GetCoroutines().BindLambda(0.5f, [=]() {
+				UGameplayStatics::OpenLevel(GetWorld(), *DSAddrString);
+			});
+
+			// Play show off anim
+			RoleHallMainShowOff();
 	
 			break;
 		}

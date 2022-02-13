@@ -55,6 +55,10 @@ public:
 	void JoinDSServer(int32 InSlotPos);
 
 protected:
+	void RoleHallMainShowUp();
+	void RoleHallMainShowOff();
+
+protected:
 	void BindNetClientRcv();
 	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
 

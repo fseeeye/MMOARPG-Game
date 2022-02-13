@@ -135,7 +135,7 @@ UUI_CharacterButton* UUI_CharacterSelectionList::GetHighlightButton()
 {
 	return FindByPredicateInList<UUI_CharacterButton>([](UUI_CharacterButton* InButton) -> bool
 		{
-			if (InButton->IsHighLight())
+			if (InButton->IsHighlight())
 				return true;
 			else
 				return false;

@@ -63,7 +63,7 @@ void UUI_CharacterButton::SetHighLight(bool bHighLight)
 	}
 }
 
-bool UUI_CharacterButton::IsHighLight()
+bool UUI_CharacterButton::IsHighlight()
 {
 	return CharacterButton->WidgetStyle.Normal.TintColor == HightLightColor;
 }
