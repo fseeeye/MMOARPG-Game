@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Core/UI_Base.h"
+#include "../Core/UI_MainBase.h"
 
-#include "SimpleNetChannelType.h" // Plugin: SimpleNetChannel
-
-#include "../Universal/UI_MsgLog.h"
+// Components
 #include "Elements/UI_CharacterSelectionList.h"
 #include "Elements/UI_NameBox.h"
 
@@ -18,13 +16,9 @@
  * 
  */
 UCLASS()
-class MMOARPG_API UUI_RoleHallMain : public UUI_Base
+class MMOARPG_API UUI_RoleHallMain : public UUI_MainBase
 {
 	GENERATED_BODY()
-
-	// Import MsgLog UI Widget
-	UPROPERTY(meta = (BindWidget))
-	UUI_MsgLog* UI_MsgLog;
 
 	// Import Character Selection List UI Widget
 	UPROPERTY(meta = (BindWidget))
@@ -39,9 +33,6 @@ public:
 	virtual void NativeDestruct() override;
 
 public:
-	void PrintMsgLog(const FString& InMsgString) { PrintMsgLog(FText::FromString(InMsgString)); }
-	void PrintMsgLog(const FText& InMsgText);
-
 	FORCEINLINE void PlayNameBoxShowUpAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowUp")); }
 	FORCEINLINE void PlayNameBoxShowOffAnim() { UI_NameBox->PlayWidgetAnim(TEXT("ShowOff")); }
 	FORCEINLINE void SetNameBoxSlotPosition(const int32 InSlotPos) { UI_NameBox->SetSlotPosition(InSlotPos); }
@@ -59,11 +50,8 @@ protected:
 	void RoleHallMainShowOff();
 
 protected:
-	void BindNetClientRcv();
-	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
-
-	UFUNCTION()
-	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
+	virtual void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel) override;
+	virtual void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg) override;
 
 protected:
 	void SpawnRecentCharacter();

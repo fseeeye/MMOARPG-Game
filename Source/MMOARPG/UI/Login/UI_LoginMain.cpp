@@ -2,13 +2,14 @@
 
 
 #include "UI_LoginMain.h"
-
-#include "ThreadManage.h" // Plugin: SimpleThread
-#include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
+#include "UI_Login.h"
 
 #include "Kismet/GameplayStatics.h"
 
-#include "../../MMOARPGGameInstance.h"
+// Plugins
+#include "ThreadManage.h" // Plugin: SimpleThread
+#include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
+
 #include "../../MMOARPGMacro.h"
 
 // run when UI created
@@ -18,21 +19,7 @@ void UUI_LoginMain::NativeConstruct()
 
 	UI_Login->SetWidgetParent(this);
 
-	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		// Create Client
-		InGameInstance->CreateNetClient();
-
-		if (InGameInstance->GetNetClient())
-		{
-			// Bind Client Handshake Handler
-			InGameInstance->GetNetClient()->NetManageMsgDelegate.BindUObject(this, &UUI_LoginMain::LinkServerInfo);
-			// Link to Server
-			InGameInstance->LinkServer();
-			// Bind Client Recv
-			BindNetClientRcv();
-		}
-	}
+	LinkGateServer();
 
 	// Read Account & encrypted Passwd from local path
 	if (!UI_Login->DecryptFromLocal(FPaths::ProjectDir() / TEXT("UserBackup")))
@@ -52,14 +39,6 @@ void UUI_LoginMain::NativeConstruct()
 void UUI_LoginMain::NativeDestruct()
 {
 	Super::NativeDestruct();
-
-	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		if (InGameInstance->GetNetClient() && InGameInstance->GetNetClient()->GetController())
-		{
-			InGameInstance->GetNetClient()->GetController()->RecvDelegate.Remove(RecvDelegate);
-		}
-	}
 }
 
 void UUI_LoginMain::SignIn(FString& InAccount, FString& InPassword)
@@ -74,45 +53,6 @@ void UUI_LoginMain::SignIn(FString& InAccount, FString& InPassword)
 void UUI_LoginMain::SignUp()
 {
 
-}
-
-void UUI_LoginMain::PrintMsgLog(const FString& InMsgString)
-{
-	PrintMsgLog(FText::FromString(InMsgString));
-}
-
-void UUI_LoginMain::PrintMsgLog(const FText& InMsgText)
-{
-	UI_MsgLog->SetText(InMsgText);
-
-	UI_MsgLog->PlayTextAnim();
-}
-
-void UUI_LoginMain::BindNetClientRcv()
-{
-	// Wait for Game Instance complete creation, and then, bind client recv channel
-	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		if (InGameInstance->GetNetClient() && InGameInstance->GetNetClient()->GetController())
-		{
-			RecvDelegate = InGameInstance->GetNetClient()->GetController()->RecvDelegate.AddLambda(
-				[&](uint32 ProtocolNumber, FSimpleChannel* Channel)
-				{
-					this->RecvProtocol(ProtocolNumber, Channel);
-				}
-			);
-		}
-		else
-		{
-			// coroutine: wait for 0.5s and try again
-			GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
-		}
-	}
-	else
-	{
-		// coroutine: wait for 0.5s and try again
-		GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
-	}
 }
 
 void UUI_LoginMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)

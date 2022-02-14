@@ -3,23 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "Components/TextBlock.h"
-#include "SimpleNetChannelType.h" // Plugin: SimpleNetChannel
-#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
-
-#include "../Core/UI_Base.h"
-#include "UI_Login.h"
-#include "../Universal/UI_MsgLog.h"
-
+#include "../Core/UI_MainBase.h"
 #include "UI_LoginMain.generated.h"
 
-class FSimpleChannel;
 /**
  * 
  */
 UCLASS()
-class MMOARPG_API UUI_LoginMain : public UUI_Base
+class MMOARPG_API UUI_LoginMain : public UUI_MainBase
 {
 	GENERATED_BODY()
 
@@ -29,33 +20,21 @@ class MMOARPG_API UUI_LoginMain : public UUI_Base
 
 	// Import Login UI Widget
 	UPROPERTY(meta = (BindWidget))
-	UUI_Login* UI_Login;
-
-	// Import MsgLog UI Widget
-	UPROPERTY(meta = (BindWidget))
-	UUI_MsgLog* UI_MsgLog;
+	class UUI_Login* UI_Login;
 
 public:
 	virtual void NativeConstruct() override;
-
 	virtual void NativeDestruct() override;
 
 public:
 	void SignIn(FString& InAccount, FString& InPassword);
-
 	// TODO
 	void SignUp();
 
-	void PrintMsgLog(const FString& InMsgString);
-	void PrintMsgLog(const FText& InMsgText);
-
 protected:
-	void BindNetClientRcv();
-
 	virtual void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel) override;
+	virtual void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg) override;
 
-	UFUNCTION()
-	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 private:
 	FDelegateHandle RecvDelegate;
 };

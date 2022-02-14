@@ -30,11 +30,13 @@ public:
 
 public:
 	void CreateNetClient();
-	void LinkServer();
 
-	inline FSimpleNetManage* GetNetClient() { return NetClient; }
-	inline FMMOARPGUserData& GetUserData() { return UserData; }
-	inline FMMOARPGGateStatus& GetGateStatus() { return GateStatus; }
+	void LinkServer();
+	void LinkServer(const FSimpleAddr& InAddr);
+
+	FORCEINLINE FSimpleNetManage* GetNetClient() { return NetClient; }
+	FORCEINLINE FMMOARPGUserData& GetUserData() { return UserData; }
+	FORCEINLINE FMMOARPGGateStatus& GetGateStatus() { return GateStatus; }
 
 private:
 	FSimpleNetManage* NetClient;

@@ -14,6 +14,3 @@ class AMMOARPGGameMode : public AGameModeBase
 public:
 	AMMOARPGGameMode();
 };
-
-
-

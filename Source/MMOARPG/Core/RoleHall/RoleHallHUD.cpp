@@ -18,7 +18,7 @@ void ARoleHallHUD::BeginPlay()
 	{
 		// Create RoleHallMain BP Widget in Game World.
 		m_RoleHallMain = CreateWidget<UUI_RoleHallMain>(GetWorld(), RoleHallMain_BP_Class);
-		// Add LoginMain UI widget to Viewport/PlayerScreen
+		// Add RoleHallMain UI widget to Viewport/PlayerScreen
 		m_RoleHallMain->AddToViewport();
 	}
 }

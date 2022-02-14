@@ -39,10 +39,13 @@ void UMMOARPGGameInstance::Shutdown()
 // Create Net Client
 void UMMOARPGGameInstance::CreateNetClient()
 {
-	// Init Net Channel
-	FSimpleNetGlobalInfo::Get()->Init();
-	// Create Game Net Client Instance
-	NetClient = FSimpleNetManage::CreateManage(ESimpleNetLinkState::LINKSTATE_CONNET, ESimpleSocketType::SIMPLESOCKETTYPE_TCP);
+	if (!NetClient)
+	{
+		// Init Net Channel
+		FSimpleNetGlobalInfo::Get()->Init();
+		// Create Game Net Client Instance
+		NetClient = FSimpleNetManage::CreateManage(ESimpleNetLinkState::LINKSTATE_CONNET, ESimpleSocketType::SIMPLESOCKETTYPE_TCP);
+	}
 }
 
 // Init Net Client & Connect to Server
@@ -51,6 +54,18 @@ void UMMOARPGGameInstance::LinkServer()
 	if (NetClient)
 	{
 		if (!NetClient->Init())
+		{
+			delete NetClient;
+			NetClient = NULL;
+		}
+	}
+}
+
+void UMMOARPGGameInstance::LinkServer(const FSimpleAddr& InAddr)
+{
+	if (NetClient)
+	{
+		if (!NetClient->Init(InAddr))
 		{
 			delete NetClient;
 			NetClient = NULL;

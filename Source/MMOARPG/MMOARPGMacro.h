@@ -1,3 +1,6 @@
+#pragma once
+
+#include "Core/Common/MMOARPGGameInstance.h"
 
 #if PLATFORM_WINDOWS
 #define SEND_DATA(InProtocols, ...) \

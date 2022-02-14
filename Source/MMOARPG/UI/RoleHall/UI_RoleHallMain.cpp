@@ -4,13 +4,11 @@
 #include "UI_RoleHallMain.h"
 
 #include "../../MMOARPGMacro.h"
-#include "../../MMOARPGGameInstance.h"
 #include "../../Core/RoleHall/RoleHallPlayerState.h"
 
 #include "Kismet/GameplayStatics.h"
 
 // Plugins
-#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
 #include "Protocol/RoleHallProtocol.h" // Plugin: MMOARPGComm
 #include "ThreadManage.h" // Plugin: SimpleThread
 #include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
@@ -25,43 +23,19 @@ void UUI_RoleHallMain::NativeConstruct()
 	// Play show up anim
 	RoleHallMainShowUp();
 
+	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
+	{
+		LinkGateServer(InGameInstance->GetGateStatus().GateAddrInfo.Addr);
+	}
+
 	// Set Widgets parent to RoleHall
 	UI_CharacterSelectionList->SetWidgetParent(this); 
 	UI_NameBox->SetWidgetParent(this);
-
-	// Init Gate Server Connection
-	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		if (MMOARPGGameInstance->GetNetClient())
-		{
-			// Bind Client Handshake Handler
-			MMOARPGGameInstance->GetNetClient()->NetManageMsgDelegate.BindUObject(this, &UUI_RoleHallMain::LinkServerInfo);
-			// Connect to Gate Server
-			MMOARPGGameInstance->GetNetClient()->Init(MMOARPGGameInstance->GetGateStatus().GateAddrInfo.Addr);
-
-			BindNetClientRcv();
-		}
-	}
 }
 
 void UUI_RoleHallMain::NativeDestruct()
 {
 	Super::NativeDestruct();
-
-	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		if (MMOARPGGameInstance->GetNetClient() && MMOARPGGameInstance->GetNetClient()->GetController())
-		{
-			MMOARPGGameInstance->GetNetClient()->GetController()->RecvDelegate.Remove(RecvDelegate);
-		}
-	}
-}
-
-void UUI_RoleHallMain::PrintMsgLog(const FText& InMsgText)
-{
-	UI_MsgLog->SetText(InMsgText);
-
-	UI_MsgLog->PlayTextAnim();
 }
 
 void UUI_RoleHallMain::ResetCharacterSelectionList(bool bSpawnCharacter /*= true*/)
@@ -136,32 +110,6 @@ void UUI_RoleHallMain::RoleHallMainShowUp()
 void UUI_RoleHallMain::RoleHallMainShowOff()
 {
 	PlayWidgetAnim(TEXT("HallMainShowOff"));
-}
-
-void UUI_RoleHallMain::BindNetClientRcv()
-{
-	if (UMMOARPGGameInstance* MMOARPGGameInstance = GetGameInstance<UMMOARPGGameInstance>())
-	{
-		if (MMOARPGGameInstance->GetNetClient() && MMOARPGGameInstance->GetNetClient()->GetController())
-		{
-			RecvDelegate = MMOARPGGameInstance->GetNetClient()->GetController()->RecvDelegate.AddLambda(
-				[&](uint32 ProtocolNumber, FSimpleChannel* Channel)
-				{
-					this->RecvProtocol(ProtocolNumber, Channel);
-				}
-			);
-		}
-		else
-		{
-			// coroutine: wait for 0.5s and try again
-			GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
-		}
-	}
-	else
-	{
-		// coroutine: wait for 0.5s and try again
-		GThread::Get()->GetCoroutines().BindLambda(0.5f, [&]() { BindNetClientRcv(); });
-	}
 }
 
 void UUI_RoleHallMain::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
