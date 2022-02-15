@@ -19,7 +19,7 @@ void UUI_LoginMain::NativeConstruct()
 
 	UI_Login->SetWidgetParent(this);
 
-	LinkGateServer();
+	LinkServer();
 
 	// Read Account & encrypted Passwd from local path
 	if (!UI_Login->DecryptFromLocal(FPaths::ProjectDir() / TEXT("UserBackup")))

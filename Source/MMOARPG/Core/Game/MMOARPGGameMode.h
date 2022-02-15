@@ -4,7 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+
+// Plugins
+#include "SimpleNetChannelType.h"
+#include "MMOARPGCommType.h"
+
 #include "MMOARPGGameMode.generated.h"
+
+class FSimpleChannel;
 
 UCLASS(minimalapi)
 class AMMOARPGGameMode : public AGameModeBase
@@ -13,4 +20,28 @@ class AMMOARPGGameMode : public AGameModeBase
 
 public:
 	AMMOARPGGameMode();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Called when the game ends
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+private:
+	void BindNetClientRcv();
+
+	void LinkServer();
+
+	UFUNCTION()
+	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
+
+	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
+
+private:
+	FDelegateHandle RecvDelegate;
 };

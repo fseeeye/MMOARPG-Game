@@ -70,7 +70,7 @@ void UUI_MainBase::BindNetClientRcv()
 	}
 }
 
-void UUI_MainBase::LinkGateServer()
+void UUI_MainBase::LinkServer()
 {
 	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 	{
@@ -89,7 +89,7 @@ void UUI_MainBase::LinkGateServer()
 	}
 }
 
-void UUI_MainBase::LinkGateServer(const FSimpleAddr& InAddr)
+void UUI_MainBase::LinkServer(const FSimpleAddr& InAddr)
 {
 	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 	{

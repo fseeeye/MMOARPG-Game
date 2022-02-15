@@ -23,9 +23,10 @@ void UUI_RoleHallMain::NativeConstruct()
 	// Play show up anim
 	RoleHallMainShowUp();
 
+	// Link Gate Server
 	if (UMMOARPGGameInstance* InGameInstance = GetGameInstance<UMMOARPGGameInstance>())
 	{
-		LinkGateServer(InGameInstance->GetGateStatus().GateAddrInfo.Addr);
+		LinkServer(InGameInstance->GetGateStatus().GateAddrInfo.Addr);
 	}
 
 	// Set Widgets parent to RoleHall

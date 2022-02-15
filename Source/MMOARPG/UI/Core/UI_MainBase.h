@@ -33,8 +33,8 @@ public:
 protected:
 	void BindNetClientRcv();
 
-	void LinkGateServer();
-	void LinkGateServer(const FSimpleAddr& InAddr);
+	void LinkServer();
+	void LinkServer(const FSimpleAddr& InAddr);
 
 	UFUNCTION()
 	virtual void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg) {}

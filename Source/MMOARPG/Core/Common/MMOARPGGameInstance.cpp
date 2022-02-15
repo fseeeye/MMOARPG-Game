@@ -72,3 +72,15 @@ void UMMOARPGGameInstance::LinkServer(const FSimpleAddr& InAddr)
 		}
 	}
 }
+
+void UMMOARPGGameInstance::LinkServer(const TCHAR* InIP, uint32 InPort)
+{
+	if (NetClient)
+	{
+		if (!NetClient->Init(InIP, InPort))
+		{
+			delete NetClient;
+			NetClient = NULL;
+		}
+	}
+}
