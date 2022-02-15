@@ -77,6 +77,28 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 }
 
 
+void AMMOARPGCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitKneadingLocation(GetMesh()->GetComponentLocation());
+}
+
+void AMMOARPGCharacter::UpdateKneadingModelAttributes()
+{
+	
+}
+
+void AMMOARPGCharacter::UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA)
+{
+	SetLegSize(InCA.LegSize);
+	SetWaistSize(InCA.WaistSize);
+	SetArmSize(InCA.ArmSize);
+
+	// 调整 mesh 位置，防止腿部进入地面
+	ResetMeshPosition(GetMesh());
+}
+
 void AMMOARPGCharacter::OnResetVR()
 {
 	// If MMOARPG is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in MMOARPG.Build.cs is not automatically propagated
@@ -88,12 +110,12 @@ void AMMOARPGCharacter::OnResetVR()
 	//UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void AMMOARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void AMMOARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector InLocation)
 {
 		Jump();
 }
 
-void AMMOARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+void AMMOARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector InLocation)
 {
 		StopJumping();
 }

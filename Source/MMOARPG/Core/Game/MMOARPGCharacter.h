@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+#include "../Common/Interface/KneadingInterface.h"
+
 #include "MMOARPGCharacter.generated.h"
 
 UCLASS(config=Game)
-class AMMOARPGCharacter : public ACharacter
+class AMMOARPGCharacter : public ACharacter, public IKneadingInterface
 {
 	GENERATED_BODY()
 
@@ -28,6 +31,14 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:
+	virtual void UpdateKneadingModelAttributes() override;
+	virtual void UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA) override;
 
 protected:
 
@@ -53,10 +64,10 @@ protected:
 	void LookUpAtRate(float Rate);
 
 	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+	void TouchStarted(ETouchIndex::Type FingerIndex, FVector InLocation);
 
 	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+	void TouchStopped(ETouchIndex::Type FingerIndex, FVector InLocation);
 
 protected:
 	// APawn interface

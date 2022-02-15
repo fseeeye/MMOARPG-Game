@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Character.h"
+
 #include "../../Common/Interface/KneadingInterface.h"
 
 #include "RoleHallCharacterStage.generated.h"
