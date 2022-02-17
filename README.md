@@ -11,5 +11,7 @@ Associated UE5 code: [Github - fseeeye/UE5EA](https://github.com/fseeeye/UE5EA/t
   - [x] Comm with Gate Server
   - [x] Character Selection
   - [x] Character Creation
+  - [x] Browse Color
 - [ ] Game Map
   - [ ] Build Terrian
+  - [ ] Paint Terrian Matrial
