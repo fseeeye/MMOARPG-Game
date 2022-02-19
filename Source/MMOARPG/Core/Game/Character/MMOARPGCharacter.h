@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "../../Common/Interface/KneadingInterface.h"
+#include "MMOARPGCharacterBase.h"
 
 #include "MMOARPGCharacter.generated.h"
 
 UCLASS(config=Game)
-class AMMOARPGCharacter : public ACharacter, public IKneadingInterface
+class AMMOARPGCharacter : public AMMOARPGCharacterBase
 {
 	GENERATED_BODY()
 
@@ -35,10 +35,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	virtual void UpdateKneadingModelAttributes() override;
-	virtual void UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA) override;
 
 protected:
 

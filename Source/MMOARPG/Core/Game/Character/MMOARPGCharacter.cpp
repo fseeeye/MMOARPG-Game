@@ -80,23 +80,7 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 void AMMOARPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	InitKneadingLocation(GetMesh()->GetComponentLocation());
-}
-
-void AMMOARPGCharacter::UpdateKneadingModelAttributes()
-{
 	
-}
-
-void AMMOARPGCharacter::UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA)
-{
-	SetLegSize(InCA.LegSize);
-	SetWaistSize(InCA.WaistSize);
-	SetArmSize(InCA.ArmSize);
-
-	// 调整 mesh 位置，防止腿部进入地面
-	ResetMeshPosition(GetMesh());
 }
 
 void AMMOARPGCharacter::OnResetVR()
