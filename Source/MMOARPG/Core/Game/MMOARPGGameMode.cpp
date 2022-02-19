@@ -2,7 +2,7 @@
 
 #include "MMOARPGGameMode.h"
 
-#include "MMOARPGCharacter.h"
+#include "Character/MMOARPGCharacter.h"
 #include "MMOARPGHUD.h"
 #include "../../MMOARPGMacro.h"
 
