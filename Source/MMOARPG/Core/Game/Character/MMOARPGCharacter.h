@@ -66,6 +66,10 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector InLocation);
 
 protected:
+	// Switch Fight State
+	void SwitchFight();
+
+protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface

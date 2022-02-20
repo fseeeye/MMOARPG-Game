@@ -4,6 +4,8 @@
 
 #include "Character/MMOARPGCharacter.h"
 #include "MMOARPGHUD.h"
+#include "MMOARPGGameState.h"
+#include "MMOARPGPlayerState.h"
 #include "../../MMOARPGMacro.h"
 
 // Plugins
@@ -16,6 +18,10 @@ AMMOARPGGameMode::AMMOARPGGameMode()
 {
 	// Register HUD
 	HUDClass = AMMOARPGHUD::StaticClass();
+	// Register GameState
+	GameStateClass = AMMOARPGGameState::StaticClass();
+	// Register PlayerState
+	PlayerStateClass = AMMOARPGPlayerState::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));

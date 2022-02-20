@@ -21,12 +21,19 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; // like Tick
 
 public:
+	// whether current character is death.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
 	bool bDeath;
 
+	// whether current character is in air.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
 	bool bInAir;
 
+	// whether current character is in fight state.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
+	bool bFight;
+
+	// the movement speed of current character.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
 	float Speed;
 };
