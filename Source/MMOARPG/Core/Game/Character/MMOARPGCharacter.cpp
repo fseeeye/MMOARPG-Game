@@ -112,25 +112,39 @@ void AMMOARPGCharacter::SwitchFight()
 	{
 		// Switch into normal state
 		bFight = false;
-		if (FCharacterAnimTableRow* SwitchStateAnimTR = GetCharacterSwitchStateAnimTableRow())
-		{
-			if (SwitchStateAnimTR->SwitchFightMontage)
-			{
-				PlayAnimMontage(SwitchStateAnimTR->SwitchFightMontage, 1.f, TEXT("SwordPutup"));
-			}
-		}
 	}
 	else
 	{
 		// Switch into fight state
 		bFight = true;
-		if (FCharacterAnimTableRow* SwitchStateAnimTR = GetCharacterSwitchStateAnimTableRow())
+	}
+
+	// Play anim montage on local client
+	FightChanged();
+
+	// Call Server to change bFight
+	ChangeFightOnServer(bFight); // `OnRep_FightChanged` function will be called on other client
+}
+
+void AMMOARPGCharacter::FightChanged()
+{
+	// Play `Sowrd Draw` or `Sword Putup` Anim Montage slot
+	if (FCharacterAnimTableRow* SwitchStateAnimTR = GetCharacterSwitchStateAnimTableRow())
+	{
+		if (SwitchStateAnimTR->SwitchFightMontage)
 		{
-			if (SwitchStateAnimTR->SwitchFightMontage)
-			{
-				PlayAnimMontage(SwitchStateAnimTR->SwitchFightMontage, 1.f, TEXT("SwordDraw"));
-			}
+			PlayAnimMontage(SwitchStateAnimTR->SwitchFightMontage, 1.f, bFight ? TEXT("SwordDraw") : TEXT("SwordPutup"));
 		}
+	}
+}
+
+void AMMOARPGCharacter::OnRep_FightChanged()
+{
+	// Only do on other Client.
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		// Play anim montage 
+		FightChanged();
 	}
 }
 

@@ -65,7 +65,7 @@ void AMMOARPGGameMode::PostLogin(APlayerController* NewPlayer)
 	// Wait Client to sync
 	GThread::Get()->GetCoroutines().BindLambda(0.5f, [&](APlayerController* InNewPlayer) {
 		// Register SwitchState Animation TableRow
-		if (InNewPlayer)
+		/*if (InNewPlayer)
 		{
 			if (AMMOARPGPlayerCharacter* PlayerCharacter = InNewPlayer->GetPawn<AMMOARPGPlayerCharacter>())
 			{
@@ -77,7 +77,7 @@ void AMMOARPGGameMode::PostLogin(APlayerController* NewPlayer)
 					}
 				}
 			}
-		}
+		}*/
 	}, NewPlayer);
 }
 

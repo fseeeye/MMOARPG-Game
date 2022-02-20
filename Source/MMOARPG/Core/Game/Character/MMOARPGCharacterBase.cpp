@@ -3,6 +3,10 @@
 
 #include "MMOARPGCharacterBase.h"
 
+#include "../MMOARPGGameState.h"
+#include <Net/UnrealNetwork.h>
+
+
 // Sets default values
 AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 	: bFight(false), SwitchStateAnimTableID(INDEX_NONE)
@@ -12,11 +16,29 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 
 }
 
+void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	// Register `bFight` only update for Simulated Player (on other client)
+	DOREPLIFETIME_CONDITION(AMMOARPGCharacterBase, bFight, COND_SimulatedOnly);
+}
+
 // Called when the game starts or when spawned
 void AMMOARPGCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (GetWorld())
+	{
+		if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
+		{
+			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetSwitchStateAnimTableID()))
+			{
+				SwitchStateAnimTableRow = SwitchStateAnimTR;
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -33,7 +55,7 @@ void AMMOARPGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
-FCharacterAnimTableRow* AMMOARPGCharacterBase::GetCharacterSwitchStateAnimTableRow()
+void AMMOARPGCharacterBase::ChangeFightOnServer_Implementation(bool bNewFight)
 {
-	return SwitchStateAnimTableRow;
+	bFight = bNewFight;
 }

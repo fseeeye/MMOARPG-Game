@@ -21,6 +21,9 @@ public:
 	// Sets default values for this character's properties
 	AMMOARPGCharacterBase();
 
+	// For Replicated property
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,10 +38,19 @@ public:
 public:
 	FORCEINLINE bool IsFight() { return bFight; }
 	FORCEINLINE int32 GetSwitchStateAnimTableID() { return SwitchStateAnimTableID; }
-	FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow();
+	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
 
 protected:
-	UPROPERTY()
+	// Do when `bFight` changed
+	UFUNCTION()
+	virtual void OnRep_FightChanged() {}
+
+	// RPC Call Server to change `bFight` property
+	UFUNCTION(Server, Reliable)
+	void ChangeFightOnServer(bool bNewFight);
+
+protected:
+	UPROPERTY(ReplicatedUsing = OnRep_FightChanged)
 	bool bFight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")

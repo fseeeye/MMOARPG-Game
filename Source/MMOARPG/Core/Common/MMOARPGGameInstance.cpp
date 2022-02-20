@@ -33,8 +33,9 @@ void UMMOARPGGameInstance::Shutdown()
 	if (NetClient)
 	{
 		FSimpleNetManage::Destroy(NetClient);
-		GThread::Destroy();
 	}
+
+	GThread::Destroy();
 }
 
 // Create Net Client

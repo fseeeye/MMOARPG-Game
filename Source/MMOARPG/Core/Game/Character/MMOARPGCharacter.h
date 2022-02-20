@@ -66,8 +66,14 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector InLocation);
 
 protected:
-	// Switch Fight State
+	// Switch Fight state
 	void SwitchFight();
+
+	// Play anim montage when `bFight` changed
+	void FightChanged();
+
+	// Do when `bFight` changed
+	virtual void OnRep_FightChanged() override;
 
 protected:
 	// APawn interface
