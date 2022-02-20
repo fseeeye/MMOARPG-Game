@@ -33,3 +33,7 @@ void AMMOARPGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
+FCharacterAnimTableRow* AMMOARPGCharacterBase::GetCharacterSwitchStateAnimTableRow()
+{
+	return SwitchStateAnimTableRow;
+}

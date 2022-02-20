@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 
 #include "../../../DataTable/CharacterAnimTableRow.h"
+#include "../MMOARPGGameMode.h"
 
 #include "MMOARPGCharacterBase.generated.h"
 
@@ -13,6 +14,8 @@ UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
+
+	friend class AMMOARPGGameMode;
 
 public:
 	// Sets default values for this character's properties
@@ -31,7 +34,8 @@ public:
 
 public:
 	FORCEINLINE bool IsFight() { return bFight; }
-	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
+	FORCEINLINE int32 GetSwitchStateAnimTableID() { return SwitchStateAnimTableID; }
+	FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow();
 
 protected:
 	UPROPERTY()

@@ -32,6 +32,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	/** Called after a successful login.  This is the first place it is safe to call replicated functions on the PlayerController. */
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
 private:
 	void BindNetClientRcv();
 

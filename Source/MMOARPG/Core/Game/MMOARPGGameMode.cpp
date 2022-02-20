@@ -2,11 +2,12 @@
 
 #include "MMOARPGGameMode.h"
 
-#include "Character/MMOARPGCharacter.h"
+#include "../../MMOARPGMacro.h"
 #include "MMOARPGHUD.h"
 #include "MMOARPGGameState.h"
 #include "MMOARPGPlayerState.h"
-#include "../../MMOARPGMacro.h"
+#include "Character/MMOARPGCharacter.h"
+#include "Character/MMOARPGPlayerCharacter.h"
 
 // Plugins
 #include "ThreadManage.h" // Plugin: SimpleThread
@@ -55,6 +56,29 @@ void AMMOARPGGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AMMOARPGGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AMMOARPGGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	// Wait Client to sync
+	GThread::Get()->GetCoroutines().BindLambda(0.5f, [&](APlayerController* InNewPlayer) {
+		// Register SwitchState Animation TableRow
+		if (InNewPlayer)
+		{
+			if (AMMOARPGPlayerCharacter* PlayerCharacter = InNewPlayer->GetPawn<AMMOARPGPlayerCharacter>())
+			{
+				if (AMMOARPGGameState* GameState = GetGameState<AMMOARPGGameState>())
+				{
+					if (FCharacterAnimTableRow* SwitchStateAnimTableRow = GameState->GetCharacterAnimTableRow(PlayerCharacter->GetSwitchStateAnimTableID()))
+					{
+						PlayerCharacter->SwitchStateAnimTableRow = SwitchStateAnimTableRow;
+					}
+				}
+			}
+		}
+	}, NewPlayer);
 }
 
 void AMMOARPGGameMode::BindNetClientRcv()

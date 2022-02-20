@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameState.h"
+#include "GameFramework/GameStateBase.h"
 
 #include "../../DataTable/CharacterAnimTableRow.h"
 
@@ -13,7 +13,7 @@
  * 
  */
 UCLASS()
-class MMOARPG_API AMMOARPGGameState : public AGameState
+class MMOARPG_API AMMOARPGGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
@@ -23,7 +23,7 @@ public:
 	FCharacterAnimTableRow* GetCharacterAnimTableRow(int32 InAnimTableID);
 	TArray<FCharacterAnimTableRow*>* GetCharacterAnimTableRows();
 
-private:
+protected:
 	UPROPERTY()
 	UDataTable* CharacterAnimTablePtr;
 
