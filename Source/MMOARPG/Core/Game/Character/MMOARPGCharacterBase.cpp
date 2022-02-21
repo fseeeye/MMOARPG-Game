@@ -55,6 +55,11 @@ void AMMOARPGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
+void AMMOARPGCharacterBase::AnimSignal(int32 InSignal)
+{
+	K2_AnimSignal(InSignal);
+}
+
 void AMMOARPGCharacterBase::ChangeFightOnServer_Implementation(bool bNewFight)
 {
 	bFight = bNewFight;

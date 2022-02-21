@@ -8,10 +8,13 @@
 #include "../../../DataTable/CharacterAnimTableRow.h"
 #include "../MMOARPGGameMode.h"
 
+// Plugins
+#include "Interface/SimpleCombatInterface.h"
+
 #include "MMOARPGCharacterBase.generated.h"
 
 UCLASS()
-class MMOARPG_API AMMOARPGCharacterBase : public ACharacter
+class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface
 {
 	GENERATED_BODY()
 
@@ -35,10 +38,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/*** Switch Fight State ***/
 public:
 	FORCEINLINE bool IsFight() { return bFight; }
 	FORCEINLINE int32 GetSwitchStateAnimTableID() { return SwitchStateAnimTableID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
+
+public:
+	virtual void AnimSignal(int32 InSignal) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, DisplayName = "AnimSignal", Category = "Anim Event")
+	void K2_AnimSignal(int32 InSignal);
 
 protected:
 	// Do when `bFight` changed

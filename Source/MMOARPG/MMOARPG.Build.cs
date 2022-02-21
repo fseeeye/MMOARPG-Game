@@ -19,7 +19,8 @@ public class MMOARPG : ModuleRules
 			"SimpleNetChannel",
 			"SimpleThread",
 			"MMOARPGComm",
-			"SimpleActorBrowsing"
+			"SimpleActorBrowsing",
+			"SimpleCombat"
 		});
 	}
 }
