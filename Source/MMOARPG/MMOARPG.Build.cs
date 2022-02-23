@@ -20,7 +20,8 @@ public class MMOARPG : ModuleRules
 			"SimpleThread",
 			"MMOARPGComm",
 			"SimpleActorBrowsing",
-			"SimpleCombat"
+			"SimpleCombat",
+			"SimpleAdvancedAnimation"
 		});
 	}
 }

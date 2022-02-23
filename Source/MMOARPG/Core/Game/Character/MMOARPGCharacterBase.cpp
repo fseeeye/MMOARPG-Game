@@ -4,7 +4,10 @@
 #include "MMOARPGCharacterBase.h"
 
 #include "../MMOARPGGameState.h"
+#include "../Animation/Instance/MMOARPGAnimInstanceBase.h"
+
 #include <Net/UnrealNetwork.h>
+#include <Components/SkeletalMeshComponent.h>
 
 
 // Sets default values
@@ -36,6 +39,18 @@ void AMMOARPGCharacterBase::BeginPlay()
 			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetSwitchStateAnimTableID()))
 			{
 				SwitchStateAnimTableRow = SwitchStateAnimTR;
+			}
+		}
+
+		// Init FootIK
+		if (!GetWorld()->IsServer())
+		{
+			if (GetMesh())
+			{
+				if (UMMOARPGAnimInstanceBase* AnimInstanceBase = Cast<UMMOARPGAnimInstanceBase>(GetMesh()->GetAnimInstance()))
+				{
+					AnimInstanceBase->InitAnimInstance(this);
+				}
 			}
 		}
 	}

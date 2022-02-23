@@ -3,8 +3,9 @@
 
 #include "MMOARPGGameInstance.h"
 
-#include "Global/SimpleNetGlobalInfo.h"
-#include "ThreadManage.h"
+#include <Global/SimpleNetGlobalInfo.h>
+#include <ThreadManage.h>
+#include <SimpleAdvancedAnimationBPLibrary.h>
 
 void UMMOARPGGameInstance::Init()
 {
@@ -30,12 +31,17 @@ void UMMOARPGGameInstance::Shutdown()
 {
 	Super::Shutdown();
 
+	// Free Net Client
 	if (NetClient)
 	{
 		FSimpleNetManage::Destroy(NetClient);
 	}
 
+	// Free Thread
 	GThread::Destroy();
+
+	// Free AdvancedAnimSystem
+	USimpleAdvancedAnimationBPLibrary::DestroyAdvancedAnimSystem();
 }
 
 // Create Net Client
