@@ -21,6 +21,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/* Kneading Data */
+protected:
+	UFUNCTION(Server, Reliable)
+	void UpdateKneadingDataOnServer(int32 InUserID);
+
+public:
+	UFUNCTION(Client, Reliable)
+	void UpdateKneadingDataOnClient(const FMMOARPGCharacterAppearance& InCA);
+
 public:
 	virtual void UpdateKneadingModelAttributes() override;
 	virtual void UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA) override;

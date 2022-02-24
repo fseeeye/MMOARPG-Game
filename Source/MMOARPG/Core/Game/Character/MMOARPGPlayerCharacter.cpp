@@ -3,11 +3,41 @@
 
 #include "MMOARPGPlayerCharacter.h"
 
+#include "../../Common/MMOARPGGameInstance.h"
+#include "../MMOARPGGameMode.h"
+
+
 void AMMOARPGPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	InitKneadingLocation(GetMesh()->GetComponentLocation());
+
+	// Request update KneadingFace Data on Server
+	if (GetLocalRole() == ROLE_AutonomousProxy) // primary client
+	{
+		if (UMMOARPGGameInstance* GameInstance = GetWorld()->GetGameInstance<UMMOARPGGameInstance>())
+		{
+			UpdateKneadingDataOnServer(GameInstance->GetUserData().ID); // RPC
+		}
+	}
+	else if (GetLocalRole() == ROLE_SimulatedProxy) // other client
+	{
+	}
+}
+
+void AMMOARPGPlayerCharacter::UpdateKneadingDataOnServer_Implementation(int32 InUserID)
+{
+	if (AMMOARPGGameMode* GameMode = GetWorld()->GetAuthGameMode<AMMOARPGGameMode>())
+	{
+		UserID = InUserID;
+		GameMode->UpdateKneadingDataRequest(InUserID);
+	}
+}
+
+void AMMOARPGPlayerCharacter::UpdateKneadingDataOnClient_Implementation(const FMMOARPGCharacterAppearance& InCA)
+{
+	UpdateKneadingModelAttributes(InCA);
 }
 
 void AMMOARPGPlayerCharacter::UpdateKneadingModelAttributes()

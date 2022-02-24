@@ -8,12 +8,16 @@
 #include "MMOARPGPlayerState.h"
 #include "Character/MMOARPGCharacter.h"
 #include "Character/MMOARPGPlayerCharacter.h"
+#include "Utils/MethodUnit.h"
+
+#include "UObject/ConstructorHelpers.h"
 
 // Plugins
 #include "ThreadManage.h" // Plugin: SimpleThread
 #include "UObject/SimpleController.h" // Plugin: SimpleNetChannel
+#include "MMOARPGCommType.h" // Plugin: MMOARPGComm
+#include "Protocol/GameProtocol.h" // Plugin: MMOARPGComm
 
-#include "UObject/ConstructorHelpers.h"
 
 AMMOARPGGameMode::AMMOARPGGameMode()
 {
@@ -81,6 +85,12 @@ void AMMOARPGGameMode::PostLogin(APlayerController* NewPlayer)
 	}, NewPlayer);
 }
 
+// Get Kneading Data from Center Server
+void AMMOARPGGameMode::UpdateKneadingDataRequest(int32 InUserID)
+{
+	SEND_DATA(SP_GetLoggedCharacterCaRequests, InUserID);
+}
+
 void AMMOARPGGameMode::BindNetClientRcv()
 {
 	// Wait for Game Instance complete creation, and then, bind client recv channel
@@ -135,7 +145,35 @@ void AMMOARPGGameMode::LinkServerInfo(ESimpleNetErrorType InType, const FString&
 
 void AMMOARPGGameMode::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel)
 {
-	//switch (ProtocolNumber)
-	//{
-	//}
+	switch (ProtocolNumber)
+	{
+		case SP_GetLoggedCharacterCaResponses:
+		{
+			int32 UserID = INDEX_NONE;
+			FString CAJson;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_GetLoggedCharacterCaResponses, UserID, CAJson);
+
+			if (UserID != INDEX_NONE && !CAJson.IsEmpty())
+			{
+				FMMOARPGCharacterAppearance CA;
+				NetDataParser::JsonToCharacterAppearance(CAJson, CA);
+
+				// Traverse Pawns to update CA in target PlayerCharacter
+				MethodUnit::CallAllPlayersOnServer<AMMOARPGPlayerCharacter>(GetWorld(), [&](AMMOARPGPlayerCharacter* InPlayerCharacter)->MethodUnit::EServerCallResult 
+				{
+					if (InPlayerCharacter->GetUserID() == UserID)
+					{
+						InPlayerCharacter->UpdateKneadingModelAttributes(CA); // Update CA on Server
+						InPlayerCharacter->UpdateKneadingDataOnClient(CA);    // Update CA on primary Client (RPC)
+
+						return MethodUnit::EServerCallResult::PROGRESS_COMPLETE;
+					}
+					
+					return MethodUnit::EServerCallResult::INPROGRESS;
+				});
+			}
+
+			break;
+		}
+	}
 }

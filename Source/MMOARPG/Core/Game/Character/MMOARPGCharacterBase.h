@@ -38,6 +38,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/*** Kneading Face Data ***/
+public:
+	UPROPERTY()
+	int32 UserID;
+
+public:
+	FORCEINLINE int32 GetUserID() { return UserID; }
+
 	/*** Switch Fight State ***/
 public:
 	FORCEINLINE bool IsFight() { return bFight; }
