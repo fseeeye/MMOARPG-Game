@@ -15,10 +15,11 @@ public class MMOARPG : ModuleRules
 			"InputCore",
 			"Slate",
 			"SlateCore",
-			// Plugin Modules
+			// Engine Plugin Modules
 			"SimpleNetChannel",
 			"SimpleThread",
 			"MMOARPGComm",
+			// Project Plugin Modules
 			"SimpleActorBrowsing",
 			"SimpleCombat",
 			"SimpleAdvancedAnimation"

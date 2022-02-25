@@ -64,7 +64,7 @@ void UMMOARPGGameInstance::LinkServer()
 		if (!NetClient->Init())
 		{
 			delete NetClient;
-			NetClient = NULL;
+			NetClient = nullptr;
 		}
 	}
 }
