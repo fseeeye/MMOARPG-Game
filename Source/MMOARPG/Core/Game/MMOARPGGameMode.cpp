@@ -6,6 +6,7 @@
 #include "MMOARPGHUD.h"
 #include "MMOARPGGameState.h"
 #include "MMOARPGPlayerState.h"
+#include "MMOARPGPlayerController.h"
 #include "Character/MMOARPGCharacter.h"
 #include "Character/MMOARPGPlayerCharacter.h"
 #include "Utils/MethodUnit.h"
@@ -27,6 +28,8 @@ AMMOARPGGameMode::AMMOARPGGameMode()
 	GameStateClass = AMMOARPGGameState::StaticClass();
 	// Register PlayerState
 	PlayerStateClass = AMMOARPGPlayerState::StaticClass();
+	// Register PlayerController
+	PlayerControllerClass = AMMOARPGPlayerController::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
