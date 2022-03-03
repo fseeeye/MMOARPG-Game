@@ -24,6 +24,6 @@ void FMMOARPGTestRobot::NativeTick(float DeltaTime)
 
 void FMMOARPGTestRobot::Run()
 {
-	GateRobot.Run();
+	GateRobot.RunLoginToDSServerRequest();
 	//DsRobot.Run();
 }

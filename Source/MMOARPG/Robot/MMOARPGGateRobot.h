@@ -22,8 +22,11 @@ public:
 	void RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Channel);
 	void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg);
 
-	void Run();
+	void RunCharacterAppearanceRequests();
+	void RunLoginToDSServerRequest();
 
 private:
 	FSimpleNetManage* GateClient;
+public:
+	FSimpleDelegate StartDelegate;
 };

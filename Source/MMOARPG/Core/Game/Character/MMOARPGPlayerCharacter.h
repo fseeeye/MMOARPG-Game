@@ -30,6 +30,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void UpdateKneadingDataOnClient(const FMMOARPGCharacterAppearance& InCA);
 
+	UFUNCTION()
+	void UpdateKneadingDataOnServer_Debug();
+
 public:
 	virtual void UpdateKneadingModelAttributes() override;
 	virtual void UpdateKneadingModelAttributes(const FMMOARPGCharacterAppearance& InCA) override;

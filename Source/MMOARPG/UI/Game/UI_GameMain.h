@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "../Core/UI_MainBase.h"
+#include "../../MMOARPGMacro.h"
 
-// TMP
+#if MMOARPG_DEBUG_DS
 #include "../../Robot/MMOARPGTestRobot.h"
+#endif
 
 #include "UI_GameMain.generated.h"
 
@@ -29,5 +31,7 @@ protected:
 	virtual void LinkServerInfo(ESimpleNetErrorType InType, const FString& InMsg) override;
 
 protected:
-	FMMOARPGTestRobot Robot; // TMP: only for test
+#if MMOARPG_DEBUG_DS
+	FMMOARPGTestRobot Robot;
+#endif
 };

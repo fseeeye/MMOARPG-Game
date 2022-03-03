@@ -22,6 +22,10 @@ public:
 
 	void Run();
 
+public:
+	FORCEINLINE FMMOARPGGateRobot& GetGateRobot() { return GateRobot; }
+	FORCEINLINE FMMOARPGDsRobot& GetDsRobot() { return DsRobot; }
+
 private:
 	FMMOARPGGateRobot GateRobot;
 	FMMOARPGDsRobot DsRobot;

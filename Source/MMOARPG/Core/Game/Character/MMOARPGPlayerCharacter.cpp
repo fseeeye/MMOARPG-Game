@@ -3,6 +3,7 @@
 
 #include "MMOARPGPlayerCharacter.h"
 
+#include "../../../MMOARPGMacro.h"
 #include "../../Common/MMOARPGGameInstance.h"
 #include "../MMOARPGGameMode.h"
 
@@ -19,19 +20,9 @@ void AMMOARPGPlayerCharacter::BeginPlay()
 	// Request update KneadingFace Data on Server
 	if (GetLocalRole() == ROLE_AutonomousProxy) // primary client
 	{
-		//if (UMMOARPGGameInstance* GameInstance = GetWorld()->GetGameInstance<UMMOARPGGameInstance>())
-		//{
-		//	UpdateKneadingDataOnServer(GameInstance->GetUserData().ID); // RPC
-		//}
-
-		// TMP: only for test
-		GThread::Get()->GetCoroutines().BindLambda(0.7f, [&]()
-		{
-			if (UMMOARPGGameInstance* GameInstance = GetWorld()->GetGameInstance<UMMOARPGGameInstance>())
-			{
-				UpdateKneadingDataOnServer(1); // RPC
-			}
-		});
+#if !MMOARPG_DEBUG_DS
+		UpdateKneadingDataOnServer_Debug();
+#endif
 	}
 	else if (GetLocalRole() == ROLE_SimulatedProxy) // other client
 	{
@@ -50,6 +41,18 @@ void AMMOARPGPlayerCharacter::UpdateKneadingDataOnServer_Implementation(int32 In
 void AMMOARPGPlayerCharacter::UpdateKneadingDataOnClient_Implementation(const FMMOARPGCharacterAppearance& InCA)
 {
 	UpdateKneadingModelAttributes(InCA);
+}
+
+void AMMOARPGPlayerCharacter::UpdateKneadingDataOnServer_Debug()
+{
+	if (UMMOARPGGameInstance* GameInstance = GetWorld()->GetGameInstance<UMMOARPGGameInstance>())
+	{
+#if MMOARPG_DEBUG_DS
+		UpdateKneadingDataOnServer(1); // TMP: only for test
+#else
+		UpdateKneadingDataOnServer(GameInstance->GetUserData().ID); // RPC
+#endif
+	}
 }
 
 void AMMOARPGPlayerCharacter::UpdateKneadingModelAttributes()
