@@ -17,7 +17,7 @@ struct FCharacterStyleTableRow : public FTableRowBase
 	FCharacterStyleTableRow();
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterStyle")
-	int32 ID;
+	int32 CharacterID;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterStyle")
 	TSubclassOf<AMMOARPGCharacterBase> CharacterClass;

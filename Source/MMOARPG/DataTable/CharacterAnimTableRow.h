@@ -16,7 +16,7 @@ struct FCharacterAnimTableRow : public FTableRowBase
 	FCharacterAnimTableRow();
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterAnim")
-	int32 ID;
+	int32 CharacterID;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterAnim")
 	UAnimMontage* SwitchFightMontage;

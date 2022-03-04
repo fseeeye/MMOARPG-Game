@@ -2,7 +2,7 @@
 
 
 FCharacterAnimTableRow::FCharacterAnimTableRow()
-	: ID(INDEX_NONE)
+	: CharacterID(INDEX_NONE)
 {
 
 }

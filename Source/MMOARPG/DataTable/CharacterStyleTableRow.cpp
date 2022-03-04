@@ -2,7 +2,7 @@
 
 
 FCharacterStyleTableRow::FCharacterStyleTableRow()
-	: ID(INDEX_NONE)
+	: CharacterID(INDEX_NONE)
 {
 
 }

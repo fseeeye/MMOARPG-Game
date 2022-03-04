@@ -27,4 +27,11 @@ public:
 	virtual void NativeConstruct();
 
 	virtual void NativeDestruct();
+
+public:
+	// TMP
+	void Init();
+
+public:
+	void TraverseListChildsByPredicate(TFunction<bool(UUI_PartnerInfo* InPartnerInfo)> InFunc);
 };

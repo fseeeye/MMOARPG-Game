@@ -48,7 +48,7 @@ protected:
 		{
 			if (TableRows->Num())
 			{
-				if (auto TargetTableRow = TableRows->FindByPredicate([&](T* InTR) { return InTR->ID == InTableRowID; }))
+				if (auto TargetTableRow = TableRows->FindByPredicate([&](T* InTR) { return InTR->CharacterID == InTableRowID; }))
 				{
 					return *TargetTableRow;
 				}
