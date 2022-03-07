@@ -29,7 +29,7 @@ protected:
 	}
 
 	template<class T>
-	T* GetGameController()
+	T* GetPlayerController()
 	{
 		return GetWorld() != nullptr ? GetWorld()->GetFirstPlayerController<T>() : nullptr;
 	}

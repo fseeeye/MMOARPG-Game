@@ -12,7 +12,7 @@
 
 // Sets default values
 AMMOARPGCharacterBase::AMMOARPGCharacterBase()
-	: bFight(false), UserID(INDEX_NONE), SwitchStateAnimTableID(INDEX_NONE)
+	: bFight(false), UserID(INDEX_NONE), CharacterID(INDEX_NONE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -36,7 +36,7 @@ void AMMOARPGCharacterBase::BeginPlay()
 	{
 		if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
 		{
-			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetSwitchStateAnimTableID()))
+			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetCharacterID()))
 			{
 				SwitchStateAnimTableRow = SwitchStateAnimTR;
 			}

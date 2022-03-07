@@ -6,6 +6,7 @@
 #include "../../../MMOARPGMacro.h"
 #include "../../Common/MMOARPGGameInstance.h"
 #include "../MMOARPGGameMode.h"
+#include "../MMOARPGPlayerState.h"
 
 // Plugins
 #include "ThreadManage.h"
@@ -17,10 +18,16 @@ void AMMOARPGPlayerCharacter::BeginPlay()
 
 	InitKneadingLocation(GetMesh()->GetComponentLocation());
 
-	// Request update KneadingFace Data on Server
 	if (GetLocalRole() == ROLE_AutonomousProxy) // primary client
 	{
+		// use CA in Player State to update
+		if (AMMOARPGPlayerState* MMOARPGPlayerState = GetPlayerState<AMMOARPGPlayerState>())
+		{
+			UpdateKneadingModelAttributes(MMOARPGPlayerState->GetCA());
+		}
+		
 #if !MMOARPG_DEBUG_DS
+		// Request update KneadingFace Data on Server
 		UpdateKneadingDataOnServer_Debug();
 #endif
 	}
@@ -41,6 +48,15 @@ void AMMOARPGPlayerCharacter::UpdateKneadingDataOnServer_Implementation(int32 In
 void AMMOARPGPlayerCharacter::UpdateKneadingDataOnClient_Implementation(const FMMOARPGCharacterAppearance& InCA)
 {
 	UpdateKneadingModelAttributes(InCA);
+
+	if (GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
+	{
+		// save CA in client Player State
+		if (AMMOARPGPlayerState* MMOARPGPlayerState = GetPlayerState<AMMOARPGPlayerState>())
+		{
+			MMOARPGPlayerState->GetCA() = InCA;
+		}
+	}
 }
 
 void AMMOARPGPlayerCharacter::UpdateKneadingDataOnServer_Debug()

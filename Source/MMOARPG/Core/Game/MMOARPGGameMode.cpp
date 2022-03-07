@@ -158,18 +158,25 @@ void AMMOARPGGameMode::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 
 			if (UserID != INDEX_NONE && !CAJson.IsEmpty())
 			{
-				FMMOARPGCharacterAppearance CA;
-				NetDataParser::JsonToCharacterAppearance(CAJson, CA);
-
-				// Traverse Pawns to update CA in target PlayerCharacter
-				MethodUnit::CallAllPlayersOnServer<AMMOARPGPlayerCharacter>(GetWorld(), [&](AMMOARPGPlayerCharacter* InPlayerCharacter)->MethodUnit::EServerCallResult 
+				// Traverse Pawns
+				MethodUnit::CallAllPlayerControllersOnServer<AMMOARPGPlayerController>(GetWorld(), [&](AMMOARPGPlayerController* InPlayerController) -> MethodUnit::EServerCallResult
 				{
-					if (InPlayerCharacter->GetUserID() == UserID)
+					if (AMMOARPGPlayerCharacter* PlayerCharacter = InPlayerController->GetPawn<AMMOARPGPlayerCharacter>())
 					{
-						InPlayerCharacter->UpdateKneadingModelAttributes(CA); // Update CA on Server
-						InPlayerCharacter->UpdateKneadingDataOnClient(CA);    // Update CA on primary Client (RPC)
+						if (PlayerCharacter->GetUserID() == UserID) // Found
+						{
+							if (AMMOARPGPlayerState* PlayerState = InPlayerController->GetPlayerState<AMMOARPGPlayerState>())
+							{
+								// Store CA in target PlayerState
+								NetDataParser::JsonToCharacterAppearance(CAJson, PlayerState->GetCA());
 
-						return MethodUnit::EServerCallResult::PROGRESS_COMPLETE;
+								// Update CA in target PlayerCharacter
+								PlayerCharacter->UpdateKneadingModelAttributes(PlayerState->GetCA()); // Update CA on Server
+								PlayerCharacter->UpdateKneadingDataOnClient(PlayerState->GetCA());    // Update CA on primary Client (RPC)
+
+								return MethodUnit::EServerCallResult::PROGRESS_COMPLETE;
+							}
+						}
 					}
 					
 					return MethodUnit::EServerCallResult::INPROGRESS;

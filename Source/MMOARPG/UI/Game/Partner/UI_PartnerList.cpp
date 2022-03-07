@@ -16,7 +16,6 @@ void UUI_PartnerList::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-
 }
 
 void UUI_PartnerList::Init()

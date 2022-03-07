@@ -49,7 +49,7 @@ public:
 	/*** Switch Fight State ***/
 public:
 	FORCEINLINE bool IsFight() { return bFight; }
-	FORCEINLINE int32 GetSwitchStateAnimTableID() { return SwitchStateAnimTableID; }
+	FORCEINLINE int32 GetCharacterID() { return CharacterID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
 
 public:
@@ -72,7 +72,7 @@ protected:
 	bool bFight;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
-	int32 SwitchStateAnimTableID;
+	int32 CharacterID;
 	
 protected:
 	FCharacterAnimTableRow* SwitchStateAnimTableRow;

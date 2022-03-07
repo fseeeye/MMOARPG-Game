@@ -1,10 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "UI_PartnerInfo.h"
+
 #include "Components/Image.h"
 #include "Components/CheckBox.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
+
 #include "UI_PartnerInfo.h"
+#include "../../../Core/Game/MMOARPGPlayerController.h"
 
 UUI_PartnerInfo::UUI_PartnerInfo(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -34,7 +37,7 @@ void UUI_PartnerInfo::SetChecked(bool bChecked)
 void UUI_PartnerInfo::OnClickedCharacter(bool bClicked)
 {
 	// Set self checked
-	SetChecked(bClicked);
+	SetChecked(true);
 
 	// Set others unchecked
 	if (UUI_PartnerList* PartnerList = GetWidgetParent<UUI_PartnerList>())
@@ -43,10 +46,16 @@ void UUI_PartnerInfo::OnClickedCharacter(bool bClicked)
 		{
 			if (InPartnerInfo->GetCharacterID() != CharacterID)
 			{
-				InPartnerInfo->SetChecked(!bClicked);
+				InPartnerInfo->SetChecked(false);
 			}
 
 			return true;
 		});
+	}
+
+	// Replace Character
+	if (AMMOARPGPlayerController* PlayerController = GetPlayerController<AMMOARPGPlayerController>())
+	{
+		PlayerController->ReplaceCharacter(CharacterID);
 	}
 }

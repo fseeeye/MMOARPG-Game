@@ -22,10 +22,10 @@ public:
 	AMMOARPGGameState();
 
 public:
-	FCharacterAnimTableRow* GetCharacterAnimTableRow(int32 InTableRowID);
+	FCharacterAnimTableRow* GetCharacterAnimTableRow(int32 InCharacterID);
 	TArray<FCharacterAnimTableRow*>* GetCharacterAnimTableRows();
 
-	FCharacterStyleTableRow* GetCharacterStyleTableRow(int32 InStyleTableRowID);
+	FCharacterStyleTableRow* GetCharacterStyleTableRow(int32 InCharacterID);
 	TArray<FCharacterStyleTableRow*>* GetCharacterStyleTableRows();
 
 protected:
@@ -42,13 +42,13 @@ protected:
 	}
 
 	template<class T>
-	T* GetTableRow(int32 InTableRowID, UDataTable* InTablePtr, TArray<T*> OutTableRows, const FString& InContextStr = TEXT("Default Table Context Message"))
+	T* GetTableRow(int32 InCharacterID, UDataTable* InTablePtr, TArray<T*> OutTableRows, const FString& InContextStr = TEXT("Default Table Context Message"))
 	{
 		if (TArray<T*>* TableRows = GetTableRows<T>(InTablePtr, OutTableRows, InContextStr))
 		{
 			if (TableRows->Num())
 			{
-				if (auto TargetTableRow = TableRows->FindByPredicate([&](T* InTR) { return InTR->CharacterID == InTableRowID; }))
+				if (auto TargetTableRow = TableRows->FindByPredicate([&](T* InTR) { return InTR->CharacterID == InCharacterID; }))
 				{
 					return *TargetTableRow;
 				}

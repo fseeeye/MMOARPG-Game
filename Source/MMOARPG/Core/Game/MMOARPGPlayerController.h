@@ -16,4 +16,7 @@ class MMOARPG_API AMMOARPGPlayerController : public APlayerController
 
 public:
 	AMMOARPGPlayerController();
+
+	UFUNCTION(Server, Reliable)
+	void ReplaceCharacter(int32 InCharacterID);
 };
