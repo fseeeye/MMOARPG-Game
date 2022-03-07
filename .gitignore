@@ -60,6 +60,10 @@ Content/StylizedCharactersPack/
 Content/Frank_RPG_Sword1/
 Content/Stylized_Landscape/
 Content/UnfCleric/
+Content/FlightAnim/Hover_*
+Content/FlightAnim/FastFlight*
+Content/FlightAnim/Dodge*
+Content/FlightAnim/GroundSlam*
 
 # Ignore Other folder
 Intermediate
