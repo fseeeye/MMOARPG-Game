@@ -60,7 +60,8 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMMOARPGCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMMOARPGCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight);
+	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight); // switch to FIGHT action state
+	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFly); // switch to FLY action state
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -108,19 +109,10 @@ void AMMOARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector InLo
 
 void AMMOARPGCharacter::SwitchFight()
 {
-	if (ActionState == ECharacterActionState::FIGHT_STATE)
-	{
-		// Switch into normal state
-		ActionState = ECharacterActionState::NORMAL_STATE;
-	}
-	else
-	{
-		// Switch into fight state
-		ActionState = ECharacterActionState::FIGHT_STATE;
-	}
+	SwitchActionState(ECharacterActionState::FIGHT_STATE);
 
 	// Play anim montage on local client
-	FightChanged();
+	PlayFightMontage();
 
 	// Call Server to change Action State to FIGHT
 	ChangeActionStateOnServer(ActionState); // `OnRep_ActionStateChanged` function will be called on other client
@@ -128,7 +120,7 @@ void AMMOARPGCharacter::SwitchFight()
 	LastActionState = ActionState;
 }
 
-void AMMOARPGCharacter::FightChanged()
+void AMMOARPGCharacter::PlayFightMontage()
 {
 	// Play `Sowrd Draw` or `Sword Putup` Anim Montage slot
 	if (FCharacterAnimTableRow* SwitchStateAnimTR = GetCharacterSwitchStateAnimTableRow())
@@ -140,6 +132,13 @@ void AMMOARPGCharacter::FightChanged()
 	}
 }
 
+void AMMOARPGCharacter::SwitchFly()
+{
+	SwitchActionState(ECharacterActionState::FLY_STATE);
+
+	LastActionState = ActionState;
+}
+
 void AMMOARPGCharacter::OnRep_ActionStateChanged()
 {
 	// Only do on other Client.
@@ -148,7 +147,7 @@ void AMMOARPGCharacter::OnRep_ActionStateChanged()
 		if (ActionState == ECharacterActionState::FIGHT_STATE || LastActionState == ECharacterActionState::FIGHT_STATE)
 		{
 			// Play FIGHT anim montage 
-			FightChanged();
+			PlayFightMontage();
 		}
 
 		LastActionState = ActionState;

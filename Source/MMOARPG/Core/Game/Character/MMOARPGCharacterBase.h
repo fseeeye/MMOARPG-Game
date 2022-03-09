@@ -9,10 +9,14 @@
 #include "../MMOARPGGameMode.h"
 #include "../../../MMOARPGGameType.h"
 
+// Components
+#include "../../Components/FlyComponent.h"
+
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
 
 #include "MMOARPGCharacterBase.generated.h"
+
 
 UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface
@@ -20,6 +24,10 @@ class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleComba
 	GENERATED_BODY()
 
 	friend class AMMOARPGGameMode;
+
+	/* Fly Component */
+	UPROPERTY()
+	UFlyComponent* FlyComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -52,6 +60,9 @@ public:
 	FORCEINLINE ECharacterActionState GetActionState() { return ActionState; }
 	FORCEINLINE int32 GetCharacterID() { return CharacterID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
+	FORCEINLINE UFlyComponent* GetFlyComponent() { return FlyComponent; }
+
+	void SwitchActionState(ECharacterActionState InTargetActionState);
 
 public:
 	virtual void AnimSignal(int32 InSignal) override;
@@ -60,7 +71,7 @@ public:
 	void K2_AnimSignal(int32 InSignal);
 
 protected:
-	// Do when Action State changed
+	// Do sth. when Action State changed
 	UFUNCTION()
 	virtual void OnRep_ActionStateChanged() {}
 
@@ -80,4 +91,5 @@ protected:
 	
 protected:
 	FCharacterAnimTableRow* SwitchStateAnimTableRow;
+
 };

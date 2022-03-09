@@ -78,11 +78,14 @@ public:
 
 	/*** Switch Action State ***/
 protected:
-	// Switch Action state
+	// Switch Action state to FIGHT (Autonomous Proxy)
 	void SwitchFight();
 
-	// Play anim montage when Action state changed (Autonomous Proxy)
-	void FightChanged();
+	// Play Fight animation montage
+	void PlayFightMontage();
+
+	// Switch Action state to FLY (Autonomous Proxy)
+	void SwitchFly();
 
 	// Play anim montage when Action state changed (Simulated Proxy)
 	virtual void OnRep_ActionStateChanged() override;

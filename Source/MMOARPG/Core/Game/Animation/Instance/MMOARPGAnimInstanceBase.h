@@ -21,10 +21,10 @@ class MMOARPG_API UMMOARPGAnimInstanceBase : public UAnimInstance
 public:
 	UMMOARPGAnimInstanceBase();
 
+	virtual void InitAnimInstance(ACharacter* InCharacter);
+
 	virtual void NativeInitializeAnimation() override; // like BeginPlay
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; // like Tick
-
-	virtual void InitAnimInstance(ACharacter* InCharacter);
 
 	/*** Basis ***/
 public:

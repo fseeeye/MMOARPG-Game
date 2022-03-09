@@ -19,6 +19,19 @@ UMMOARPGAnimInstanceBase::UMMOARPGAnimInstanceBase()
 {
 }
 
+void UMMOARPGAnimInstanceBase::InitAnimInstance(ACharacter* InCharacter)
+{
+	// Init FootIK
+	if (bFootIK)
+	{
+		// TMP
+		FootIK_BoneNames.Add(FootIK_LeftBoneName);
+		FootIK_BoneNames.Add(FootIK_RightBoneName);
+
+		FootIK_ID = USimpleAdvancedAnimationBPLibrary::CreateFootIK(InCharacter, FootIK_BoneNames);
+	}
+}
+
 void UMMOARPGAnimInstanceBase::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
@@ -54,19 +67,6 @@ void UMMOARPGAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 		// Tips: might be reverse in different mesh
 		FootIK_LeftOffset  = -(FootIK_CentroidOffsetZ - LOffset);
 		FootIK_RightOffset = FootIK_CentroidOffsetZ - ROffset;
-	}
-}
-
-void UMMOARPGAnimInstanceBase::InitAnimInstance(ACharacter* InCharacter)
-{
-	// Init FootIK
-	if (bFootIK)
-	{
-		// TMP
-		FootIK_BoneNames.Add(FootIK_LeftBoneName);
-		FootIK_BoneNames.Add(FootIK_RightBoneName);
-
-		FootIK_ID = USimpleAdvancedAnimationBPLibrary::CreateFootIK(InCharacter, FootIK_BoneNames);
 	}
 }
 

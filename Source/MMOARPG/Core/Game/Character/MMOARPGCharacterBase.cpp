@@ -20,6 +20,9 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Init Character Fly Component
+	FlyComponent = CreateDefaultSubobject<UFlyComponent>(TEXT("CharacterFlyComponent"));
+	//FlyComponent->SetupAttachment(RootComponent);
 }
 
 void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -71,6 +74,20 @@ void AMMOARPGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMMOARPGCharacterBase::SwitchActionState(ECharacterActionState InTargetActionState)
+{
+	if (ActionState == InTargetActionState)
+	{
+		// Switch into normal state
+		ActionState = ECharacterActionState::NORMAL_STATE;
+	}
+	else
+	{
+		// Switch into target state
+		ActionState = InTargetActionState;
+	}
 }
 
 void AMMOARPGCharacterBase::AnimSignal(int32 InSignal)
