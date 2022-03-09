@@ -7,14 +7,17 @@
 #include "../Animation/Instance/MMOARPGAnimInstanceBase.h"
 
 #include <Net/UnrealNetwork.h>
+
+// Components
 #include <Components/SkeletalMeshComponent.h>
+#include "../../Components/FlyComponent.h"
 
 
 // Sets default values
 AMMOARPGCharacterBase::AMMOARPGCharacterBase()
-	: ActionState(ECharacterActionState::NORMAL_STATE)
+	: UserID(INDEX_NONE)
+	, ActionState(ECharacterActionState::NORMAL_STATE)
 	, LastActionState(ECharacterActionState::NORMAL_STATE)
-	, UserID(INDEX_NONE)
 	, CharacterID(INDEX_NONE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

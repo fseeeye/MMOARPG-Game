@@ -3,6 +3,10 @@
 
 #include "FlyComponent.h"
 
+#include "../Game/Character/MMOARPGCharacterBase.h"
+#include <GameFramework/CharacterMovementComponent.h>
+
+
 // Sets default values for this component's properties
 UFlyComponent::UFlyComponent()
 {
@@ -19,8 +23,11 @@ void UFlyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	Inner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
+	if (Inner_CharacterBase)
+	{
+		Inner_MovementComponent = Cast<UCharacterMovementComponent>(Inner_CharacterBase->GetMovementComponent());
+	}
 }
 
 
@@ -30,5 +37,23 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UFlyComponent::ResetFly()
+{
+	if (Inner_CharacterBase && Inner_MovementComponent)
+	{
+		// Set `bOrientRotationToMovement` and flying mode
+		if (Inner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
+		{
+			Inner_MovementComponent->bOrientRotationToMovement = false;
+			Inner_MovementComponent->SetMovementMode(MOVE_Flying);
+		}
+		else
+		{
+			Inner_MovementComponent->bOrientRotationToMovement = true;
+			Inner_MovementComponent->SetMovementMode(MOVE_Walking);
+		}
+	}
 }
 

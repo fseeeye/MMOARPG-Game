@@ -2,12 +2,14 @@
 
 #include "MMOARPGCharacter.h"
 //#include "HeadMountedDisplayFunctionLibrary.h"
+// Components
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "../../Components/FlyComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMMOARPGCharacter
@@ -135,6 +137,8 @@ void AMMOARPGCharacter::PlayFightMontage()
 void AMMOARPGCharacter::SwitchFly()
 {
 	SwitchActionState(ECharacterActionState::FLY_STATE);
+
+	GetFlyComponent()->ResetFly();
 
 	LastActionState = ActionState;
 }

@@ -9,14 +9,13 @@
 #include "../MMOARPGGameMode.h"
 #include "../../../MMOARPGGameType.h"
 
-// Components
-#include "../../Components/FlyComponent.h"
-
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
 
 #include "MMOARPGCharacterBase.generated.h"
 
+
+class UFlyComponent;
 
 UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface
@@ -27,7 +26,7 @@ class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleComba
 
 	/* Fly Component */
 	UPROPERTY()
-	UFlyComponent* FlyComponent;
+	TObjectPtr<UFlyComponent> FlyComponent;
 
 public:
 	// Sets default values for this character's properties
