@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 
 #include <GameFramework/Character.h>
+#include "../../../../MMOARPGGameType.h"
 
 #include "MMOARPGAnimInstanceBase.generated.h"
 
@@ -35,13 +36,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
 	bool bInAir;
 
-	// whether current character is in fight state.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
-	bool bFight;
-
 	// the movement speed of current character.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
 	float Speed;
+
+	// the action state of current character.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttributes")
+	ECharacterActionState ActionState;
 
 	/*** FootIK ***/
 public:

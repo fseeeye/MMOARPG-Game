@@ -108,22 +108,24 @@ void AMMOARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector InLo
 
 void AMMOARPGCharacter::SwitchFight()
 {
-	if (bFight)
+	if (ActionState == ECharacterActionState::FIGHT_STATE)
 	{
 		// Switch into normal state
-		bFight = false;
+		ActionState = ECharacterActionState::NORMAL_STATE;
 	}
 	else
 	{
 		// Switch into fight state
-		bFight = true;
+		ActionState = ECharacterActionState::FIGHT_STATE;
 	}
 
 	// Play anim montage on local client
 	FightChanged();
 
-	// Call Server to change bFight
-	ChangeFightOnServer(bFight); // `OnRep_FightChanged` function will be called on other client
+	// Call Server to change Action State to FIGHT
+	ChangeActionStateOnServer(ActionState); // `OnRep_ActionStateChanged` function will be called on other client
+
+	LastActionState = ActionState;
 }
 
 void AMMOARPGCharacter::FightChanged()
@@ -133,18 +135,23 @@ void AMMOARPGCharacter::FightChanged()
 	{
 		if (SwitchStateAnimTR->SwitchFightMontage)
 		{
-			PlayAnimMontage(SwitchStateAnimTR->SwitchFightMontage, 1.f, bFight ? TEXT("SwordDraw") : TEXT("SwordPutup"));
+			PlayAnimMontage(SwitchStateAnimTR->SwitchFightMontage, 1.f, ActionState == ECharacterActionState::FIGHT_STATE ? TEXT("SwordDraw") : TEXT("SwordPutup"));
 		}
 	}
 }
 
-void AMMOARPGCharacter::OnRep_FightChanged()
+void AMMOARPGCharacter::OnRep_ActionStateChanged()
 {
 	// Only do on other Client.
 	if (GetLocalRole() != ROLE_Authority)
 	{
-		// Play anim montage 
-		FightChanged();
+		if (ActionState == ECharacterActionState::FIGHT_STATE || LastActionState == ECharacterActionState::FIGHT_STATE)
+		{
+			// Play FIGHT anim montage 
+			FightChanged();
+		}
+
+		LastActionState = ActionState;
 	}
 }
 

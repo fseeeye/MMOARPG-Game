@@ -7,6 +7,7 @@
 
 #include "../../../DataTable/CharacterAnimTableRow.h"
 #include "../MMOARPGGameMode.h"
+#include "../../../MMOARPGGameType.h"
 
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
@@ -46,9 +47,9 @@ public:
 public:
 	FORCEINLINE int32 GetUserID() { return UserID; }
 
-	/*** Switch Fight State ***/
+	/*** Switch Action State ***/
 public:
-	FORCEINLINE bool IsFight() { return bFight; }
+	FORCEINLINE ECharacterActionState GetActionState() { return ActionState; }
 	FORCEINLINE int32 GetCharacterID() { return CharacterID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
 
@@ -59,17 +60,20 @@ public:
 	void K2_AnimSignal(int32 InSignal);
 
 protected:
-	// Do when `bFight` changed
+	// Do when Action State changed
 	UFUNCTION()
-	virtual void OnRep_FightChanged() {}
+	virtual void OnRep_ActionStateChanged() {}
 
-	// RPC Call Server to change `bFight` property
+	// Change Action State property by RPC (Authority)
 	UFUNCTION(Server, Reliable)
-	void ChangeFightOnServer(bool bNewFight);
+	void ChangeActionStateOnServer(ECharacterActionState InActionState);
 
 protected:
-	UPROPERTY(ReplicatedUsing = OnRep_FightChanged)
-	bool bFight;
+	UPROPERTY(ReplicatedUsing = OnRep_ActionStateChanged)
+	ECharacterActionState ActionState;
+
+	UPROPERTY()
+	ECharacterActionState LastActionState;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	int32 CharacterID;

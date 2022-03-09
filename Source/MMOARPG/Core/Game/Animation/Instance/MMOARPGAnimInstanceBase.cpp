@@ -8,8 +8,14 @@
 #include "SimpleAdvancedAnimationBPLibrary.h"
 
 UMMOARPGAnimInstanceBase::UMMOARPGAnimInstanceBase()
-	: bDeath(false), bInAir(false), bFight(false), Speed(0.f), 
-	  bFootIK(false), FootIK_ID(INDEX_NONE), FootIK_LeftBoneName(TEXT("foot_l")), FootIK_RightBoneName(TEXT("foot_r"))
+	: bDeath(false)
+	, bInAir(false)
+	, Speed(0.f)
+	, ActionState(ECharacterActionState::NORMAL_STATE)
+	, bFootIK(false)
+	, FootIK_ID(INDEX_NONE)
+	, FootIK_LeftBoneName(TEXT("foot_l"))
+	, FootIK_RightBoneName(TEXT("foot_r"))
 {
 }
 
@@ -30,7 +36,7 @@ void UMMOARPGAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 		// Get is falling (in air)
 		bInAir = CharacterBase->GetMovementComponent()->IsFalling();
 		// Get is fight from CharacterBase class
-		bFight = CharacterBase->IsFight();
+		ActionState = CharacterBase->GetActionState();
 	}
 
 	// FootIK update offsets

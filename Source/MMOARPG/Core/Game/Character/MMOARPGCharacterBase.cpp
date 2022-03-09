@@ -12,7 +12,10 @@
 
 // Sets default values
 AMMOARPGCharacterBase::AMMOARPGCharacterBase()
-	: bFight(false), UserID(INDEX_NONE), CharacterID(INDEX_NONE)
+	: ActionState(ECharacterActionState::NORMAL_STATE)
+	, LastActionState(ECharacterActionState::NORMAL_STATE)
+	, UserID(INDEX_NONE)
+	, CharacterID(INDEX_NONE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -23,8 +26,8 @@ void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	// Register `bFight` only update for Simulated Player (on other client)
-	DOREPLIFETIME_CONDITION(AMMOARPGCharacterBase, bFight, COND_SimulatedOnly);
+	// Register `ActionState` only update for Simulated Player (on other client)
+	DOREPLIFETIME_CONDITION(AMMOARPGCharacterBase, ActionState, COND_SimulatedOnly);
 }
 
 // Called when the game starts or when spawned
@@ -75,7 +78,8 @@ void AMMOARPGCharacterBase::AnimSignal(int32 InSignal)
 	K2_AnimSignal(InSignal);
 }
 
-void AMMOARPGCharacterBase::ChangeFightOnServer_Implementation(bool bNewFight)
+void AMMOARPGCharacterBase::ChangeActionStateOnServer_Implementation(ECharacterActionState InActionState)
 {
-	bFight = bNewFight;
+	ActionState = InActionState;
+	LastActionState = ActionState;
 }

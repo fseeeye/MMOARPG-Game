@@ -66,16 +66,6 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector InLocation);
 
 protected:
-	// Switch Fight state
-	void SwitchFight();
-
-	// Play anim montage when `bFight` changed
-	void FightChanged();
-
-	// Do when `bFight` changed
-	virtual void OnRep_FightChanged() override;
-
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
@@ -85,5 +75,16 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/*** Switch Action State ***/
+protected:
+	// Switch Action state
+	void SwitchFight();
+
+	// Play anim montage when Action state changed (Autonomous Proxy)
+	void FightChanged();
+
+	// Play anim montage when Action state changed (Simulated Proxy)
+	virtual void OnRep_ActionStateChanged() override;
 };
 
