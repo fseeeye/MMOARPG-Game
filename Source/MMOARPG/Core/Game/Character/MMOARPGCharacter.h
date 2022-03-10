@@ -86,6 +86,9 @@ protected:
 
 	// Switch Action state to FLY (Autonomous Proxy)
 	void SwitchFly();
+	
+	// Switch to Speed Up when at some Action State
+	void SwitchSpeedUp();
 
 	// Play anim montage when Action state changed (Simulated Proxy)
 	virtual void OnRep_ActionStateChanged() override;

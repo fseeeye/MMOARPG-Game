@@ -17,7 +17,7 @@ UFlyComponent::UFlyComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	bFastFly = false;
 }
 
 
@@ -48,7 +48,16 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			// Reset Actor rotation
 			const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
 			const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
-			FRotator NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f); // Calc new interp Capsule Rotation depends on Camera Rotation
+			FRotator NewRotation;
+			if (!bFastFly)
+			{
+				// Calc new interp Capsule Rotation depends on Camera Rotation
+				NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
+			}
+			else
+			{
+				NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
+			}
 			Owner_CharacterBase->SetActorRotation(NewRotation);
 
 			// Calc fly rotation rate (map angular velocity)
@@ -59,6 +68,7 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			RotationDiff *= FramesPerSecond;
 			//DebugPrint(DeltaTime, RotationDiff.ToString());
 			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Yaw); // Map angular velocity to (-1, 1)
+			FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Pitch);
 
 			LastRotation = NewRotation;
 		}
@@ -88,6 +98,8 @@ void UFlyComponent::ResetFly()
 			Owner_MovementComponent->bOrientRotationToMovement = true;
 			Owner_MovementComponent->SetMovementMode(MOVE_Walking);
 		}
+
+		bFastFly = false;
 	}
 }
 
@@ -95,9 +107,7 @@ void UFlyComponent::FlyForwardAxis(float InAxisValue)
 {
 	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
 	{
-		// get forward vector
-		const FVector Direction = Owner_CameraComponent->GetForwardVector();
-		Owner_CharacterBase->AddMovementInput(Direction, InAxisValue);
+		const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
+		Owner_CharacterBase->AddMovementInput(Direction, InAxisValue); // impl direction
 	}
 }
-

@@ -64,6 +64,8 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight); // switch to FIGHT action state
 	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFly); // switch to FLY action state
+	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUp); // switch to speed up when at some state
+	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUp);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -141,6 +143,14 @@ void AMMOARPGCharacter::SwitchFly()
 	GetFlyComponent()->ResetFly();
 
 	LastActionState = ActionState;
+}
+
+void AMMOARPGCharacter::SwitchSpeedUp()
+{
+	if (ActionState == ECharacterActionState::FLY_STATE)
+	{
+		GetFlyComponent()->SwitchFastFly();
+	}
 }
 
 void AMMOARPGCharacter::OnRep_ActionStateChanged()

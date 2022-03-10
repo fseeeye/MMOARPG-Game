@@ -34,7 +34,12 @@ private:
 
 public:
 	void ResetFly();
+
+	// Called for flying forwards/backward input
 	void FlyForwardAxis(float InAxisValue);
+
+	// Switch `bFastFly` value
+	FORCEINLINE void SwitchFastFly() { bFastFly = !bFastFly; }
 
 protected:
 	UPROPERTY()
@@ -55,4 +60,7 @@ protected:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	FVector2D FlyRotationRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	bool bFastFly;
 };
