@@ -34,6 +34,7 @@ private:
 
 public:
 	void ResetFly();
+	void FlyForwardAxis(float InAxisValue);
 
 protected:
 	UPROPERTY()

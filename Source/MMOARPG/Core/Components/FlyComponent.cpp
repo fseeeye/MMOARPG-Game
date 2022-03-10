@@ -46,9 +46,9 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		if (Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
 		{
 			// Reset Actor rotation
-			FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
-			FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
-			FRotator NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f); // Calc new interp Capsule Rotation depends on Camera Rotation
+			const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
+			const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
+			FRotator NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f); // Calc new interp Capsule Rotation depends on Camera Rotation
 			Owner_CharacterBase->SetActorRotation(NewRotation);
 
 			// Calc fly rotation rate (map angular velocity)
@@ -57,7 +57,7 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			float FramesPerSecond = 1.f / DeltaTime;
 			FRotator RotationDiff = NewRotation - LastRotation;
 			RotationDiff *= FramesPerSecond;
-			DebugPrint(DeltaTime, RotationDiff.ToString());
+			//DebugPrint(DeltaTime, RotationDiff.ToString());
 			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Yaw); // Map angular velocity to (-1, 1)
 
 			LastRotation = NewRotation;
@@ -88,6 +88,16 @@ void UFlyComponent::ResetFly()
 			Owner_MovementComponent->bOrientRotationToMovement = true;
 			Owner_MovementComponent->SetMovementMode(MOVE_Walking);
 		}
+	}
+}
+
+void UFlyComponent::FlyForwardAxis(float InAxisValue)
+{
+	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
+	{
+		// get forward vector
+		const FVector Direction = Owner_CameraComponent->GetForwardVector();
+		Owner_CharacterBase->AddMovementInput(Direction, InAxisValue);
 	}
 }
 
