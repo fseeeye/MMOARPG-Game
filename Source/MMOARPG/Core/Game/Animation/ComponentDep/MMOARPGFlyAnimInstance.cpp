@@ -8,6 +8,7 @@
 // Components
 #include <GameFramework/PawnMovementComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
+#include "../../../Components/FlyComponent.h"
 
 void UMMOARPGFlyAnimInstance::InitAnimInstance(ACharacter* InCharacter)
 {
@@ -27,6 +28,7 @@ void UMMOARPGFlyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (AMMOARPGCharacterBase* CharacterBase = Cast<AMMOARPGCharacterBase>(TryGetPawnOwner()))
 	{
+		// Update Fly Speed
 		FVector  CurrentSpeed = CharacterBase->GetVelocity();
 		FRotator CurrentRotation = CharacterBase->GetActorRotation();
 		CurrentSpeed = CurrentRotation.UnrotateVector(CurrentSpeed); // fix speed by rotation matrix
@@ -40,5 +42,8 @@ void UMMOARPGFlyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			FlySpeed.Y = FMath::GetMappedRangeValueClamped(FVector2D(-MaxFlySpeed, MaxFlySpeed), FVector2D(-1, 1), CurrentSpeed.Y);
 			FlySpeed.Z = FMath::GetMappedRangeValueClamped(FVector2D(-MaxFlySpeed, MaxFlySpeed), FVector2D(-1, 1), CurrentSpeed.Z);
 		}
+
+		// Update Fly Rotation
+		FlyRotationRate = CharacterBase->GetFlyComponent()->FlyRotationRate;
 	}
 }

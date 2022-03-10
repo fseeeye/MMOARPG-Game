@@ -4,9 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-
 #include "FlyComponent.generated.h"
 
+
+class AMMOARPGCharacterBase;
+class UCharacterMovementComponent;
+class UCapsuleComponent;
+class UCameraComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MMOARPG_API UFlyComponent : public UActorComponent
@@ -25,13 +29,29 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+private:
+	void DebugPrint(float InDeltaTime, const FString& InMsg);
+
 public:
 	void ResetFly();
 
 protected:
 	UPROPERTY()
-	class AMMOARPGCharacterBase* Inner_CharacterBase;
+	TWeakObjectPtr<AMMOARPGCharacterBase> Owner_CharacterBase;
 
 	UPROPERTY()
-	class UCharacterMovementComponent* Inner_MovementComponent;
+	TWeakObjectPtr<UCharacterMovementComponent> Owner_MovementComponent;
+
+	UPROPERTY()
+	TWeakObjectPtr<UCapsuleComponent> Owner_CapsuleComponent;
+
+	UPROPERTY()
+	TWeakObjectPtr<UCameraComponent> Owner_CameraComponent;
+
+	UPROPERTY()
+	FRotator LastRotation;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	FVector2D FlyRotationRate;
 };

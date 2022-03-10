@@ -16,6 +16,7 @@
 
 
 class UFlyComponent;
+class UCameraComponent;
 
 UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface
@@ -60,6 +61,8 @@ public:
 	FORCEINLINE int32 GetCharacterID() { return CharacterID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
 	FORCEINLINE UFlyComponent* GetFlyComponent() { return FlyComponent; }
+
+	virtual class UCameraComponent* GetFollowCamera() const { return nullptr; }
 
 	void SwitchActionState(ECharacterActionState InTargetActionState);
 

@@ -4,7 +4,10 @@
 #include "FlyComponent.h"
 
 #include "../Game/Character/MMOARPGCharacterBase.h"
+
 #include <GameFramework/CharacterMovementComponent.h>
+#include <Components/CapsuleComponent.h>
+#include <Camera/CameraComponent.h>
 
 
 // Sets default values for this component's properties
@@ -23,10 +26,12 @@ void UFlyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Inner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
-	if (Inner_CharacterBase)
+	Owner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
+	if (Owner_CharacterBase.IsValid())
 	{
-		Inner_MovementComponent = Cast<UCharacterMovementComponent>(Inner_CharacterBase->GetMovementComponent());
+		Owner_MovementComponent = Cast<UCharacterMovementComponent>(Owner_CharacterBase->GetMovementComponent());
+		Owner_CapsuleComponent  = Owner_CharacterBase->GetCapsuleComponent();
+		Owner_CameraComponent   = Owner_CharacterBase->GetFollowCamera();
 	}
 }
 
@@ -36,23 +41,52 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
+	{
+		if (Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
+		{
+			// Reset Actor rotation
+			FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
+			FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
+			FRotator NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f); // Calc new interp Capsule Rotation depends on Camera Rotation
+			Owner_CharacterBase->SetActorRotation(NewRotation);
+
+			// Calc fly rotation rate (map angular velocity)
+			//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
+			//DebugPrint(DeltaTime, AngularVelocity.ToString());
+			float FramesPerSecond = 1.f / DeltaTime;
+			FRotator RotationDiff = NewRotation - LastRotation;
+			RotationDiff *= FramesPerSecond;
+			DebugPrint(DeltaTime, RotationDiff.ToString());
+			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Yaw); // Map angular velocity to (-1, 1)
+
+			LastRotation = NewRotation;
+		}
+	}
+}
+
+void UFlyComponent::DebugPrint(float InDeltaTime, const FString& InMsg)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, InDeltaTime, FColor::Blue, FString::Printf(TEXT("%s"), *InMsg));
+	}
 }
 
 void UFlyComponent::ResetFly()
 {
-	if (Inner_CharacterBase && Inner_MovementComponent)
+	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid())
 	{
 		// Set `bOrientRotationToMovement` and flying mode
-		if (Inner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
+		if (Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
 		{
-			Inner_MovementComponent->bOrientRotationToMovement = false;
-			Inner_MovementComponent->SetMovementMode(MOVE_Flying);
+			Owner_MovementComponent->bOrientRotationToMovement = false;
+			Owner_MovementComponent->SetMovementMode(MOVE_Flying);
 		}
 		else
 		{
-			Inner_MovementComponent->bOrientRotationToMovement = true;
-			Inner_MovementComponent->SetMovementMode(MOVE_Walking);
+			Owner_MovementComponent->bOrientRotationToMovement = true;
+			Owner_MovementComponent->SetMovementMode(MOVE_Walking);
 		}
 	}
 }
