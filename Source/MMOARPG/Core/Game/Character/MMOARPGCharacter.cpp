@@ -182,13 +182,13 @@ void AMMOARPGCharacter::LookUpAtRate(float Rate)
 
 void AMMOARPGCharacter::MoveForward(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	if (Controller != nullptr)
 	{
 		if (ActionState == ECharacterActionState::FLY_STATE)
 		{
 			GetFlyComponent()->FlyForwardAxis(Value);
 		}
-		else
+		else if (Value != 0.0f)
 		{
 			// find out which way is forward
 			const FRotator Rotation = Controller->GetControlRotation();

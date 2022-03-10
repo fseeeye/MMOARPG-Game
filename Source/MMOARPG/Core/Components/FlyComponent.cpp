@@ -63,12 +63,10 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			// Calc fly rotation rate (map angular velocity)
 			//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
 			//DebugPrint(DeltaTime, AngularVelocity.ToString());
-			float FramesPerSecond = 1.f / DeltaTime;
-			FRotator RotationDiff = NewRotation - LastRotation;
-			RotationDiff *= FramesPerSecond;
-			//DebugPrint(DeltaTime, RotationDiff.ToString());
-			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Yaw); // Map angular velocity to (-1, 1)
-			FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationDiff.Pitch);
+			FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
+			//DebugPrint(DeltaTime, RotationVelocity.ToString());
+			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
+			FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
 
 			LastRotation = NewRotation;
 		}
@@ -95,8 +93,16 @@ void UFlyComponent::ResetFly()
 		}
 		else
 		{
+			// reset `bOrientRotationToMovement`
 			Owner_MovementComponent->bOrientRotationToMovement = true;
+			// reset movement mode
 			Owner_MovementComponent->SetMovementMode(MOVE_Walking);
+			// reset max fly speed
+			Owner_MovementComponent->MaxFlySpeed = 600.f;
+			// reset actor pitch rotation
+			FRotator CharacterRotation = Owner_CharacterBase->GetActorRotation();
+			CharacterRotation.Pitch = 0.f;
+			Owner_CharacterBase->SetActorRotation(CharacterRotation);
 		}
 
 		bFastFly = false;
@@ -107,7 +113,32 @@ void UFlyComponent::FlyForwardAxis(float InAxisValue)
 {
 	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
 	{
-		const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
-		Owner_CharacterBase->AddMovementInput(Direction, InAxisValue); // impl direction
+		if (bFastFly)
+		{
+			const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
+			Owner_CharacterBase->AddMovementInput(Direction, 1.f); // keep move forward
+		}
+		else if (InAxisValue != 0.f)
+		{
+			const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
+			Owner_CharacterBase->AddMovementInput(Direction, InAxisValue); // impl axis value at forward direction
+		}
+	}
+}
+
+void UFlyComponent::SwitchFastFly()
+{
+	if (Owner_MovementComponent.IsValid())
+	{
+		if (bFastFly)
+		{
+			bFastFly = false;
+			Owner_MovementComponent->MaxFlySpeed = 600.f;
+		}
+		else
+		{
+			bFastFly = true;
+			Owner_MovementComponent->MaxFlySpeed = 1200.f;
+		}
 	}
 }

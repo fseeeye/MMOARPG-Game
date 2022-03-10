@@ -39,7 +39,7 @@ public:
 	void FlyForwardAxis(float InAxisValue);
 
 	// Switch `bFastFly` value
-	FORCEINLINE void SwitchFastFly() { bFastFly = !bFastFly; }
+	void SwitchFastFly();
 
 protected:
 	UPROPERTY()
