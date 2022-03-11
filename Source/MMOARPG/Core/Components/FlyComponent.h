@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "../../MMOARPGGameType.h"
+
 #include "FlyComponent.generated.h"
 
 
@@ -41,6 +44,9 @@ public:
 	// Switch `bFastFly` value
 	void SwitchFastFly();
 
+	// Switch Dodge state
+	void SwitchDodge(EFlyDodgeState InTargetDodge);
+
 protected:
 	UPROPERTY()
 	TWeakObjectPtr<AMMOARPGCharacterBase> Owner_CharacterBase;
@@ -63,4 +69,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	bool bFastFly;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	EFlyDodgeState FlyDodgeState;
 };

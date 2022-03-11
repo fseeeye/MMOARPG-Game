@@ -15,6 +15,8 @@ class MMOARPG_API UMMOARPGFlyAnimInstance : public UMMOARPGAnimInstanceBase
 	GENERATED_BODY()
 
 public:
+	UMMOARPGFlyAnimInstance();
+
 	virtual void InitAnimInstance(ACharacter* InCharacter) override;
 
 	virtual void NativeInitializeAnimation() override; // like BeginPlay
@@ -29,4 +31,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	bool bFastFly;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	EFlyDodgeState FlyDodgeState;
 };

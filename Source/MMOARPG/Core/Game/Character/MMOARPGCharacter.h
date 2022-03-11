@@ -76,7 +76,7 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE virtual class UCameraComponent* GetFollowCamera() const override { return FollowCamera; }
 
-	/*** Switch Action State ***/
+	/*** Switch State ***/
 protected:
 	// Switch Action state to FIGHT (Autonomous Proxy)
 	void SwitchFight();
@@ -89,6 +89,10 @@ protected:
 	
 	// Switch to Speed Up when at some Action State
 	void SwitchSpeedUp();
+
+	// Switch Dodge state when fast fly (flying speedup)
+	void SwitchDodgeLeft();
+	void SwitchDodgeRight();
 
 	// Play anim montage when Action state changed (Simulated Proxy)
 	virtual void OnRep_ActionStateChanged() override;

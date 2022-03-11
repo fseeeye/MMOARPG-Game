@@ -12,3 +12,11 @@ enum class ECharacterActionState : uint8
 	CLIMB_STATE  UMETA(DisplayName = "Climb"),
 	SWIM_STATE   UMETA(DisplayName = "Swim")
 };
+
+UENUM(BlueprintType)
+enum class EFlyDodgeState : uint8
+{
+	NONE  UMETA(DisplayName = "None"),
+	LEFT  UMETA(DisplayName = "Left"),
+	RIGHT UMETA(DisplayName = "Right"),
+};

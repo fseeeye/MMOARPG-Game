@@ -134,11 +134,27 @@ void UFlyComponent::SwitchFastFly()
 		{
 			bFastFly = false;
 			Owner_MovementComponent->MaxFlySpeed = 600.f;
+			FlyDodgeState = EFlyDodgeState::NONE;
 		}
 		else
 		{
 			bFastFly = true;
 			Owner_MovementComponent->MaxFlySpeed = 1200.f;
+		}
+	}
+}
+
+void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
+{
+	if (bFastFly)
+	{
+		if (FlyDodgeState == InTargetDodge)
+		{
+			FlyDodgeState = EFlyDodgeState::NONE;
+		}
+		else if (FlyDodgeState == EFlyDodgeState::NONE)
+		{
+			FlyDodgeState = InTargetDodge;
 		}
 	}
 }

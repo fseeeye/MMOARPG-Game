@@ -10,6 +10,13 @@
 #include <GameFramework/CharacterMovementComponent.h>
 #include "../../../Components/FlyComponent.h"
 
+UMMOARPGFlyAnimInstance::UMMOARPGFlyAnimInstance()
+	: Super()
+	, FlyDodgeState(EFlyDodgeState::NONE)
+{
+
+}
+
 void UMMOARPGFlyAnimInstance::InitAnimInstance(ACharacter* InCharacter)
 {
 	Super::InitAnimInstance(InCharacter);
@@ -45,6 +52,9 @@ void UMMOARPGFlyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		// Update Fly Rotation
 		FlyRotationRate = CharacterBase->GetFlyComponent()->FlyRotationRate;
+		// Update bFastFly
 		bFastFly = CharacterBase->GetFlyComponent()->bFastFly;
+		// Update Fly Dodge State
+		FlyDodgeState = CharacterBase->GetFlyComponent()->FlyDodgeState;
 	}
 }
