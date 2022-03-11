@@ -54,13 +54,21 @@
 .vs
 .vscode
 
-# Ignore private content
+# Ignore private content & starter content
 Content/FemaleMilitaryOfficer/
 Content/StylizedCharactersPack/
 Content/Frank_RPG_Sword1/
 Content/Stylized_Landscape/
 Content/UnfCleric/
 Content/FlightAnim/
+Content/TestContent/
+Content/ThirdPerson/
+Content/Geometry/
+Content/Mannequin/
+
+# Ignore Package folder
+DSServerPackage
+GamePackage
 
 # Ignore Other folder
 Intermediate
