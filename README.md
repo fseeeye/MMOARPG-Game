@@ -20,6 +20,18 @@ Associated UE5 code: [Github - fseeeye/UE5EA](https://github.com/fseeeye/UE5EA/t
   - [x] Character Selection
   - [x] Character Creation
   - [x] Browse Color
-- [ ] Game Map
-  - [ ] Build Terrian
-  - [ ] Paint Terrian Matrial
+- [x] Game Map
+  - [x] Build Terrian
+  - [x] Paint Terrian Matrial
+  - [x] Comm with Dedicated Server
+- [ ] Player & Partner
+  - [x] C++ Character Base Classes
+  - [x] Run & Jump
+  - [x] Switch between Normal & Fight action state (sync in network)
+  - [x] Add Weapon
+  - [x] FootIK
+  - [x] Switch Player & Partner
+  - [ ] Add Fly action state
+  - [ ] Add Swim action state
+  - [ ] Add Climb action state
+ - [ ] Combat
