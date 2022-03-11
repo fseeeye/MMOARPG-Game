@@ -72,4 +72,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	EFlyDodgeState FlyDodgeState;
+
+private:
+	float DodgeTimer;
 };

@@ -69,9 +69,7 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUp);
 
 	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeLeft); // switch to dodge left when fast fly
-	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Released, this, &AMMOARPGCharacter::SwitchDodgeLeft);
 	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeRight); // switch to dodge right when fast fly
-	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Released, this, &AMMOARPGCharacter::SwitchDodgeRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.

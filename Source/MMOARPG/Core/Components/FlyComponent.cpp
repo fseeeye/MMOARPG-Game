@@ -12,12 +12,13 @@
 
 // Sets default values for this component's properties
 UFlyComponent::UFlyComponent()
+	: bFastFly(false), DodgeTimer(0.f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	bFastFly = false;
+	// ...
 }
 
 
@@ -32,6 +33,13 @@ void UFlyComponent::BeginPlay()
 		Owner_MovementComponent = Cast<UCharacterMovementComponent>(Owner_CharacterBase->GetMovementComponent());
 		Owner_CapsuleComponent  = Owner_CharacterBase->GetCapsuleComponent();
 		Owner_CameraComponent   = Owner_CharacterBase->GetFollowCamera();
+
+		// TMP: reset accleration & braking deceleration
+		if (Owner_MovementComponent.IsValid())
+		{
+			Owner_MovementComponent->MaxAcceleration = 2500.f;
+			Owner_MovementComponent->BrakingDecelerationFlying = 1400.f;
+		}
 	}
 }
 
@@ -69,6 +77,16 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
 
 			LastRotation = NewRotation;
+		}
+
+		if (DodgeTimer > 0.f)
+		{
+			DodgeTimer -= DeltaTime;
+			if (DodgeTimer <= 0.f)
+			{
+				FlyDodgeState = EFlyDodgeState::NONE;
+				DodgeTimer = 0.f;
+			}
 		}
 	}
 }
@@ -148,13 +166,8 @@ void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
 {
 	if (bFastFly)
 	{
-		if (FlyDodgeState == InTargetDodge)
-		{
-			FlyDodgeState = EFlyDodgeState::NONE;
-		}
-		else if (FlyDodgeState == EFlyDodgeState::NONE)
-		{
-			FlyDodgeState = InTargetDodge;
-		}
+		FlyDodgeState = InTargetDodge;
+
+		DodgeTimer = 1.6f;
 	}
 }
