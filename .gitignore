@@ -62,9 +62,7 @@ Content/Stylized_Landscape/
 Content/UnfCleric/
 Content/FlightAnim/
 Content/TestContent/
-Content/ThirdPerson/
-Content/Geometry/
-Content/Mannequin/
+Content/SwimmingAnimation/
 
 # Ignore Package folder
 DSServerPackage
