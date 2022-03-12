@@ -12,7 +12,6 @@
 
 // Sets default values for this component's properties
 UFlyComponent::UFlyComponent()
-	: bFastFly(false), DodgeTimer(0.f)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -40,6 +39,19 @@ void UFlyComponent::BeginPlay()
 			Owner_MovementComponent->MaxAcceleration = 2500.f;
 			Owner_MovementComponent->BrakingDecelerationFlying = 1400.f;
 		}
+
+		// Bind landed delegate
+		Owner_CapsuleComponent->OnComponentHit.AddDynamic(this, &UFlyComponent::OnHitLand);
+		// Bind time out delegate
+		bFastFly.FuncDelegate.BindLambda([&]() { FlyDodgeState = EFlyDodgeState::NONE; });
+		bLanded.FuncDelegate.BindLambda([&]() 
+			{ 
+				if (Owner_CharacterBase.IsValid())
+				{
+					Owner_CharacterBase->SwitchActionState(ECharacterActionState::NORMAL_STATE);
+					ResetFly();
+				}
+			});
 	}
 }
 
@@ -53,41 +65,39 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	{
 		if (Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
 		{
-			// Reset Actor rotation
-			const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
-			const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
-			FRotator NewRotation;
-			if (!bFastFly)
+			if (!bLanded)
 			{
-				// Calc new interp Capsule Rotation depends on Camera Rotation
-				NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
-			}
-			else
-			{
-				NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
-			}
-			Owner_CharacterBase->SetActorRotation(NewRotation);
 
-			// Calc fly rotation rate (map angular velocity)
-			//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
-			//DebugPrint(DeltaTime, AngularVelocity.ToString());
-			FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
-			//DebugPrint(DeltaTime, RotationVelocity.ToString());
-			FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
-			FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
+				// Reset Actor rotation
+				const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
+				const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
+				FRotator NewRotation;
+				if (!bFastFly)
+				{
+					// Calc new interp Capsule Rotation depends on Camera Rotation
+					NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
+				}
+				else
+				{
+					NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
+				}
+				Owner_CharacterBase->SetActorRotation(NewRotation);
 
-			LastRotation = NewRotation;
-		}
+				// Calc fly rotation rate (map angular velocity)
+				//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
+				//DebugPrint(DeltaTime, AngularVelocity.ToString());
+				FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
+				//DebugPrint(DeltaTime, RotationVelocity.ToString());
+				FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
+				FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
 
-		if (DodgeTimer > 0.f)
-		{
-			DodgeTimer -= DeltaTime;
-			if (DodgeTimer <= 0.f)
-			{
-				FlyDodgeState = EFlyDodgeState::NONE;
-				DodgeTimer = 0.f;
+				LastRotation = NewRotation;
 			}
 		}
+
+		// Tick bool timer
+		bFastFly.NativeTick(DeltaTime);
+		bLanded.NativeTick(DeltaTime);
 	}
 }
 
@@ -111,19 +121,27 @@ void UFlyComponent::ResetFly()
 		}
 		else
 		{
-			// reset `bOrientRotationToMovement`
-			Owner_MovementComponent->bOrientRotationToMovement = true;
-			// reset movement mode
-			Owner_MovementComponent->SetMovementMode(MOVE_Walking);
-			// reset max fly speed
-			Owner_MovementComponent->MaxFlySpeed = 600.f;
-			// reset actor pitch rotation
-			FRotator CharacterRotation = Owner_CharacterBase->GetActorRotation();
-			CharacterRotation.Pitch = 0.f;
-			Owner_CharacterBase->SetActorRotation(CharacterRotation);
+			ResetFlyToWalking();
 		}
 
 		bFastFly = false;
+	}
+}
+
+void UFlyComponent::ResetFlyToWalking()
+{
+	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid())
+	{
+		// reset `bOrientRotationToMovement`
+		Owner_MovementComponent->bOrientRotationToMovement = true;
+		// reset movement mode
+		Owner_MovementComponent->SetMovementMode(MOVE_Walking);
+		// reset max fly speed
+		Owner_MovementComponent->MaxFlySpeed = 600.f;
+		// reset actor pitch rotation
+		FRotator CharacterRotation = Owner_CharacterBase->GetActorRotation();
+		CharacterRotation.Pitch = 0.f;
+		Owner_CharacterBase->SetActorRotation(CharacterRotation);
 	}
 }
 
@@ -167,7 +185,23 @@ void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
 	if (bFastFly)
 	{
 		FlyDodgeState = InTargetDodge;
+		bFastFly = 1.6f;
+	}
+}
 
-		DodgeTimer = 1.6f;
+void UFlyComponent::OnHitLand(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (Owner_CharacterBase.IsValid() && Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE && bFastFly)
+	{
+		// judge angle between forward vector and land normal
+		float DotProductRst = FVector::DotProduct(Owner_CapsuleComponent->GetForwardVector(), Hit.ImpactNormal);
+		float IncludeAngle = (180.f / PI) * FMath::Acos(DotProductRst);
+		if (IncludeAngle >= 120.f && Hit.ImpactNormal.Z > 0.5f) // face land & land isn't a hill
+		{
+			ResetFlyToWalking();
+
+			bLanded = true;
+			bLanded = 1.6f;
+		}
 	}
 }

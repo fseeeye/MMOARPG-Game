@@ -30,8 +30,11 @@ public:
 	FVector2D FlyRotationRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	EFlyDodgeState FlyDodgeState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	bool bFastFly;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
-	EFlyDodgeState FlyDodgeState;
+	bool bLanded;
 };

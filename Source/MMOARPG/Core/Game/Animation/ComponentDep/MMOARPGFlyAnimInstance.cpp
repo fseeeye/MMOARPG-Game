@@ -52,9 +52,11 @@ void UMMOARPGFlyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		// Update Fly Rotation
 		FlyRotationRate = CharacterBase->GetFlyComponent()->FlyRotationRate;
-		// Update bFastFly
-		bFastFly = CharacterBase->GetFlyComponent()->bFastFly;
 		// Update Fly Dodge State
 		FlyDodgeState = CharacterBase->GetFlyComponent()->FlyDodgeState;
+		// Update bFastFly
+		bFastFly = *CharacterBase->GetFlyComponent()->bFastFly;
+		// Update bLanded
+		bLanded = *CharacterBase->GetFlyComponent()->bLanded;
 	}
 }

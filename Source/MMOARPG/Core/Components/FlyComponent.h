@@ -37,6 +37,7 @@ private:
 
 public:
 	void ResetFly();
+	void ResetFlyToWalking();
 
 	// Called for flying forwards/backward input
 	void FlyForwardAxis(float InAxisValue);
@@ -46,6 +47,10 @@ public:
 
 	// Switch Dodge state
 	void SwitchDodge(EFlyDodgeState InTargetDodge);
+
+	// Call for flying landed
+	UFUNCTION()
+	void OnHitLand(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 protected:
 	UPROPERTY()
@@ -68,11 +73,9 @@ public:
 	FVector2D FlyRotationRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
-	bool bFastFly;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	EFlyDodgeState FlyDodgeState;
 
-private:
-	float DodgeTimer;
+	FTimeBool bFastFly;
+
+	FTimeBool bLanded;
 };
