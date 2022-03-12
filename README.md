@@ -31,7 +31,7 @@ Associated UE5 code: [Github - fseeeye/UE5EA](https://github.com/fseeeye/UE5EA/t
   - [x] Add Weapon
   - [x] FootIK
   - [x] Switch Player & Partner
-  - [ ] Add Fly action state
-  - [ ] Add Swim action state
-  - [ ] Add Climb action state
+  - [x] Fly action state
+  - [ ] Swim action state
+  - [ ] Climb action state
  - [ ] Combat
