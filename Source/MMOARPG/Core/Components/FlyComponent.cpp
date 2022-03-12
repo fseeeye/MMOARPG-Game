@@ -23,6 +23,7 @@ UFlyComponent::UFlyComponent()
 
 // Called when the game starts
 void UFlyComponent::BeginPlay()
+
 {
 	Super::BeginPlay();
 
@@ -65,33 +66,36 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	{
 		if (Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE)
 		{
-			if (!bLanded)
+			if (Owner_CharacterBase->GetLocalRole() == ROLE_Authority ||
+				Owner_CharacterBase->GetLocalRole() == ROLE_AutonomousProxy)
 			{
-
-				// Reset Actor rotation
-				const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
-				const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
-				FRotator NewRotation;
-				if (!bFastFly)
+				if (!bLanded)
 				{
-					// Calc new interp Capsule Rotation depends on Camera Rotation
-					NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
-				}
-				else
-				{
-					NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
-				}
-				Owner_CharacterBase->SetActorRotation(NewRotation);
+					// Reset Actor rotation
+					const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
+					const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
+					FRotator NewRotation;
+					if (!bFastFly)
+					{
+						// Calc new interp Capsule Rotation depends on Camera Rotation
+						NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
+					}
+					else
+					{
+						NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
+					}
+					Owner_CharacterBase->SetActorRotation(NewRotation);
 
-				// Calc fly rotation rate (map angular velocity)
-				//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
-				//DebugPrint(DeltaTime, AngularVelocity.ToString());
-				FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
-				//DebugPrint(DeltaTime, RotationVelocity.ToString());
-				FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
-				FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
+					// Calc fly rotation rate (map angular velocity)
+					//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
+					//DebugPrint(DeltaTime, AngularVelocity.ToString());
+					FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
+					//DebugPrint(DeltaTime, RotationVelocity.ToString());
+					FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
+					FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
 
-				LastRotation = NewRotation;
+					LastRotation = NewRotation;
+				}
 			}
 		}
 

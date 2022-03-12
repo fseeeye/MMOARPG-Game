@@ -85,7 +85,11 @@ protected:
 	void PlayFightMontage();
 
 	// Switch Action state to FLY (Autonomous Proxy)
-	void SwitchFly();
+	UFUNCTION(Server, Reliable)
+	void SwitchFlyOnServer();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SwitchFlyMulticast();
 	
 	// Switch to Speed Up when at some Action State
 	void SwitchSpeedUp();

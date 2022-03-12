@@ -63,7 +63,7 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMMOARPGCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight); // switch to FIGHT action state
-	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFly); // switch to FLY action state
+	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFlyOnServer); // switch to FLY action state
 
 	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUp); // switch to speed up when at some state
 	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUp);
@@ -140,7 +140,12 @@ void AMMOARPGCharacter::PlayFightMontage()
 	}
 }
 
-void AMMOARPGCharacter::SwitchFly()
+void AMMOARPGCharacter::SwitchFlyOnServer_Implementation()
+{
+	SwitchFlyMulticast();
+}
+
+void AMMOARPGCharacter::SwitchFlyMulticast_Implementation()
 {
 	SwitchActionState(ECharacterActionState::FLY_STATE);
 
