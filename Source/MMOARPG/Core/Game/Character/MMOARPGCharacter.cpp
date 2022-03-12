@@ -65,8 +65,8 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight); // switch to FIGHT action state
 	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFlyOnServer); // switch to FLY action state
 
-	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUp); // switch to speed up when at some state
-	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUp);
+	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUpOnServer); // switch to speed up when at some state
+	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUpOnServer);
 
 	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeLeft); // switch to dodge left when fast fly
 	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeRight); // switch to dodge right when fast fly
@@ -154,7 +154,12 @@ void AMMOARPGCharacter::SwitchFlyMulticast_Implementation()
 	LastActionState = ActionState;
 }
 
-void AMMOARPGCharacter::SwitchSpeedUp()
+void AMMOARPGCharacter::SwitchSpeedUpOnServer_Implementation()
+{
+	SwitchSpeedUpMulticast();
+}
+
+void AMMOARPGCharacter::SwitchSpeedUpMulticast_Implementation()
 {
 	if (ActionState == ECharacterActionState::FLY_STATE)
 	{
@@ -162,7 +167,17 @@ void AMMOARPGCharacter::SwitchSpeedUp()
 	}
 }
 
-void AMMOARPGCharacter::SwitchDodgeLeft()
+void AMMOARPGCharacter::SwitchDodgeLeft_Implementation()
+{
+	SwitchDodgeLeftMulticast();
+}
+
+void AMMOARPGCharacter::SwitchDodgeRight_Implementation()
+{
+	SwitchDodgeRightMulticast();
+}
+
+void AMMOARPGCharacter::SwitchDodgeLeftMulticast_Implementation()
 {
 	if (ActionState == ECharacterActionState::FLY_STATE)
 	{
@@ -170,7 +185,7 @@ void AMMOARPGCharacter::SwitchDodgeLeft()
 	}
 }
 
-void AMMOARPGCharacter::SwitchDodgeRight()
+void AMMOARPGCharacter::SwitchDodgeRightMulticast_Implementation()
 {
 	if (ActionState == ECharacterActionState::FLY_STATE)
 	{

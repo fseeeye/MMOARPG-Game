@@ -92,11 +92,24 @@ protected:
 	void SwitchFlyMulticast();
 	
 	// Switch to Speed Up when at some Action State
-	void SwitchSpeedUp();
+	UFUNCTION(Server, Reliable)
+	void SwitchSpeedUpOnServer();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SwitchSpeedUpMulticast();
 
 	// Switch Dodge state when fast fly (flying speedup)
+	UFUNCTION(Server, Reliable)
 	void SwitchDodgeLeft();
+
+	UFUNCTION(Server, Reliable)
 	void SwitchDodgeRight();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SwitchDodgeLeftMulticast();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SwitchDodgeRightMulticast();
 
 	// Play anim montage when Action state changed (Simulated Proxy)
 	virtual void OnRep_ActionStateChanged() override;
