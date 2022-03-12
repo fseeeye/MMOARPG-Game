@@ -75,7 +75,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	EFlyDodgeState FlyDodgeState;
 
-	FTimeBool bFastFly;
+	bool bFastFly;
+	
+	FTimeBool bDodgeFly;
 
 	FTimeBool bLanded;
 };

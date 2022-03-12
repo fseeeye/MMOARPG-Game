@@ -44,7 +44,7 @@ void UFlyComponent::BeginPlay()
 		// Bind landed delegate
 		Owner_CapsuleComponent->OnComponentHit.AddDynamic(this, &UFlyComponent::OnHitLand);
 		// Bind time out delegate
-		bFastFly.FuncDelegate.BindLambda([&]() { FlyDodgeState = EFlyDodgeState::NONE; });
+		bDodgeFly.FuncDelegate.BindLambda([&]() { FlyDodgeState = EFlyDodgeState::NONE; });
 		bLanded.FuncDelegate.BindLambda([&]() 
 			{ 
 				if (Owner_CharacterBase.IsValid())
@@ -100,7 +100,7 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		}
 
 		// Tick bool timer
-		bFastFly.NativeTick(DeltaTime);
+		bDodgeFly.NativeTick(DeltaTime);
 		bLanded.NativeTick(DeltaTime);
 	}
 }
@@ -129,6 +129,7 @@ void UFlyComponent::ResetFly()
 		}
 
 		bFastFly = false;
+		bDodgeFly = false;
 	}
 }
 
@@ -189,7 +190,7 @@ void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
 	if (bFastFly)
 	{
 		FlyDodgeState = InTargetDodge;
-		bFastFly = 1.6f;
+		bDodgeFly = 1.6f;
 	}
 }
 
