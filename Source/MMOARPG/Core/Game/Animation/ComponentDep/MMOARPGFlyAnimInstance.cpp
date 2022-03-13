@@ -35,23 +35,13 @@ void UMMOARPGFlyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (AMMOARPGCharacterBase* CharacterBase = Cast<AMMOARPGCharacterBase>(TryGetPawnOwner()))
 	{
-		// Update Fly Speed
-		FVector  CurrentSpeed = CharacterBase->GetVelocity();
-		FRotator CurrentRotation = CharacterBase->GetActorRotation();
-		CurrentSpeed = CurrentRotation.UnrotateVector(CurrentSpeed); // fix speed by rotation matrix
-
 		if (auto CharacterMovementComponent = Cast<UCharacterMovementComponent>(CharacterBase->GetMovementComponent()))
 		{
-			float MaxFlySpeed = CharacterMovementComponent->MaxFlySpeed;
-
-			// Map current speed to (-1, 1)
-			FlySpeed.X = FMath::GetMappedRangeValueClamped(FVector2D(-MaxFlySpeed, MaxFlySpeed), FVector2D(-1, 1), CurrentSpeed.X);
-			FlySpeed.Y = FMath::GetMappedRangeValueClamped(FVector2D(-MaxFlySpeed, MaxFlySpeed), FVector2D(-1, 1), CurrentSpeed.Y);
-			FlySpeed.Z = FMath::GetMappedRangeValueClamped(FVector2D(-MaxFlySpeed, MaxFlySpeed), FVector2D(-1, 1), CurrentSpeed.Z);
+			UpdateAxisSpeed3D(CharacterMovementComponent->MaxFlySpeed);
 		}
 
-		// Update Fly Rotation
-		FlyRotationRate = CharacterBase->GetFlyComponent()->FlyRotationRate;
+		// Update Fly Rotation Rate
+		RotationRate = CharacterBase->GetFlyComponent()->RotationRate;
 		// Update Fly Dodge State
 		FlyDodgeState = CharacterBase->GetFlyComponent()->FlyDodgeState;
 		// Update bFastFly

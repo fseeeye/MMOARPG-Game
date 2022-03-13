@@ -85,15 +85,8 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 					}
 					Owner_CharacterBase->SetActorRotation(NewRotation);
 
-					// Calc fly rotation rate (map angular velocity)
-					//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
-					//DebugPrint(DeltaTime, AngularVelocity.ToString());
-					FRotator RotationVelocity = (NewRotation - LastRotation) * (1.f / DeltaTime);
-					//DebugPrint(DeltaTime, RotationVelocity.ToString());
-					FlyRotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
-					FlyRotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
-
-					LastRotation = NewRotation;
+					// Calc rotation rate
+					ResetRotationRate(DeltaTime);
 				}
 			}
 		}

@@ -25,7 +25,8 @@ void USwimComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		{
 			if (Owner_CharacterBase->GetActionState() == ECharacterActionState::SWIM_STATE) // Main Logic
 			{
-				
+				// Calc rotation rate
+				ResetRotationRate(DeltaTime);
 			}
 			else 
 			{

@@ -28,6 +28,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	void ResetRotationRate(float DeltaTime);
+
 protected:
 	UPROPERTY()
 	TWeakObjectPtr<AMMOARPGCharacterBase> Owner_CharacterBase;
@@ -43,4 +46,8 @@ protected:
 
 	UPROPERTY()
 	FRotator LastRotation;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	FVector2D RotationRate;
 };

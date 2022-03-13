@@ -43,3 +43,17 @@ void UActorMotionComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+void UActorMotionComponent::ResetRotationRate(float DeltaTime)
+{
+	// Calc fly rotation rate (map angular velocity)
+	//FVector AngularVelocity = Owner_CapsuleComponent->GetPhysicsAngularVelocityInDegrees();
+	//DebugPrint(DeltaTime, AngularVelocity.ToString());
+	FRotator CurrentRotation = Owner_CharacterBase->GetActorRotation();
+	FRotator RotationVelocity = (CurrentRotation - LastRotation) * (1.f / DeltaTime);
+	//DebugPrint(DeltaTime, RotationVelocity.ToString());
+	RotationRate.X = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Yaw); // Map angular velocity to (-1, 1)
+	RotationRate.Y = FMath::GetMappedRangeValueClamped(FVector2D(-360.f, 360.f), FVector2D(-1.f, 1.f), RotationVelocity.Pitch);
+
+	LastRotation = CurrentRotation;
+}
+

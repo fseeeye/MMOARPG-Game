@@ -49,9 +49,6 @@ public:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
-	FVector2D FlyRotationRate;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	EFlyDodgeState FlyDodgeState;
 
 	bool bFastFly;
