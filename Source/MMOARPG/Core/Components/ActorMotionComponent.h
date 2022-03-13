@@ -29,6 +29,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	void LockView(float DeltaTime, bool bClearPitch = false);
+
 	void ResetRotationRate(float DeltaTime);
 
 protected:

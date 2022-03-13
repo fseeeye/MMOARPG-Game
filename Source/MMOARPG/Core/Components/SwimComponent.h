@@ -21,4 +21,8 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	// Called for swimming forward input
+	void SwimForwardAxis(float InAxisValue);
 };

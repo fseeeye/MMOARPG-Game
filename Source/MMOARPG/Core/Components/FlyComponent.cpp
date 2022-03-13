@@ -70,20 +70,8 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			{
 				if (!bLanded)
 				{
-					// Reset Actor rotation
-					const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
-					const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
-					FRotator NewRotation;
-					if (!bFastFly)
-					{
-						// Calc new interp Capsule Rotation depends on Camera Rotation
-						NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
-					}
-					else
-					{
-						NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
-					}
-					Owner_CharacterBase->SetActorRotation(NewRotation);
+					// Lock View ( character turn to camera direction )
+					LockView(DeltaTime, !bFastFly);
 
 					// Calc rotation rate
 					ResetRotationRate(DeltaTime);

@@ -43,6 +43,26 @@ void UActorMotionComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+void UActorMotionComponent::LockView(float DeltaTime, bool bClearPitch /*= false*/)
+{
+	// Reset Actor rotation
+	const FRotator CameraRotation = Owner_CameraComponent->GetComponentRotation();
+	const FRotator CapsuleRotation = Owner_CapsuleComponent->GetComponentRotation();
+
+	FRotator NewRotation;
+	if (bClearPitch)
+	{
+		// Calc new interp Capsule Rotation depends on Camera Rotation
+		NewRotation = FMath::RInterpTo(CapsuleRotation, FRotator(0.f, CameraRotation.Yaw, CameraRotation.Roll), DeltaTime, 8.f);
+	}
+	else
+	{
+		NewRotation = FMath::RInterpTo(CapsuleRotation, CameraRotation, DeltaTime, 8.f);
+	}
+
+	Owner_CharacterBase->SetActorRotation(NewRotation);
+}
+
 void UActorMotionComponent::ResetRotationRate(float DeltaTime)
 {
 	// Calc fly rotation rate (map angular velocity)

@@ -25,6 +25,9 @@ void USwimComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		{
 			if (Owner_CharacterBase->GetActionState() == ECharacterActionState::SWIM_STATE) // Main Logic
 			{
+				// Lock View ( character turn to camera direction )
+				LockView(DeltaTime);
+
 				// Calc rotation rate
 				ResetRotationRate(DeltaTime);
 			}
@@ -38,5 +41,17 @@ void USwimComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			Owner_CharacterBase->SwitchActionState(ECharacterActionState::SWIM_STATE);
 		}
 		
+	}
+}
+
+void USwimComponent::SwimForwardAxis(float InAxisValue)
+{
+	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
+	{
+		if (InAxisValue >= 0.f) // ban backward
+		{
+			const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
+			Owner_CharacterBase->AddMovementInput(Direction, InAxisValue); // impl axis value at forward direction
+		}
 	}
 }

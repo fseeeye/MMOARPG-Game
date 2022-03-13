@@ -10,6 +10,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "../../Components/FlyComponent.h"
+#include "../../Components/SwimComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMMOARPGCharacter
@@ -227,6 +228,10 @@ void AMMOARPGCharacter::MoveForward(float Value)
 		if (ActionState == ECharacterActionState::FLY_STATE)
 		{
 			GetFlyComponent()->FlyForwardAxis(Value);
+		}
+		else if (ActionState == ECharacterActionState::SWIM_STATE)
+		{
+			GetSwimComponent()->SwimForwardAxis(Value);
 		}
 		else if (Value != 0.0f)
 		{
