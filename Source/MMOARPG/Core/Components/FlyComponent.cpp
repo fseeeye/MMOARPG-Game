@@ -27,13 +27,8 @@ void UFlyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Owner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
 	if (Owner_CharacterBase.IsValid())
 	{
-		Owner_MovementComponent = Cast<UCharacterMovementComponent>(Owner_CharacterBase->GetMovementComponent());
-		Owner_CapsuleComponent  = Owner_CharacterBase->GetCapsuleComponent();
-		Owner_CameraComponent   = Owner_CharacterBase->GetFollowCamera();
-
 		// TMP: reset accleration & braking deceleration
 		if (Owner_MovementComponent.IsValid())
 		{
@@ -42,7 +37,11 @@ void UFlyComponent::BeginPlay()
 		}
 
 		// Bind landed delegate
-		Owner_CapsuleComponent->OnComponentHit.AddDynamic(this, &UFlyComponent::OnHitLand);
+		if (Owner_CapsuleComponent.IsValid())
+		{
+			Owner_CapsuleComponent->OnComponentHit.AddDynamic(this, &UFlyComponent::OnHitLand);
+		}
+
 		// Bind time out delegate
 		bDodgeFly.FuncDelegate.BindLambda([&]() { FlyDodgeState = EFlyDodgeState::NONE; });
 		bLanded.FuncDelegate.BindLambda([&]() 

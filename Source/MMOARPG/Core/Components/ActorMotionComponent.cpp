@@ -3,6 +3,12 @@
 
 #include "ActorMotionComponent.h"
 
+#include "../Game/Character/MMOARPGCharacterBase.h"
+
+#include <GameFramework/CharacterMovementComponent.h>
+#include <Components/CapsuleComponent.h>
+#include <Camera/CameraComponent.h>
+
 // Sets default values for this component's properties
 UActorMotionComponent::UActorMotionComponent()
 {
@@ -19,8 +25,13 @@ void UActorMotionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	Owner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
+	if (Owner_CharacterBase.IsValid())
+	{
+		Owner_MovementComponent = Cast<UCharacterMovementComponent>(Owner_CharacterBase->GetMovementComponent());
+		Owner_CapsuleComponent = Owner_CharacterBase->GetCapsuleComponent();
+		Owner_CameraComponent = Owner_CharacterBase->GetFollowCamera();
+	}
 }
 
 
