@@ -71,7 +71,7 @@ void UFlyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 				if (!bLanded)
 				{
 					// Lock View ( character turn to camera direction )
-					LockView(DeltaTime, !bFastFly);
+					LockView(DeltaTime, !bFast);
 
 					// Calc rotation rate
 					ResetRotationRate(DeltaTime);
@@ -108,7 +108,7 @@ void UFlyComponent::ResetFly()
 			ResetFlyToWalking();
 		}
 
-		bFastFly = false;
+		bFast = false;
 		bDodgeFly = false;
 	}
 }
@@ -134,7 +134,7 @@ void UFlyComponent::FlyForwardAxis(float InAxisValue)
 {
 	if (Owner_CharacterBase.IsValid() && Owner_MovementComponent.IsValid() && Owner_CapsuleComponent.IsValid() && Owner_CameraComponent.IsValid())
 	{
-		if (bFastFly)
+		if (bFast)
 		{
 			const FVector Direction = Owner_CameraComponent->GetForwardVector(); // get forward vector
 			Owner_CharacterBase->AddMovementInput(Direction, 1.f); // keep move forward
@@ -151,15 +151,15 @@ void UFlyComponent::SwitchFastFly()
 {
 	if (Owner_MovementComponent.IsValid())
 	{
-		if (bFastFly)
+		if (bFast)
 		{
-			bFastFly = false;
+			bFast = false;
 			Owner_MovementComponent->MaxFlySpeed = 600.f;
 			FlyDodgeState = EFlyDodgeState::NONE;
 		}
 		else
 		{
-			bFastFly = true;
+			bFast = true;
 			Owner_MovementComponent->MaxFlySpeed = 1200.f;
 		}
 	}
@@ -167,7 +167,7 @@ void UFlyComponent::SwitchFastFly()
 
 void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
 {
-	if (bFastFly)
+	if (bFast)
 	{
 		FlyDodgeState = InTargetDodge;
 		bDodgeFly = 1.6f;
@@ -176,7 +176,7 @@ void UFlyComponent::SwitchDodge(EFlyDodgeState InTargetDodge)
 
 void UFlyComponent::OnHitLand(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Owner_CharacterBase.IsValid() && Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE && bFastFly)
+	if (Owner_CharacterBase.IsValid() && Owner_CharacterBase->GetActionState() == ECharacterActionState::FLY_STATE && bFast)
 	{
 		// judge angle between forward vector and land normal
 		float DotProductRst = FVector::DotProduct(Owner_CapsuleComponent->GetForwardVector(), Hit.ImpactNormal);

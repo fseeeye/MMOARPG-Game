@@ -29,5 +29,7 @@ void UMMOARPGSwimAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		// Update Swim Rotation Rate
 		RotationRate = CharacterBase->GetSwimComponent()->RotationRate; 
+		// Update Swim bFast
+		bFast = CharacterBase->GetSwimComponent()->bFast;
 	}
 }

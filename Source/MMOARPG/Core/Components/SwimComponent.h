@@ -25,4 +25,7 @@ public:
 public:
 	// Called for swimming forward input
 	void SwimForwardAxis(float InAxisValue);
+
+	// Switch `bFast`
+	void SwitchFastSwim();
 };

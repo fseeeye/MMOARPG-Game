@@ -37,7 +37,7 @@ public:
 	// Called for flying forwards/backward input
 	void FlyForwardAxis(float InAxisValue);
 
-	// Switch `bFastFly` value
+	// Switch `bFast`
 	void SwitchFastFly();
 
 	// Switch Dodge state
@@ -50,8 +50,6 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	EFlyDodgeState FlyDodgeState;
-
-	bool bFastFly;
 	
 	FTimeBool bDodgeFly;
 

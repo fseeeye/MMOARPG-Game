@@ -95,8 +95,14 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void SwitchSpeedUpOnServer();
 
+	UFUNCTION(Server, Reliable)
+	void SwitchSpeedUpReleasedOnServer();
+
 	UFUNCTION(NetMulticast, Reliable)
 	void SwitchSpeedUpMulticast();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SwitchSpeedUpReleasedMulticast();
 
 	// Switch Dodge state when fast fly (flying speedup)
 	UFUNCTION(Server, Reliable)

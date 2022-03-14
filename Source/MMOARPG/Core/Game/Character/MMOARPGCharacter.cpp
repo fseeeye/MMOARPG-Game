@@ -67,7 +67,7 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFlyOnServer); // switch to FLY action state
 
 	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUpOnServer); // switch to speed up when at some state
-	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUpOnServer);
+	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUpReleasedOnServer);
 
 	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeLeft); // switch to dodge left when fast fly
 	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeRight); // switch to dodge right when fast fly
@@ -160,11 +160,32 @@ void AMMOARPGCharacter::SwitchSpeedUpOnServer_Implementation()
 	SwitchSpeedUpMulticast();
 }
 
+void AMMOARPGCharacter::SwitchSpeedUpReleasedOnServer_Implementation()
+{
+	SwitchSpeedUpReleasedMulticast();
+}
+
 void AMMOARPGCharacter::SwitchSpeedUpMulticast_Implementation()
 {
-	if (ActionState == ECharacterActionState::FLY_STATE)
+	if (ActionState == ECharacterActionState::FLY_STATE && !GetFlyComponent()->bFast)
 	{
 		GetFlyComponent()->SwitchFastFly();
+	}
+	else if (ActionState == ECharacterActionState::SWIM_STATE && !GetSwimComponent()->bFast)
+	{
+		GetSwimComponent()->SwitchFastSwim();
+	}
+}
+
+void AMMOARPGCharacter::SwitchSpeedUpReleasedMulticast_Implementation()
+{
+	if (ActionState == ECharacterActionState::FLY_STATE && GetFlyComponent()->bFast)
+	{
+		GetFlyComponent()->SwitchFastFly();
+	}
+	else if (ActionState == ECharacterActionState::SWIM_STATE && GetSwimComponent()->bFast)
+	{
+		GetSwimComponent()->SwitchFastSwim();
 	}
 }
 

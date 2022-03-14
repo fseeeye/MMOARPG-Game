@@ -50,6 +50,8 @@ protected:
 	FRotator LastRotation;
 
 public:
+	bool bFast;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	FVector2D RotationRate;
 };

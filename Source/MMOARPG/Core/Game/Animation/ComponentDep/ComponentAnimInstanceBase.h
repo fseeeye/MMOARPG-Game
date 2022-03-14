@@ -27,4 +27,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	FVector2D RotationRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
+	bool bFast;
 };

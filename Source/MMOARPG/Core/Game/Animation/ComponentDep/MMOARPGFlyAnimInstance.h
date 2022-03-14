@@ -27,8 +27,5 @@ public:
 	EFlyDodgeState FlyDodgeState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
-	bool bFastFly;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimAttribute")
 	bool bLanded;
 };
