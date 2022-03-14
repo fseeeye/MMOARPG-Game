@@ -17,6 +17,7 @@
 
 class UFlyComponent;
 class USwimComponent;
+class UFightComponent;
 class UCameraComponent;
 
 UCLASS()
@@ -33,6 +34,10 @@ class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleComba
 	/* Swim Component */
 	UPROPERTY()
 	TObjectPtr<USwimComponent> SwimComponent;
+
+	/* Fight Component */
+	UPROPERTY()
+	TObjectPtr<UFightComponent> FightComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -65,8 +70,10 @@ public:
 	FORCEINLINE ECharacterActionState GetActionState() { return ActionState; }
 	FORCEINLINE int32 GetCharacterID() { return CharacterID; }
 	FORCEINLINE FCharacterAnimTableRow* GetCharacterSwitchStateAnimTableRow() { return SwitchStateAnimTableRow; }
+
 	FORCEINLINE UFlyComponent* GetFlyComponent() { return FlyComponent; }
 	FORCEINLINE USwimComponent* GetSwimComponent() { return SwimComponent; }
+	FORCEINLINE UFightComponent* GetFightComponent() { return FightComponent; }
 
 public:
 	virtual class UCameraComponent* GetFollowCamera() const { return nullptr; }

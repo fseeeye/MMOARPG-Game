@@ -12,6 +12,7 @@
 #include <Components/SkeletalMeshComponent.h>
 #include "../../Components/FlyComponent.h"
 #include "../../Components/SwimComponent.h"
+#include "../../Components/FightComponent.h"
 
 
 // Sets default values
@@ -30,6 +31,9 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 	
 	// Init Character Swim Component
 	SwimComponent = CreateDefaultSubobject<USwimComponent>(TEXT("CharacterSwimComponent"));
+
+	// Init Character Fight Component
+	FightComponent = CreateDefaultSubobject<UFightComponent>(TEXT("CharacterFightComponent"));
 }
 
 void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
