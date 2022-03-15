@@ -13,6 +13,7 @@
 #include "../../Components/FlyComponent.h"
 #include "../../Components/SwimComponent.h"
 #include "../../Components/FightComponent.h"
+#include "../GameplayAbility/MMOARPGAbilitySystemComponent.h"
 
 
 // Sets default values
@@ -34,6 +35,10 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 
 	// Init Character Fight Component
 	FightComponent = CreateDefaultSubobject<UFightComponent>(TEXT("CharacterFightComponent"));
+
+	// Init MMOARPG GAS Component
+	GASComponent = CreateDefaultSubobject<UMMOARPGAbilitySystemComponent>(TEXT("MMOARPGAbilitySystemComponent"));
+	GASComponent->SetIsReplicated(true); // set GAS component is replicated
 }
 
 void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -110,4 +115,9 @@ void AMMOARPGCharacterBase::ChangeActionStateOnServer_Implementation(ECharacterA
 {
 	ActionState = InActionState;
 	LastActionState = ActionState;
+}
+
+UAbilitySystemComponent* AMMOARPGCharacterBase::GetAbilitySystemComponent() const
+{
+	return GASComponent;
 }

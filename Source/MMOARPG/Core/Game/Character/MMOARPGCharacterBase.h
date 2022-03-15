@@ -9,6 +9,8 @@
 #include "../MMOARPGGameMode.h"
 #include "../../../MMOARPGGameType.h"
 
+#include "AbilitySystemInterface.h"
+
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
 
@@ -19,9 +21,11 @@ class UFlyComponent;
 class USwimComponent;
 class UFightComponent;
 class UCameraComponent;
+class UAbilitySystemComponent;
+class UMMOARPGAbilitySystemComponent;
 
 UCLASS()
-class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface
+class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -38,6 +42,10 @@ class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleComba
 	/* Fight Component */
 	UPROPERTY()
 	TObjectPtr<UFightComponent> FightComponent;
+
+	/* MMOARPG GAS Component */
+	UPROPERTY()
+	TObjectPtr<UMMOARPGAbilitySystemComponent> GASComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -108,4 +116,7 @@ protected:
 protected:
 	FCharacterAnimTableRow* SwitchStateAnimTableRow;
 
+	/*** GAS ***/
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 };

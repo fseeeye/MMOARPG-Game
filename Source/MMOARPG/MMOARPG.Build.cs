@@ -19,6 +19,8 @@ public class MMOARPG : ModuleRules
 			"SimpleNetChannel",
 			"SimpleThread",
 			"MMOARPGComm",
+			"GameplayAbilities",
+			"GameplayTasks",
 			// Project Plugin Modules
 			"SimpleActorBrowsing",
 			"SimpleCombat",
