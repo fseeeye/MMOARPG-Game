@@ -7,6 +7,7 @@
 
 #include "../../DataTable/CharacterAnimTableRow.h"
 #include "../../DataTable/CharacterStyleTableRow.h"
+#include "../../DataTable/CharacterAbilityTableRow.h"
 
 #include "MMOARPGGameState.generated.h"
 
@@ -27,6 +28,9 @@ public:
 
 	FCharacterStyleTableRow* GetCharacterStyleTableRow(int32 InCharacterID);
 	TArray<FCharacterStyleTableRow*>* GetCharacterStyleTableRows();
+
+	FCharacterAbilityTableRow* GetCharacterAbilityTableRow(int32 InCharacterID);
+	TArray<FCharacterAbilityTableRow*>* GetCharacterAbilityTableRows();
 
 protected:
 	template<class T>
@@ -71,4 +75,11 @@ protected:
 	UDataTable* CharacterStyleTablePtr;
 
 	TArray<FCharacterStyleTableRow*> CharacterStyleTableRows; // Table Cache
+
+	/* Character Ability DataTable */
+protected:
+	UPROPERTY()
+	UDataTable* CharacterAbilityTablePtr;
+
+	TArray<FCharacterAbilityTableRow*> CharacterAbilityTableRows; // Table Cache
 };

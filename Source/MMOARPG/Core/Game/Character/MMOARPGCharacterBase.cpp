@@ -13,7 +13,6 @@
 #include "../../Components/FlyComponent.h"
 #include "../../Components/SwimComponent.h"
 #include "../../Components/FightComponent.h"
-#include "../GameplayAbility/MMOARPGAbilitySystemComponent.h"
 
 
 // Sets default values
@@ -58,9 +57,16 @@ void AMMOARPGCharacterBase::BeginPlay()
 	{
 		if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
 		{
+			// Init Switch Action State animation
 			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetCharacterID()))
 			{
 				SwitchStateAnimTableRow = SwitchStateAnimTR;
+			}
+
+			// Add inherent abilities
+			if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(GetCharacterID()))
+			{
+				CharacterAbilities.Add(TEXT("NormalAttack"), AddAbility(AbilityTR->NormalAttack));
 			}
 		}
 
@@ -76,6 +82,9 @@ void AMMOARPGCharacterBase::BeginPlay()
 			}
 		}
 	}
+
+	// Init GAS info
+	GASComponent->InitAbilityActorInfo(this, this); 
 }
 
 // Called every frame
@@ -120,4 +129,25 @@ void AMMOARPGCharacterBase::ChangeActionStateOnServer_Implementation(ECharacterA
 UAbilitySystemComponent* AMMOARPGCharacterBase::GetAbilitySystemComponent() const
 {
 	return GASComponent;
+}
+
+FGameplayAbilitySpecHandle AMMOARPGCharacterBase::AddAbility(TSubclassOf<UGameplayAbility> InNewAbility)
+{
+	if (IsValid(InNewAbility) && GASComponent)
+	{
+		return GASComponent->GiveAbility(FGameplayAbilitySpec(InNewAbility));
+	}
+
+	return FGameplayAbilitySpecHandle();
+}
+
+void AMMOARPGCharacterBase::NormalAttack(int32 InAnimIndex)
+{
+	if (GASComponent)
+	{
+		if (FGameplayAbilitySpecHandle* NormalAttackHandle = CharacterAbilities.Find(TEXT("NormalAttack")))
+		{
+			GASComponent->TryActivateAbility(*NormalAttackHandle);
+		}
+	}
 }

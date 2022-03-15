@@ -9,7 +9,8 @@
 #include "../MMOARPGGameMode.h"
 #include "../../../MMOARPGGameType.h"
 
-#include "AbilitySystemInterface.h"
+#include <AbilitySystemInterface.h>
+#include "../GameplayAbility/MMOARPGAbilitySystemComponent.h"
 
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
@@ -22,7 +23,7 @@ class USwimComponent;
 class UFightComponent;
 class UCameraComponent;
 class UAbilitySystemComponent;
-class UMMOARPGAbilitySystemComponent;
+class UGameplayAbility;
 
 UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface, public IAbilitySystemInterface
@@ -119,4 +120,13 @@ protected:
 	/*** GAS ***/
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+
+	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void NormalAttack(int32 InAnimIndex);
+
+protected:
+	TMap<FName, FGameplayAbilitySpecHandle> CharacterAbilities;
 };
