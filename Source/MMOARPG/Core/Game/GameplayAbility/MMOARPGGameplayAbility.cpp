@@ -57,3 +57,13 @@ UAbilityTask_PlayMontageAndWait* UMMOARPGGameplayAbility::PlayMontageAndWaitSimp
 {
 	return CreatePlayMontageAndWaitProxy(NAME_None, MontageToPlay, 1.f, StartSection);
 }
+
+int32 UMMOARPGGameplayAbility::GetMontageCompositeSectionsNum()
+{
+	if (MontageToPlay)
+	{
+		return MontageToPlay->CompositeSections.Num();
+	}
+
+	return 0;
+}

@@ -43,10 +43,10 @@ void ARoleHallPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	// add mouse left released input binding
-	InputComponent->BindAction("MouseLeftButtonNew", IE_Released, this, &ARoleHallPlayerController::StopRotateCharacter);
+	InputComponent->BindAction("MouseLeftButton", IE_Released, this, &ARoleHallPlayerController::StopRotateCharacter);
 	// add mouse wheel input binding
 	InputComponent->BindAxis("MouseWheelNew", this, &ARoleHallPlayerController::Zoom);
 	// add mouse right released input binding
-	InputComponent->BindAction("MouseRightButtonNew", IE_Pressed, this, &ARoleHallPlayerController::StartMove);
-	InputComponent->BindAction("MouseRightButtonNew", IE_Released, this, &ARoleHallPlayerController::StopMove);
+	InputComponent->BindAction("MouseRightButton", IE_Pressed, this, &ARoleHallPlayerController::StartMove);
+	InputComponent->BindAction("MouseRightButton", IE_Released, this, &ARoleHallPlayerController::StopMove);
 }

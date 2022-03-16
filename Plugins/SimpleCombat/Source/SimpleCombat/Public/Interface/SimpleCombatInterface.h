@@ -21,7 +21,18 @@ class SIMPLECOMBAT_API ISimpleCombatInterface
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+	/* Switch State */
 public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void AnimSignal(int32 InSignal) {}
+
+	/* Combo Attack */
+public:
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual void NormalAttack(const FName& InAbilityName) {}
+
+	//UFUNCTION(BlueprintCallable, Category = "Combat")
+	//virtual void ComboAttack(const FName& InNameKey) {}
+	
+	virtual struct FSimpleComboAttack* GetComboAttack() { return nullptr; }
 };

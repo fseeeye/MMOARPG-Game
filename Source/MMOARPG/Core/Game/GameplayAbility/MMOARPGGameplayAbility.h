@@ -48,6 +48,9 @@ public:
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWaitSimple(FName StartSection = NAME_None);
 
 public:
+	int32 GetMontageCompositeSectionsNum();
+
+public:
 	UPROPERTY(EditDefaultsOnly, Category = "UMMOARPGGameplayAbility|MontageAbility")
 	UAnimMontage* MontageToPlay;
 };

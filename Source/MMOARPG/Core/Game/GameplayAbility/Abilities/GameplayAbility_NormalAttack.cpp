@@ -3,6 +3,9 @@
 
 #include "GameplayAbility_NormalAttack.h"
 
+#include "../../Character/MMOARPGCharacterBase.h"
+#include "SimpleComboType.h"
+
 void UGameplayAbility_NormalAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -12,9 +15,13 @@ void UGameplayAbility_NormalAttack::ActivateAbility(const FGameplayAbilitySpecHa
 	{
 		return;
 	}
-	if (PlayMontageAndWaitSimple(TEXT("Attack0")))
+
+	if (AMMOARPGCharacterBase* OwnerCharacterBase = Cast<AMMOARPGCharacterBase>(ActorInfo->OwnerActor))
 	{
-		// ...
+		if (PlayMontageAndWaitSimple(*FString::FromInt(OwnerCharacterBase->GetComboAttack()->ComboIndex))) // play correct combo attack section
+		{
+			// ...
+		}
 	}
 }
 

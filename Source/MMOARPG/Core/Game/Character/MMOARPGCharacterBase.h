@@ -122,7 +122,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void NormalAttack(const FName& InKey);
+	//UFUNCTION(BlueprintCallable)
+	void NormalAttack(const FName& InAbilityName) override;
+
+	//virtual void ComboAttack(const FName& InNameKey) override;
 
 };

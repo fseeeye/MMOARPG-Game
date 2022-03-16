@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 
 #include "MMOARPGCharacterBase.h"
+#include "SimpleComboType.h"
 
 #include "MMOARPGCharacter.generated.h"
 
@@ -119,5 +120,15 @@ protected:
 
 	// Play anim montage when Action state changed (Simulated Proxy)
 	virtual void OnRep_ActionStateChanged() override;
+
+	/*** Gameplay Ability ***/
+public:
+	void MouseLeftPressed();
+	void MouseRightPressed();
+	void MouseLeftReleased();
+	void MouseRightReleased();
+
+	virtual FSimpleComboAttack* GetComboAttack() override;
+	virtual void AnimSignal(int32 InSignal) override;
 };
 

@@ -4,6 +4,7 @@
 #include "FightComponent.h"
 
 #include "../Game/MMOARPGGameState.h"
+#include "../Game/GameplayAbility/MMOARPGGameplayAbility.h"
 
 
 UFightComponent::UFightComponent()
@@ -23,12 +24,14 @@ void UFightComponent::BeginPlay()
 
 		if (GetWorld())
 		{
-			// Add inherent abilities
 			if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
 			{
 				if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(Owner_CharacterBase->GetCharacterID()))
 				{
+					// Add inherent abilities
 					CharacterAbilities.Add(TEXT("NormalAttack"), AddAbility(AbilityTR->NormalAttack));
+					// Register ComboAttack
+					RegisterComboAttack(ComboAttack, TEXT("NormalAttack")); // register normal attack ability to combo attack
 				}
 			}
 
@@ -48,7 +51,23 @@ FGameplayAbilitySpecHandle UFightComponent::AddAbility(TSubclassOf<UGameplayAbil
 	return FGameplayAbilitySpecHandle();
 }
 
-void UFightComponent::NormalAttack(const FName& InKey)
+UMMOARPGGameplayAbility* UFightComponent::FindAbility(const FName& InAbilityName)
+{
+	if (FGameplayAbilitySpecHandle* Handle = CharacterAbilities.Find(InAbilityName))
+	{
+		if (Owner_GASComponent.IsValid())
+		{
+			if (FGameplayAbilitySpec* AbilitySpec = Owner_GASComponent->FindAbilitySpecFromHandle(*Handle))
+			{
+				return Cast<UMMOARPGGameplayAbility>(AbilitySpec->Ability);
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+void UFightComponent::NormalAttack(const FName& InAbilityName)
 {
 	if (Owner_GASComponent.IsValid())
 	{
@@ -57,4 +76,18 @@ void UFightComponent::NormalAttack(const FName& InKey)
 			Owner_GASComponent->TryActivateAbility(*NormalAttackHandle);
 		}
 	}
+}
+
+void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, const FName& InAbilityName)
+{
+	InComboAttack.OutCharacter = Owner_CharacterBase.Get();
+	InComboAttack.ComboAbilityName = InAbilityName;
+	if (UMMOARPGGameplayAbility* GameplayAbility = FindAbility(InAbilityName))
+	{
+		InComboAttack.MaxIndex = GameplayAbility->GetMontageCompositeSectionsNum();
+	}
+	//else
+	//{
+	//	InComboAttack.MaxIndex = 4;
+	//}
 }

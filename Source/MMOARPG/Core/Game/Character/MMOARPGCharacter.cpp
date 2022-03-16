@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "../../Components/FlyComponent.h"
 #include "../../Components/SwimComponent.h"
+#include "../../Components/FightComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMMOARPGCharacter
@@ -71,6 +72,12 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeLeft); // switch to dodge left when fast fly
 	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeRight); // switch to dodge right when fast fly
+
+	PlayerInputComponent->BindAction("MouseLeftButton", IE_Pressed, this, &AMMOARPGCharacter::MouseLeftPressed);
+	PlayerInputComponent->BindAction("MouseLeftButton", IE_Released, this, &AMMOARPGCharacter::MouseLeftReleased);
+
+	PlayerInputComponent->BindAction("MouseRightButton", IE_Pressed, this, &AMMOARPGCharacter::MouseRightPressed);
+	PlayerInputComponent->BindAction("MouseRightButton", IE_Released, this, &AMMOARPGCharacter::MouseRightReleased);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -227,6 +234,41 @@ void AMMOARPGCharacter::OnRep_ActionStateChanged()
 		}
 
 		LastActionState = ActionState;
+	}
+}
+
+void AMMOARPGCharacter::MouseLeftPressed()
+{
+	GetComboAttack()->OnPress();
+}
+
+void AMMOARPGCharacter::MouseRightPressed()
+{
+
+}
+
+void AMMOARPGCharacter::MouseLeftReleased()
+{
+	GetComboAttack()->OnReleased();
+}
+
+void AMMOARPGCharacter::MouseRightReleased()
+{
+
+}
+
+FSimpleComboAttack* AMMOARPGCharacter::GetComboAttack()
+{
+	return GetFightComponent()->GetComboAttack();
+}
+
+void AMMOARPGCharacter::AnimSignal(int32 InSignal)
+{
+	Super::AnimSignal(InSignal);
+
+	if (InSignal == 2)
+	{
+		GetComboAttack()->OnReset();
 	}
 }
 

@@ -6,8 +6,11 @@
 #include "ActorMotionComponent.h"
 
 #include "../Game/GameplayAbility/MMOARPGAbilitySystemComponent.h"
+#include "SimpleComboType.h"
 
 #include "FightComponent.generated.h"
+
+class UMMOARPGGameplayAbility;
 
 /**
  * 
@@ -19,6 +22,9 @@ class MMOARPG_API UFightComponent : public UActorMotionComponent
 
 	UPROPERTY()
 	TWeakObjectPtr<UMMOARPGAbilitySystemComponent> Owner_GASComponent;
+
+	UPROPERTY()
+	FSimpleComboAttack ComboAttack;
 	
 public:
 	UFightComponent();
@@ -27,12 +33,21 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	/*** Ability Utils ***/
 public:
 	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
-
-	UFUNCTION(BlueprintCallable)
-	void NormalAttack(const FName& InKey);
+	UMMOARPGGameplayAbility* FindAbility(const FName& InAbilityName);
 
 protected:
 	TMap<FName, FGameplayAbilitySpecHandle> CharacterAbilities;
+
+	/*** Attack ***/
+public:
+	UFUNCTION(BlueprintCallable)
+	void NormalAttack(const FName& InAbilityName);
+
+	FORCEINLINE FSimpleComboAttack* GetComboAttack() { return &ComboAttack; }
+
+protected:
+	void RegisterComboAttack(FSimpleComboAttack& InComboAttack, const FName& InAbilityName);
 };
