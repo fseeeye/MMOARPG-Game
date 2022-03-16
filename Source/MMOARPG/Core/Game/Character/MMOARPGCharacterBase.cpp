@@ -55,18 +55,12 @@ void AMMOARPGCharacterBase::BeginPlay()
 	
 	if (GetWorld())
 	{
+		// Init Switch Action State animation
 		if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
 		{
-			// Init Switch Action State animation
 			if (FCharacterAnimTableRow* SwitchStateAnimTR = GameState->GetCharacterAnimTableRow(GetCharacterID()))
 			{
 				SwitchStateAnimTableRow = SwitchStateAnimTR;
-			}
-
-			// Add inherent abilities
-			if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(GetCharacterID()))
-			{
-				CharacterAbilities.Add(TEXT("NormalAttack"), AddAbility(AbilityTR->NormalAttack));
 			}
 		}
 
@@ -82,9 +76,6 @@ void AMMOARPGCharacterBase::BeginPlay()
 			}
 		}
 	}
-
-	// Init GAS info
-	GASComponent->InitAbilityActorInfo(this, this); 
 }
 
 // Called every frame
@@ -131,23 +122,7 @@ UAbilitySystemComponent* AMMOARPGCharacterBase::GetAbilitySystemComponent() cons
 	return GASComponent;
 }
 
-FGameplayAbilitySpecHandle AMMOARPGCharacterBase::AddAbility(TSubclassOf<UGameplayAbility> InNewAbility)
+void AMMOARPGCharacterBase::NormalAttack(const FName& InKey)
 {
-	if (IsValid(InNewAbility) && GASComponent)
-	{
-		return GASComponent->GiveAbility(FGameplayAbilitySpec(InNewAbility));
-	}
-
-	return FGameplayAbilitySpecHandle();
-}
-
-void AMMOARPGCharacterBase::NormalAttack(int32 InAnimIndex)
-{
-	if (GASComponent)
-	{
-		if (FGameplayAbilitySpecHandle* NormalAttackHandle = CharacterAbilities.Find(TEXT("NormalAttack")))
-		{
-			GASComponent->TryActivateAbility(*NormalAttackHandle);
-		}
-	}
+	FightComponent->NormalAttack(InKey);
 }

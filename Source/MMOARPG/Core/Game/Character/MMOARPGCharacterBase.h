@@ -117,16 +117,12 @@ protected:
 protected:
 	FCharacterAnimTableRow* SwitchStateAnimTableRow;
 
-	/*** GAS ***/
+	/*** Gameplay Ability ***/
 public:
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void NormalAttack(int32 InAnimIndex);
+	void NormalAttack(const FName& InKey);
 
-protected:
-	TMap<FName, FGameplayAbilitySpecHandle> CharacterAbilities;
 };

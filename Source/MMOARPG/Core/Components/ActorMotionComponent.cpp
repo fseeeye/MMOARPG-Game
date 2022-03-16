@@ -28,6 +28,7 @@ void UActorMotionComponent::BeginPlay()
 	Owner_CharacterBase = Cast<AMMOARPGCharacterBase>(GetOwner());
 	if (Owner_CharacterBase.IsValid())
 	{
+		// Register components
 		Owner_MovementComponent = Cast<UCharacterMovementComponent>(Owner_CharacterBase->GetMovementComponent());
 		Owner_CapsuleComponent = Owner_CharacterBase->GetCapsuleComponent();
 		Owner_CameraComponent = Owner_CharacterBase->GetFollowCamera();
