@@ -239,7 +239,10 @@ void AMMOARPGCharacter::OnRep_ActionStateChanged()
 
 void AMMOARPGCharacter::MouseLeftPressed()
 {
-	GetComboAttack()->OnPress();
+	if (GetActionState() == ECharacterActionState::FIGHT_STATE)
+	{
+		GetComboAttack()->OnPress();
+	}
 }
 
 void AMMOARPGCharacter::MouseRightPressed()

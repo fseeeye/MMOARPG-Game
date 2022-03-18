@@ -71,7 +71,7 @@ void UFightComponent::NormalAttack(const FName& InAbilityName)
 {
 	if (Owner_GASComponent.IsValid())
 	{
-		if (FGameplayAbilitySpecHandle* NormalAttackHandle = CharacterAbilities.Find(TEXT("NormalAttack"))) // TODO
+		if (FGameplayAbilitySpecHandle* NormalAttackHandle = CharacterAbilities.Find(InAbilityName))
 		{
 			Owner_GASComponent->TryActivateAbility(*NormalAttackHandle);
 		}

@@ -18,7 +18,7 @@ void UGameplayAbility_NormalAttack::ActivateAbility(const FGameplayAbilitySpecHa
 
 	if (AMMOARPGCharacterBase* OwnerCharacterBase = Cast<AMMOARPGCharacterBase>(ActorInfo->OwnerActor))
 	{
-		if (PlayMontageAndWaitSimple(*FString::FromInt(OwnerCharacterBase->GetComboAttack()->ComboIndex))) // play correct combo attack section
+		if (UAbilityTask_PlayMontageAndWait* MontageTask = PlayMontageAndWaitSimple(*FString::FromInt(OwnerCharacterBase->GetComboAttack()->ComboIndex))) // play correct combo attack section
 		{
 			// ...
 		}

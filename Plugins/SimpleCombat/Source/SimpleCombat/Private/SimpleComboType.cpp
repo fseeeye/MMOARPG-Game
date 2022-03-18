@@ -16,13 +16,19 @@ void FSimpleComboAttack::OnUpdate()
 {
 	check(MaxIndex > 0);
 	
+	//if (ComboIndex >= MaxIndex)
+	//{
+	//	ComboIndex = 1;
+	//}
+	//else
+	//{
+	//	++ComboIndex;
+	//}
+
+	ComboIndex++;
 	if (ComboIndex >= MaxIndex)
 	{
-		ComboIndex = 1;
-	}
-	else
-	{
-		++ComboIndex;
+		ComboIndex = 0;
 	}
 }
 
