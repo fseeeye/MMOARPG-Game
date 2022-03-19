@@ -22,17 +22,20 @@ void UFightComponent::BeginPlay()
 		// Register GAS component
 		Owner_GASComponent = Cast<UMMOARPGAbilitySystemComponent>(Owner_CharacterBase->GetAbilitySystemComponent());
 
-		if (GetWorld())
+		if (Owner_CharacterBase->GetLocalRole() == ROLE_Authority) // tip: `GiveAbility()` only allowed on Authority NetRole.
 		{
-			// Add Inherent ComboAttacks
-			AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
+			if (GetWorld())
+			{
+				// Add Inherent ComboAttacks
+				AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
 
-			// Init GAS info
-			Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
-
-			// Register ComboAttack initial info
-			RegisterComboAttack(NormalAttackInfo, "NormalAttack");
+				// Init GAS info
+				Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
+			}
 		}
+
+		// Register ComboAttack initial info on all NetRole
+		RegisterComboAttack(NormalAttackInfo, "NormalAttack");
 	}
 }
 
@@ -103,6 +106,21 @@ void UFightComponent::NormalAttack(const FName& InAbilityName)
 			Owner_GASComponent->TryActivateAbility(*NormalAttackHandle);
 		}
 	}
+}
+
+void UFightComponent::NormalAttackOnPress_Implementation()
+{
+	NormalAttackInfo.OnPress();
+}
+
+void UFightComponent::NormalAttackOnReleasesd_Implementation()
+{
+	NormalAttackInfo.OnReleased();
+}
+
+void UFightComponent::NormalAttackOnReset_Implementation()
+{
+	NormalAttackInfo.OnReset();
 }
 
 void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, const FName& InAbilityName)

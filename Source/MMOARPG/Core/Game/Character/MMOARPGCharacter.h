@@ -123,9 +123,16 @@ protected:
 
 	/*** Gameplay Ability ***/
 public:
+	UFUNCTION(Server, Reliable)
 	void MouseLeftPressed();
+
+	UFUNCTION(Server, Reliable)
 	void MouseRightPressed();
+
+	UFUNCTION(Server, Reliable)
 	void MouseLeftReleased();
+
+	UFUNCTION(Server, Reliable)
 	void MouseRightReleased();
 
 	virtual FSimpleComboAttack* GetComboAttack() override;

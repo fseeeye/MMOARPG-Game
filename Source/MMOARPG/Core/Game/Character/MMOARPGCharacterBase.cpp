@@ -34,10 +34,11 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 
 	// Init Character Fight Component
 	FightComponent = CreateDefaultSubobject<UFightComponent>(TEXT("CharacterFightComponent"));
+	FightComponent->SetIsReplicated(true);
 
 	// Init MMOARPG GAS Component
 	GASComponent = CreateDefaultSubobject<UMMOARPGAbilitySystemComponent>(TEXT("MMOARPGAbilitySystemComponent"));
-	GASComponent->SetIsReplicated(true); // set GAS component is replicated
+	GASComponent->SetIsReplicated(true);
 }
 
 void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

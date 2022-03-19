@@ -56,6 +56,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void NormalAttack(const FName& InAbilityName);
 
+	UFUNCTION(NetMulticast, Reliable)
+	void NormalAttackOnPress();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void NormalAttackOnReleasesd();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void NormalAttackOnReset();
+
 	FORCEINLINE FSimpleComboAttack* GetNormalAttackInfo() { return &NormalAttackInfo; }
 
 protected:

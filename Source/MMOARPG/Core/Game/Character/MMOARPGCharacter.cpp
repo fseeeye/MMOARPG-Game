@@ -237,25 +237,25 @@ void AMMOARPGCharacter::OnRep_ActionStateChanged()
 	}
 }
 
-void AMMOARPGCharacter::MouseLeftPressed()
+void AMMOARPGCharacter::MouseLeftPressed_Implementation()
 {
 	if (GetActionState() == ECharacterActionState::FIGHT_STATE)
 	{
-		GetComboAttack()->OnPress();
+		GetFightComponent()->NormalAttackOnPress();
 	}
 }
 
-void AMMOARPGCharacter::MouseRightPressed()
+void AMMOARPGCharacter::MouseRightPressed_Implementation()
 {
 
 }
 
-void AMMOARPGCharacter::MouseLeftReleased()
+void AMMOARPGCharacter::MouseLeftReleased_Implementation()
 {
-	GetComboAttack()->OnReleased();
+	GetFightComponent()->NormalAttackOnReleasesd();
 }
 
-void AMMOARPGCharacter::MouseRightReleased()
+void AMMOARPGCharacter::MouseRightReleased_Implementation()
 {
 
 }
@@ -271,7 +271,7 @@ void AMMOARPGCharacter::AnimSignal(int32 InSignal)
 
 	if (InSignal == 2)
 	{
-		GetComboAttack()->OnReset();
+		GetFightComponent()->NormalAttackOnReset();
 	}
 }
 
