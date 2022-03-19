@@ -262,7 +262,7 @@ void AMMOARPGCharacter::MouseRightReleased()
 
 FSimpleComboAttack* AMMOARPGCharacter::GetComboAttack()
 {
-	return GetFightComponent()->GetComboAttack();
+	return GetFightComponent()->GetNormalAttackInfo();
 }
 
 void AMMOARPGCharacter::AnimSignal(int32 InSignal)

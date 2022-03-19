@@ -17,6 +17,8 @@ struct FCharacterAbilityTableRow : public FTableRowBase
 	int32 CharacterID;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterAbility")
-	TSubclassOf<UGameplayAbility> NormalAttack;
+	TMap<FName, TSubclassOf<UGameplayAbility>> ComboAttack;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "CharacterAbility")
+	TMap<FName, TSubclassOf<UGameplayAbility>> AbilityAttack;
 };

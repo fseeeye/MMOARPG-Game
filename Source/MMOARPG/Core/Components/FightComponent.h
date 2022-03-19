@@ -24,7 +24,13 @@ class MMOARPG_API UFightComponent : public UActorMotionComponent
 	TWeakObjectPtr<UMMOARPGAbilitySystemComponent> Owner_GASComponent;
 
 	UPROPERTY()
-	FSimpleComboAttack ComboAttack;
+	FSimpleComboAttack NormalAttackInfo;
+
+	enum class EAbilityType : uint8
+	{
+		COMBOATTACK,
+		ABILITYATTACK
+	};
 	
 public:
 	UFightComponent();
@@ -35,8 +41,12 @@ protected:
 
 	/*** Ability Utils ***/
 public:
-	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
 	UMMOARPGGameplayAbility* FindAbility(const FName& InAbilityName);
+
+	void AddInherentAbility(const FName& InAbilityName, EAbilityType InAbilityType = EAbilityType::ABILITYATTACK);
+
+protected:
+	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
 
 protected:
 	TMap<FName, FGameplayAbilitySpecHandle> CharacterAbilities;
@@ -46,7 +56,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void NormalAttack(const FName& InAbilityName);
 
-	FORCEINLINE FSimpleComboAttack* GetComboAttack() { return &ComboAttack; }
+	FORCEINLINE FSimpleComboAttack* GetNormalAttackInfo() { return &NormalAttackInfo; }
 
 protected:
 	void RegisterComboAttack(FSimpleComboAttack& InComboAttack, const FName& InAbilityName);

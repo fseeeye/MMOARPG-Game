@@ -24,19 +24,14 @@ void UFightComponent::BeginPlay()
 
 		if (GetWorld())
 		{
-			if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
-			{
-				if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(Owner_CharacterBase->GetCharacterID()))
-				{
-					// Add inherent abilities
-					CharacterAbilities.Add(TEXT("NormalAttack"), AddAbility(AbilityTR->NormalAttack));
-					// Register ComboAttack
-					RegisterComboAttack(ComboAttack, TEXT("NormalAttack")); // register normal attack ability to combo attack
-				}
-			}
+			// Add Inherent ComboAttacks
+			AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
 
 			// Init GAS info
 			Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
+
+			// Register ComboAttack initial info
+			RegisterComboAttack(NormalAttackInfo, "NormalAttack");
 		}
 	}
 }
@@ -67,6 +62,38 @@ UMMOARPGGameplayAbility* UFightComponent::FindAbility(const FName& InAbilityName
 	return nullptr;
 }
 
+void UFightComponent::AddInherentAbility(const FName& InAbilityName, EAbilityType InAbilityType /*= EAbilityType::ABILITYATTACK*/)
+{
+	if (GetWorld())
+	{
+		if (AMMOARPGGameState* GameState = GetWorld()->GetGameState<AMMOARPGGameState>())
+		{
+			if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(Owner_CharacterBase->GetCharacterID()))
+			{
+				auto GetInherentAbilityMap = [&](EAbilityType InAbilityType) -> TMap<FName, TSubclassOf<UGameplayAbility>>*
+				{
+					switch (InAbilityType)
+					{
+						case EAbilityType::COMBOATTACK: return &AbilityTR->ComboAttack;
+						case EAbilityType::ABILITYATTACK: return &AbilityTR->AbilityAttack;
+					}
+
+					return nullptr;
+				};
+
+				// Add inherent ability
+				if (TMap<FName, TSubclassOf<UGameplayAbility>>* InherentAbilityMap = GetInherentAbilityMap(InAbilityType))
+				{
+					if (TSubclassOf<UGameplayAbility>* NewAbility = InherentAbilityMap->Find(InAbilityName))
+					{
+						CharacterAbilities.Add(InAbilityName, AddAbility(*NewAbility));
+					}
+				}
+			}
+		}
+	}
+}
+
 void UFightComponent::NormalAttack(const FName& InAbilityName)
 {
 	if (Owner_GASComponent.IsValid())
@@ -86,8 +113,8 @@ void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, con
 	{
 		InComboAttack.MaxIndex = GameplayAbility->GetMontageCompositeSectionsNum();
 	}
-	//else
-	//{
-	//	InComboAttack.MaxIndex = 4;
-	//}
+	else
+	{
+		InComboAttack.MaxIndex = 0;
+	}
 }
