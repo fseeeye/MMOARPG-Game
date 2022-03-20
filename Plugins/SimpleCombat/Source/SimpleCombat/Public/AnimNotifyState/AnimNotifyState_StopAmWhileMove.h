@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "AnimNotifyState_BlockInputInTime.generated.h"
+#include "AnimNotifyState_StopAmWhileMove.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SIMPLECOMBAT_API UAnimNotifyState_BlockInputInTime : public UAnimNotifyState
+class SIMPLECOMBAT_API UAnimNotifyState_StopAmWhileMove : public UAnimNotifyState
 {
 	GENERATED_BODY()
 	

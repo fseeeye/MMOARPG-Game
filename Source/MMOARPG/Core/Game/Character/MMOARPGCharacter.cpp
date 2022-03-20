@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "../../Components/FlyComponent.h"
@@ -65,7 +66,7 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMMOARPGCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction("SwitchFight", IE_Pressed, this, &AMMOARPGCharacter::SwitchFight); // switch to FIGHT action state
-	PlayerInputComponent->BindAction("SwitchFly", IE_Pressed, this, &AMMOARPGCharacter::SwitchFlyOnServer); // switch to FLY action state
+	PlayerInputComponent->BindAction("SwitchSpecial", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpecialStateOnServer); // switch to FLY action state
 
 	PlayerInputComponent->BindAction("SpeedUp", IE_Pressed, this, &AMMOARPGCharacter::SwitchSpeedUpOnServer); // switch to speed up when at some state
 	PlayerInputComponent->BindAction("SpeedUp", IE_Released, this, &AMMOARPGCharacter::SwitchSpeedUpReleasedOnServer);
@@ -150,18 +151,28 @@ void AMMOARPGCharacter::PlayFightMontage()
 	}
 }
 
-void AMMOARPGCharacter::SwitchFlyOnServer_Implementation()
+void AMMOARPGCharacter::SwitchSpecialStateOnServer_Implementation()
 {
-	SwitchFlyMulticast();
+	SwitchSpecialActionMulticast();
 }
 
-void AMMOARPGCharacter::SwitchFlyMulticast_Implementation()
+void AMMOARPGCharacter::SwitchSpecialActionMulticast_Implementation()
 {
-	SwitchActionState(ECharacterActionState::FLY_STATE);
+	if (UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent()))
+	{
+		if ((CharacterMovementComponent->MovementMode == EMovementMode::MOVE_Walking || CharacterMovementComponent->MovementMode == EMovementMode::MOVE_Swimming)
+			&& ActionState != ECharacterActionState::FIGHT_STATE) // TODO
+		{
+			SwitchActionState(ECharacterActionState::FLY_STATE);
 
-	GetFlyComponent()->ResetFly();
+			GetFlyComponent()->ResetFly();
 
-	LastActionState = ActionState;
+			LastActionState = ActionState;
+		}
+		else if (ActionState == ECharacterActionState::FIGHT_STATE)
+		{
+		}
+	}
 }
 
 void AMMOARPGCharacter::SwitchSpeedUpOnServer_Implementation()

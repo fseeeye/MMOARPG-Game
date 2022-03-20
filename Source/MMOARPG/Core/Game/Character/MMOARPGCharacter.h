@@ -85,12 +85,12 @@ protected:
 	// Play Fight animation montage
 	void PlayFightMontage();
 
-	// Switch Action state to FLY (Autonomous Proxy)
+	// Switch Action state to Special state (Autonomous Proxy)
 	UFUNCTION(Server, Reliable)
-	void SwitchFlyOnServer();
+	void SwitchSpecialStateOnServer();
 
 	UFUNCTION(NetMulticast, Reliable)
-	void SwitchFlyMulticast();
+	void SwitchSpecialActionMulticast();
 	
 	// Switch to Speed Up when at some Action State
 	UFUNCTION(Server, Reliable)
