@@ -82,7 +82,6 @@ public:
 
 	FORCEINLINE UFlyComponent* GetFlyComponent() { return FlyComponent; }
 	FORCEINLINE USwimComponent* GetSwimComponent() { return SwimComponent; }
-	FORCEINLINE UFightComponent* GetFightComponent() { return FightComponent; }
 
 public:
 	virtual class UCameraComponent* GetFollowCamera() const { return nullptr; }
@@ -119,12 +118,11 @@ protected:
 
 	/*** Gameplay Ability ***/
 public:
+	FORCEINLINE UFightComponent* GetFightComponent() { return FightComponent; }
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 public:
-	//UFUNCTION(BlueprintCallable)
 	void CallNormalAttack(const FName& InAbilityName) override;
-
-	//virtual void ComboAttack(const FName& InNameKey) override;
 
 };

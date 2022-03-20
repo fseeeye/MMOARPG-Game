@@ -28,6 +28,7 @@ void UFightComponent::BeginPlay()
 			AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
 			// Add Inherent Abilities
 			AddInherentAbility(TEXT("Dodge"), EAbilityType::ABILITY);
+			AddInherentAbility(TEXT("Sprint"), EAbilityType::ABILITY);
 
 			// Init GAS info (tip: only init ability info on authority)
 			Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
@@ -132,11 +133,16 @@ void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, con
 	}
 	else
 	{
-		InComboAttack.MaxIndex = 3;
+		InComboAttack.MaxIndex = 3; // TODO
 	}
 }
 
 void UFightComponent::CallDodgeAbility_Implementation()
 {
 	CallFightAbility(TEXT("Dodge"));
+}
+
+void UFightComponent::CallSprintAbility_Implementation()
+{
+	CallFightAbility(TEXT("Sprint"));
 }

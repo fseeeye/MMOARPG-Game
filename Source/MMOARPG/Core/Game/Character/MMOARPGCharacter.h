@@ -123,17 +123,23 @@ protected:
 
 	/*** Gameplay Ability ***/
 public:
+	// Normal Attack
 	UFUNCTION(Server, Reliable)
 	void MouseLeftPressed();
 
 	UFUNCTION(Server, Reliable)
+	void MouseLeftReleased();
+
+	// Dodge
+	UFUNCTION(Server, Reliable)
 	void MouseRightPressed();
 
 	UFUNCTION(Server, Reliable)
-	void MouseLeftReleased();
-
-	UFUNCTION(Server, Reliable)
 	void MouseRightReleased();
+
+	// Sprint
+	UFUNCTION(Server, Reliable)
+	void SprintPressed();
 
 	virtual FSimpleComboAttack* GetComboAttack() override;
 	virtual void AnimSignal(int32 InSignal) override;

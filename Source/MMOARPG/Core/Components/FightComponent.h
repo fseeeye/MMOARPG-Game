@@ -75,4 +75,9 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void CallDodgeAbility();
 
+	/*** Ability: Sprint ***/
+public:
+	UFUNCTION(NetMulticast, Reliable)
+	void CallSprintAbility();
+
 };

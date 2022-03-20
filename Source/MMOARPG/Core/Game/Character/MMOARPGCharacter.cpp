@@ -73,11 +73,13 @@ void AMMOARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("FlyDodgeLeft", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeLeft); // switch to dodge left when fast fly
 	PlayerInputComponent->BindAction("FlyDodgeRight", IE_Pressed, this, &AMMOARPGCharacter::SwitchDodgeRight); // switch to dodge right when fast fly
 
-	PlayerInputComponent->BindAction("MouseLeftButton", IE_Pressed, this, &AMMOARPGCharacter::MouseLeftPressed);
+	PlayerInputComponent->BindAction("MouseLeftButton", IE_Pressed, this, &AMMOARPGCharacter::MouseLeftPressed); // ability: normal attack
 	PlayerInputComponent->BindAction("MouseLeftButton", IE_Released, this, &AMMOARPGCharacter::MouseLeftReleased);
 
-	PlayerInputComponent->BindAction("MouseRightButton", IE_Pressed, this, &AMMOARPGCharacter::MouseRightPressed);
+	PlayerInputComponent->BindAction("MouseRightButton", IE_Pressed, this, &AMMOARPGCharacter::MouseRightPressed); // ability: dodge ability
 	PlayerInputComponent->BindAction("MouseRightButton", IE_Released, this, &AMMOARPGCharacter::MouseRightReleased);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMMOARPGCharacter::SprintPressed); // ability: sprint ability
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -245,19 +247,24 @@ void AMMOARPGCharacter::MouseLeftPressed_Implementation()
 	}
 }
 
-void AMMOARPGCharacter::MouseRightPressed_Implementation()
-{
-	GetFightComponent()->CallDodgeAbility();
-}
-
 void AMMOARPGCharacter::MouseLeftReleased_Implementation()
 {
 	GetFightComponent()->NormalAttackOnReleasesd();
 }
 
+void AMMOARPGCharacter::MouseRightPressed_Implementation()
+{
+	GetFightComponent()->CallDodgeAbility();
+}
+
 void AMMOARPGCharacter::MouseRightReleased_Implementation()
 {
 
+}
+
+void AMMOARPGCharacter::SprintPressed_Implementation()
+{
+	GetFightComponent()->CallSprintAbility();
 }
 
 FSimpleComboAttack* AMMOARPGCharacter::GetComboAttack()
