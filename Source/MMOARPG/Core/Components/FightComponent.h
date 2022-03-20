@@ -29,7 +29,7 @@ class MMOARPG_API UFightComponent : public UActorMotionComponent
 	enum class EAbilityType : uint8
 	{
 		COMBOATTACK,
-		ABILITYATTACK
+		ABILITY
 	};
 	
 public:
@@ -41,9 +41,12 @@ protected:
 
 	/*** Ability Utils ***/
 public:
+	void AddInherentAbility(const FName& InAbilityName, EAbilityType InAbilityType = EAbilityType::ABILITY);
+
 	UMMOARPGGameplayAbility* FindAbility(const FName& InAbilityName);
 
-	void AddInherentAbility(const FName& InAbilityName, EAbilityType InAbilityType = EAbilityType::ABILITYATTACK);
+	UFUNCTION(BlueprintCallable)
+	void CallFightAbility(const FName& InAbilityName);
 
 protected:
 	FGameplayAbilitySpecHandle AddAbility(TSubclassOf<UGameplayAbility> InNewAbility);
@@ -51,11 +54,8 @@ protected:
 protected:
 	TMap<FName, FGameplayAbilitySpecHandle> CharacterAbilities;
 
-	/*** Attack ***/
+	/*** Ability: Normal Attack ***/
 public:
-	UFUNCTION(BlueprintCallable)
-	void NormalAttack(const FName& InAbilityName);
-
 	UFUNCTION(NetMulticast, Reliable)
 	void NormalAttackOnPress();
 
@@ -69,4 +69,10 @@ public:
 
 protected:
 	void RegisterComboAttack(FSimpleComboAttack& InComboAttack, const FName& InAbilityName);
+
+	/*** Ability: Dodge ***/
+public:
+	UFUNCTION(NetMulticast, Reliable)
+	void CallDodgeAbility();
+
 };

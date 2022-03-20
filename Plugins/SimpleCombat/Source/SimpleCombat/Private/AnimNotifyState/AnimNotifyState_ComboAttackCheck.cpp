@@ -31,7 +31,7 @@ void UAnimNotifyState_ComboAttackCheck::NotifyEnd(USkeletalMeshComponent* MeshCo
 	{
 		if (Character->GetComboAttack()->bLongPress || Character->GetComboAttack()->bShortPress)
 		{
-			Character->NormalAttack(ComboAbilityName);
+			Character->CallNormalAttack(ComboAbilityName);
 		}
 	}
 }

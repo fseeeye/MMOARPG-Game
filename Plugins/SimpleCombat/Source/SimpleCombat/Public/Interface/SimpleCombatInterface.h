@@ -29,7 +29,7 @@ public:
 	/* Combo Attack */
 public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual void NormalAttack(const FName& InAbilityName) {}
+	virtual void CallNormalAttack(const FName& InAbilityName) {}
 
 	//UFUNCTION(BlueprintCallable, Category = "Combat")
 	//virtual void ComboAttack(const FName& InNameKey) {}

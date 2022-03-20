@@ -38,7 +38,7 @@ void FSimpleComboAttack::OnPress()
 	{
 		++ComboIndex;
 
-		OutCharacter->NormalAttack(ComboAbilityName);
+		OutCharacter->CallNormalAttack(ComboAbilityName);
 	}
 
 	bShortPress = true;

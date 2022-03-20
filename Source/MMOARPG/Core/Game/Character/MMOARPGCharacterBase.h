@@ -123,7 +123,7 @@ public:
 
 public:
 	//UFUNCTION(BlueprintCallable)
-	void NormalAttack(const FName& InAbilityName) override;
+	void CallNormalAttack(const FName& InAbilityName) override;
 
 	//virtual void ComboAttack(const FName& InNameKey) override;
 

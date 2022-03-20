@@ -247,7 +247,7 @@ void AMMOARPGCharacter::MouseLeftPressed_Implementation()
 
 void AMMOARPGCharacter::MouseRightPressed_Implementation()
 {
-
+	GetFightComponent()->CallDodgeAbility();
 }
 
 void AMMOARPGCharacter::MouseLeftReleased_Implementation()

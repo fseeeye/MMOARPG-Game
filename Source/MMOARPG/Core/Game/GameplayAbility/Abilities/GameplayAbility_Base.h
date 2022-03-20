@@ -14,4 +14,9 @@ class MMOARPG_API UGameplayAbility_Base : public UMMOARPGGameplayAbility
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void OnCompleted() override;
+	virtual void OnBlendOut() override;
+	virtual void OnInterrupted() override;
+	virtual void OnCancelled() override;
 };

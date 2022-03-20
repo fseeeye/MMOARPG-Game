@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayAbility_Base.h"
-#include "GameplayAbility_NormalAttack.generated.h"
+#include "GameplayAbility_Single.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MMOARPG_API UGameplayAbility_NormalAttack : public UGameplayAbility_Base
+class MMOARPG_API UGameplayAbility_Single : public UGameplayAbility_Base
 {
 	GENERATED_BODY()
 	

@@ -123,7 +123,7 @@ UAbilitySystemComponent* AMMOARPGCharacterBase::GetAbilitySystemComponent() cons
 	return GASComponent;
 }
 
-void AMMOARPGCharacterBase::NormalAttack(const FName& InAbilityName)
+void AMMOARPGCharacterBase::CallNormalAttack(const FName& InAbilityName)
 {
-	FightComponent->NormalAttack(InAbilityName);
+	FightComponent->CallFightAbility(InAbilityName);
 }

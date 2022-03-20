@@ -24,45 +24,18 @@ void UFightComponent::BeginPlay()
 
 		if (Owner_CharacterBase->GetLocalRole() == ROLE_Authority) // tip: `GiveAbility()` only allowed on Authority NetRole.
 		{
-			if (GetWorld())
-			{
-				// Add Inherent ComboAttacks
-				AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
+			// Add Inherent ComboAttack
+			AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
+			// Add Inherent Abilities
+			AddInherentAbility(TEXT("Dodge"), EAbilityType::ABILITY);
 
-				// Init GAS info
-				Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
-			}
+			// Init GAS info (tip: only init ability info on authority)
+			Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
 		}
 
 		// Register ComboAttack initial info on all NetRole
 		RegisterComboAttack(NormalAttackInfo, "NormalAttack");
 	}
-}
-
-FGameplayAbilitySpecHandle UFightComponent::AddAbility(TSubclassOf<UGameplayAbility> InNewAbility)
-{
-	if (IsValid(InNewAbility) && Owner_GASComponent.IsValid())
-	{
-		return Owner_GASComponent->GiveAbility(FGameplayAbilitySpec(InNewAbility));
-	}
-
-	return FGameplayAbilitySpecHandle();
-}
-
-UMMOARPGGameplayAbility* UFightComponent::FindAbility(const FName& InAbilityName)
-{
-	if (FGameplayAbilitySpecHandle* Handle = CharacterAbilities.Find(InAbilityName))
-	{
-		if (Owner_GASComponent.IsValid())
-		{
-			if (FGameplayAbilitySpec* AbilitySpec = Owner_GASComponent->FindAbilitySpecFromHandle(*Handle))
-			{
-				return Cast<UMMOARPGGameplayAbility>(AbilitySpec->Ability);
-			}
-		}
-	}
-
-	return nullptr;
 }
 
 void UFightComponent::AddInherentAbility(const FName& InAbilityName, EAbilityType InAbilityType /*= EAbilityType::ABILITYATTACK*/)
@@ -77,8 +50,8 @@ void UFightComponent::AddInherentAbility(const FName& InAbilityName, EAbilityTyp
 				{
 					switch (InAbilityType)
 					{
-						case EAbilityType::COMBOATTACK: return &AbilityTR->ComboAttack;
-						case EAbilityType::ABILITYATTACK: return &AbilityTR->AbilityAttack;
+					case EAbilityType::COMBOATTACK: return &AbilityTR->ComboAttack;
+					case EAbilityType::ABILITY: return &AbilityTR->AbilityAttack;
 					}
 
 					return nullptr;
@@ -97,7 +70,23 @@ void UFightComponent::AddInherentAbility(const FName& InAbilityName, EAbilityTyp
 	}
 }
 
-void UFightComponent::NormalAttack(const FName& InAbilityName)
+UMMOARPGGameplayAbility* UFightComponent::FindAbility(const FName& InAbilityName)
+{
+	if (FGameplayAbilitySpecHandle* Handle = CharacterAbilities.Find(InAbilityName))
+	{
+		if (Owner_GASComponent.IsValid())
+		{
+			if (FGameplayAbilitySpec* AbilitySpec = Owner_GASComponent->FindAbilitySpecFromHandle(*Handle))
+			{
+				return Cast<UMMOARPGGameplayAbility>(AbilitySpec->Ability);
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+void UFightComponent::CallFightAbility(const FName& InAbilityName)
 {
 	if (Owner_GASComponent.IsValid())
 	{
@@ -106,6 +95,16 @@ void UFightComponent::NormalAttack(const FName& InAbilityName)
 			Owner_GASComponent->TryActivateAbility(*NormalAttackHandle);
 		}
 	}
+}
+
+FGameplayAbilitySpecHandle UFightComponent::AddAbility(TSubclassOf<UGameplayAbility> InNewAbility)
+{
+	if (IsValid(InNewAbility) && Owner_GASComponent.IsValid())
+	{
+		return Owner_GASComponent->GiveAbility(FGameplayAbilitySpec(InNewAbility));
+	}
+
+	return FGameplayAbilitySpecHandle();
 }
 
 void UFightComponent::NormalAttackOnPress_Implementation()
@@ -133,6 +132,11 @@ void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, con
 	}
 	else
 	{
-		InComboAttack.MaxIndex = 0;
+		InComboAttack.MaxIndex = 3;
 	}
+}
+
+void UFightComponent::CallDodgeAbility_Implementation()
+{
+	CallFightAbility(TEXT("Dodge"));
 }
