@@ -25,17 +25,17 @@ void UFightComponent::BeginPlay()
 		if (Owner_CharacterBase->GetLocalRole() == ROLE_Authority) // tip: `GiveAbility()` only allowed on Authority NetRole.
 		{
 			// Add Inherent ComboAttack
-			AddInherentAbility(TEXT("NormalAttack"), EAbilityType::COMBOATTACK);
+			AddInherentAbility(TEXT("Player.Attack.ComboAttack"), EAbilityType::COMBOATTACK);
 			// Add Inherent Abilities
-			AddInherentAbility(TEXT("Dodge"), EAbilityType::ABILITY);
-			AddInherentAbility(TEXT("Sprint"), EAbilityType::ABILITY);
+			AddInherentAbility(TEXT("Player.Ability.Dodge"), EAbilityType::ABILITY);
+			AddInherentAbility(TEXT("Player.Ability.Sprint"), EAbilityType::ABILITY);
 
 			// Init GAS info (tip: only init ability info on authority)
 			Owner_GASComponent->InitAbilityActorInfo(Owner_CharacterBase.Get(), Owner_CharacterBase.Get());
 		}
 
 		// Register ComboAttack initial info on all NetRole
-		RegisterComboAttack(NormalAttackInfo, "NormalAttack");
+		RegisterComboAttack(NormalAttackInfo, "Player.Attack.ComboAttack");
 	}
 }
 
@@ -47,24 +47,21 @@ void UFightComponent::AddInherentAbility(const FName& InAbilityName, EAbilityTyp
 		{
 			if (FCharacterAbilityTableRow* AbilityTR = GameState->GetCharacterAbilityTableRow(Owner_CharacterBase->GetCharacterID()))
 			{
-				auto GetInherentAbilityMap = [&](EAbilityType InAbilityType) -> TMap<FName, TSubclassOf<UGameplayAbility>>*
+				auto GetInherentAbility = [&](EAbilityType InAbilityType) -> TSubclassOf<UGameplayAbility>*
 				{
 					switch (InAbilityType)
 					{
-					case EAbilityType::COMBOATTACK: return &AbilityTR->ComboAttack;
-					case EAbilityType::ABILITY: return &AbilityTR->AbilityAttack;
+					case EAbilityType::COMBOATTACK: return AbilityTR->FindComboAttackByTagName(InAbilityName);
+					case EAbilityType::ABILITY: return AbilityTR->FindAbilityAttackByTagName(InAbilityName);
 					}
 
 					return nullptr;
 				};
 
 				// Add inherent ability
-				if (TMap<FName, TSubclassOf<UGameplayAbility>>* InherentAbilityMap = GetInherentAbilityMap(InAbilityType))
+				if (TSubclassOf<UGameplayAbility>* InherentAbility = GetInherentAbility(InAbilityType))
 				{
-					if (TSubclassOf<UGameplayAbility>* NewAbility = InherentAbilityMap->Find(InAbilityName))
-					{
-						CharacterAbilities.Add(InAbilityName, AddAbility(*NewAbility));
-					}
+					CharacterAbilities.Add(InAbilityName, AddAbility(*InherentAbility));
 				}
 			}
 		}
@@ -139,10 +136,10 @@ void UFightComponent::RegisterComboAttack(FSimpleComboAttack& InComboAttack, con
 
 void UFightComponent::CallDodgeAbility_Implementation()
 {
-	CallFightAbility(TEXT("Dodge"));
+	CallFightAbility(TEXT("Player.Ability.Dodge"));
 }
 
 void UFightComponent::CallSprintAbility_Implementation()
 {
-	CallFightAbility(TEXT("Sprint"));
+	CallFightAbility(TEXT("Player.Ability.Sprint"));
 }

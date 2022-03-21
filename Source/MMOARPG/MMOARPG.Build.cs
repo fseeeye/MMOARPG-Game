@@ -21,6 +21,7 @@ public class MMOARPG : ModuleRules
 			"MMOARPGComm",
 			"GameplayAbilities",
 			"GameplayTasks",
+			"GameplayTags",
 			// Project Plugin Modules
 			"SimpleActorBrowsing",
 			"SimpleCombat",

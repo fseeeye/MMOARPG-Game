@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+
+#include "GameplayTagContainer.h"
+
 #include "CharacterAbilityTableRow.generated.h"
 
 class UGameplayAbility;
@@ -17,8 +20,12 @@ struct FCharacterAbilityTableRow : public FTableRowBase
 	int32 CharacterID;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterAbility")
-	TMap<FName, TSubclassOf<UGameplayAbility>> ComboAttack;
+	TArray<TSubclassOf<UGameplayAbility>> ComboAttack;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterAbility")
-	TMap<FName, TSubclassOf<UGameplayAbility>> AbilityAttack;
+	TArray<TSubclassOf<UGameplayAbility>> AbilityAttack;
+
+public:
+	TSubclassOf<UGameplayAbility>* FindComboAttackByTagName(const FName& InTagName);
+	TSubclassOf<UGameplayAbility>* FindAbilityAttackByTagName(const FName& InTagName);
 };
