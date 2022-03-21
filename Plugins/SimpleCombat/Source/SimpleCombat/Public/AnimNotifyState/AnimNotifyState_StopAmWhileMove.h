@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "StopAnimMontageWhileMove"))
 class SIMPLECOMBAT_API UAnimNotifyState_StopAmWhileMove : public UAnimNotifyState
 {
 	GENERATED_BODY()

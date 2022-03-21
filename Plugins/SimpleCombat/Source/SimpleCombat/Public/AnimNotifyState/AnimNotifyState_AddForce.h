@@ -10,7 +10,7 @@ class ACharacter;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "AddForce"))
 class SIMPLECOMBAT_API UAnimNotifyState_AddForce : public UAnimNotifyState
 {
 	GENERATED_BODY()

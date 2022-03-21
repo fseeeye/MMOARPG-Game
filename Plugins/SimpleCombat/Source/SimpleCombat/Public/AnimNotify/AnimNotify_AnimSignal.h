@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "AnimSignal"))
 class SIMPLECOMBAT_API UAnimNotify_AnimSignal : public UAnimNotify
 {
 	GENERATED_BODY()

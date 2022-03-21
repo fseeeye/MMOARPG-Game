@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "BlockInput"))
 class SIMPLECOMBAT_API UAnimNotifyState_BlockInput : public UAnimNotifyState
 {
 	GENERATED_BODY()

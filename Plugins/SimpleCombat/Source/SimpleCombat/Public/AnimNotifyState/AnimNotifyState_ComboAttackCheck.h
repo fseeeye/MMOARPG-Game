@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "ComboAttackCheck"))
 class SIMPLECOMBAT_API UAnimNotifyState_ComboAttackCheck : public UAnimNotifyState
 {
 	GENERATED_BODY()
