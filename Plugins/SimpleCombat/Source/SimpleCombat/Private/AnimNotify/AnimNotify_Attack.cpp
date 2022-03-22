@@ -17,6 +17,11 @@ UAnimNotify_Attack::UAnimNotify_Attack()
 	HitObjectLifeSpan = 4.f;
 	HitObjectBindSocketName = TEXT("attack_hit");
 
+	BoxExtent = FVector(32.f);
+	SphereRadius = 32.f;
+	CapsuleHalfHeight = 44.f;
+	CapsuleRadius = 22.f;
+
 	bBox = true;
 	bCapsule = false;
 	bCustom = false;
@@ -40,10 +45,35 @@ void UAnimNotify_Attack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 		FActorSpawnParameters ActorSpawnParameters;
 		ActorSpawnParameters.Instigator = Cast<APawn>(OuterActor);
 
-		// span hit collision
+		// Span Hit Collision
 		if (AAbilityHitCollision* NewHitCollision = OuterActor->GetWorld()->SpawnActor<AAbilityHitCollision>(HitObjectClass, SocketLocation, SocketRotation, ActorSpawnParameters))
 		{
+			// Set Hit Collision properties 
 			NewHitCollision->SetLifeSpan(HitObjectLifeSpan);
+
+			if (NewHitCollision->GetHitComponent())
+			{
+				FVector HitComponentRelativeLocation = NewHitCollision->GetHitComponent()->GetRelativeLocation();
+				NewHitCollision->SetHitComponentRelativeLocation(HitComponentRelativeLocation + HitObjectRelativeOffset);
+			}
+
+			if (AAbilityHitCollisionBox* HitBox = Cast<AAbilityHitCollisionBox>(NewHitCollision))
+			{
+				HitBox->SetBoxExtent(BoxExtent);
+			}
+			else if (AAbilityHitCollisionCapsule* HitCapsule = Cast<AAbilityHitCollisionCapsule>(NewHitCollision))
+			{
+				HitCapsule->SetCapsuleHalfHeight(CapsuleRadius);
+				HitCapsule->SetCapsuleRadius(CapsuleRadius);
+			}
+			else if (AAbilityHitCollisionSphere* HitSphere = Cast<AAbilityHitCollisionSphere>(NewHitCollision))
+			{
+				HitSphere->SetSphereRadius(SphereRadius);
+			}
+			else if (AAbilityHitCollisionCustom* HitCustom = Cast<AAbilityHitCollisionCustom>(NewHitCollision))
+			{
+
+			}
 		}
 	}
 }

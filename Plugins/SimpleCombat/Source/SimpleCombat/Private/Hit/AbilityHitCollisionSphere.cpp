@@ -3,8 +3,10 @@
 #include <Components/SphereComponent.h>
 
 AAbilityHitCollisionSphere::AAbilityHitCollisionSphere()
+	: Super()
 {
 	HitSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("HitSphere"));
+	HitSphereComponent->SetupAttachment(RootComponent); // attach to root component
 }
 
 void AAbilityHitCollisionSphere::BeginPlay()
@@ -22,4 +24,9 @@ void AAbilityHitCollisionSphere::Tick(float DeltaSeconds)
 UPrimitiveComponent* AAbilityHitCollisionSphere::GetHitComponent()
 {
 	return HitSphereComponent;
+}
+
+void AAbilityHitCollisionSphere::SetSphereRadius(float InNewRadius)
+{
+	HitSphereComponent->SetSphereRadius(InNewRadius);
 }

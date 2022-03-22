@@ -36,7 +36,7 @@ public:
 	TSubclassOf<AAbilityHitCollision> HitObjectClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General")
-	FVector HitObjectRelativelocation; // Hit Object relative location
+	FVector HitObjectRelativeOffset; // Hit Object relative location offset
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General")
 	float HitObjectLifeSpan; // Hit Object life span

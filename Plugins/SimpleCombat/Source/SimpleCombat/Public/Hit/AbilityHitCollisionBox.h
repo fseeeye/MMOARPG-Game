@@ -28,4 +28,6 @@ public:
 
 public:
 	virtual UPrimitiveComponent* GetHitComponent() override;
+
+	void SetBoxExtent(const FVector& InNewBoxExtent);
 };

@@ -28,4 +28,7 @@ public:
 
 public:
 	virtual UPrimitiveComponent* GetHitComponent() override;
+
+	void SetCapsuleHalfHeight(float InNewHalfHeight);
+	void SetCapsuleRadius(float InNewRadius);
 };

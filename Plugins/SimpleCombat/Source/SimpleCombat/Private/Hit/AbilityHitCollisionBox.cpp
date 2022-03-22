@@ -3,8 +3,10 @@
 #include <Components/BoxComponent.h>
 
 AAbilityHitCollisionBox::AAbilityHitCollisionBox()
+	: Super()
 {
 	HitBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
+	HitBoxComponent->SetupAttachment(RootComponent); // attach to root component
 }
 
 void AAbilityHitCollisionBox::BeginPlay()
@@ -22,4 +24,9 @@ void AAbilityHitCollisionBox::Tick(float DeltaSeconds)
 UPrimitiveComponent* AAbilityHitCollisionBox::GetHitComponent()
 {
 	return HitBoxComponent;
+}
+
+void AAbilityHitCollisionBox::SetBoxExtent(const FVector& InNewBoxExtent)
+{
+	HitBoxComponent->SetBoxExtent(InNewBoxExtent);
 }

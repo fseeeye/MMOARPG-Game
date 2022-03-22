@@ -2,6 +2,9 @@
 
 AAbilityHitCollision::AAbilityHitCollision()
 {
+	HitCollisionRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HitCollisionRootComponent"));
+	RootComponent = HitCollisionRootComponent;
+
 	InitialLifeSpan = 4.f;
 }
 
@@ -18,6 +21,14 @@ void AAbilityHitCollision::BeginPlay()
 
 void AAbilityHitCollision::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaSeconds); // ?
+	Super::Tick(DeltaSeconds);
 
+}
+
+void AAbilityHitCollision::SetHitComponentRelativeLocation(const FVector& InNewRelativeLocation)
+{
+	if (UPrimitiveComponent* HitComponent = GetHitComponent())
+	{
+		HitComponent->SetRelativeLocation(InNewRelativeLocation);
+	}
 }
