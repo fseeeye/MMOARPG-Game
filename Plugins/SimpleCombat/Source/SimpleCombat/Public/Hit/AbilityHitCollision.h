@@ -14,7 +14,14 @@ class SIMPLECOMBAT_API AAbilityHitCollision : public AActor
 
 public:
 	AAbilityHitCollision();
+	
+	AAbilityHitCollision(const FObjectInitializer& ObjectInitializer);
 
+private:
+	/** Called from the constructor to initialize the class to its default settings */
+	void InitializeDefaults();
+
+protected:
 	/** Overridable native event for when play begins for this actor. */
 	virtual void BeginPlay() override;
 
@@ -28,7 +35,7 @@ public:
 
 public:
 	UFUNCTION()
-	virtual void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {}
+	virtual void HandleDamage(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {}
 
 	virtual UPrimitiveComponent* GetHitComponent() { return nullptr; }
 

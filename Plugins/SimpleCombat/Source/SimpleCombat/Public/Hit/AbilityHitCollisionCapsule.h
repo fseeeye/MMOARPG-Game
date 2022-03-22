@@ -15,6 +15,13 @@ class SIMPLECOMBAT_API AAbilityHitCollisionCapsule : public AAbilityHitCollision
 public:
 	AAbilityHitCollisionCapsule();
 
+	AAbilityHitCollisionCapsule(const FObjectInitializer& ObjectInitializer);
+
+private:
+	/** Called from the constructor to initialize the class to its default settings */
+	void InitializeDefaults();
+
+protected:
 	/** Overridable native event for when play begins for this actor. */
 	virtual void BeginPlay() override;
 

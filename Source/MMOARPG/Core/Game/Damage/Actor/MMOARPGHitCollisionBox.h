@@ -1,21 +1,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityHitCollision.h"
-#include "AbilityHitCollisionBox.generated.h"
+#include "Hit/AbilityHitCollisionBox.h"
+#include "MMOARPGHitCollisionBox.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
-class SIMPLECOMBAT_API AAbilityHitCollisionBox : public AAbilityHitCollision
+class AMMOARPGHitCollisionBox : public AAbilityHitCollisionBox
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BaseAttribute", meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* HitBoxComponent;
-
 public:
-	AAbilityHitCollisionBox();
+	AMMOARPGHitCollisionBox();
 
-	AAbilityHitCollisionBox(const FObjectInitializer& ObjectInitializer);
+	AMMOARPGHitCollisionBox(const FObjectInitializer& ObjectInitializer);
 
 private:
 	/** Called from the constructor to initialize the class to its default settings */
@@ -34,7 +31,5 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	virtual UPrimitiveComponent* GetHitComponent() override;
-
-	void SetBoxExtent(const FVector& InNewBoxExtent);
+	virtual void HandleDamage(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 };

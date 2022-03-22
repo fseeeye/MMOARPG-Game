@@ -1,6 +1,18 @@
 #include "Hit/AbilityHitCollision.h"
 
 AAbilityHitCollision::AAbilityHitCollision()
+	: Super()
+{
+	InitializeDefaults();
+}
+
+AAbilityHitCollision::AAbilityHitCollision(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	InitializeDefaults();
+}
+
+void AAbilityHitCollision::InitializeDefaults()
 {
 	HitCollisionRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HitCollisionRootComponent"));
 	RootComponent = HitCollisionRootComponent;
@@ -15,7 +27,7 @@ void AAbilityHitCollision::BeginPlay()
 	if (UPrimitiveComponent* HitComponent = GetHitComponent())
 	{
 		HitComponent->SetHiddenInGame(false); // TMP
-		HitComponent->OnComponentBeginOverlap.AddDynamic(this, &AAbilityHitCollision::BeginOverlap); // bind hit callback func
+		HitComponent->OnComponentBeginOverlap.AddDynamic(this, &AAbilityHitCollision::HandleDamage); // bind hit callback func
 	}
 }
 

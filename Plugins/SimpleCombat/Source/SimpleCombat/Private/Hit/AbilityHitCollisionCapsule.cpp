@@ -5,6 +5,17 @@
 AAbilityHitCollisionCapsule::AAbilityHitCollisionCapsule()
 	: Super()
 {
+	InitializeDefaults();
+}
+
+AAbilityHitCollisionCapsule::AAbilityHitCollisionCapsule(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	InitializeDefaults();
+}
+
+void AAbilityHitCollisionCapsule::InitializeDefaults()
+{
 	HitCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HitCapsule"));
 	HitCapsuleComponent->SetupAttachment(RootComponent); // attach to root component
 }

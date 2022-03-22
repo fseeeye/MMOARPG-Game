@@ -5,6 +5,17 @@
 AAbilityHitCollisionBox::AAbilityHitCollisionBox()
 	: Super()
 {
+	InitializeDefaults();
+}
+
+AAbilityHitCollisionBox::AAbilityHitCollisionBox(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	InitializeDefaults();
+}
+
+void AAbilityHitCollisionBox::InitializeDefaults()
+{
 	HitBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
 	HitBoxComponent->SetupAttachment(RootComponent); // attach to root component
 }

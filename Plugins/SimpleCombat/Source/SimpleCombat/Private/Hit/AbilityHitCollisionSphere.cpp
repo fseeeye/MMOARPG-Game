@@ -5,6 +5,17 @@
 AAbilityHitCollisionSphere::AAbilityHitCollisionSphere()
 	: Super()
 {
+	InitializeDefaults();
+}
+
+AAbilityHitCollisionSphere::AAbilityHitCollisionSphere(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	InitializeDefaults();
+}
+
+void AAbilityHitCollisionSphere::InitializeDefaults()
+{
 	HitSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("HitSphere"));
 	HitSphereComponent->SetupAttachment(RootComponent); // attach to root component
 }
