@@ -2,6 +2,8 @@
 
 #include <Abilities/GameplayAbility.h>
 
+#include "MMOARPGGameplayAbilityType.h"
+
 #include "MMOARPGGameplayAbility.generated.h"
 
 class UAbilityTask_PlayMontageAndWait;
@@ -56,4 +58,7 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "UMMOARPGGameplayAbility|MontageAbility")
 	UAnimMontage* MontageToPlay;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameplayEffects")
+	TMap<FGameplayTag, FMMOARPGGameplayEffects> EffectMap;
 };

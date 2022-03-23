@@ -2,6 +2,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTags.h"
+#include "../../Character/MMOARPGCharacterBase.h"
 
 AMMOARPGHitCollisionBox::AMMOARPGHitCollisionBox()
 	: Super()
@@ -38,12 +39,14 @@ void AMMOARPGHitCollisionBox::HandleDamage(UPrimitiveComponent* OverlappedCompon
 
 	if (GetInstigator() != OtherActor) // overlap actor isn't ourself
 	{
-		// Send Gameplay Event
-		FGameplayEventData EventData;
-		EventData.Instigator = GetInstigator();
-		EventData.Target = OtherActor;
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), FGameplayTag::RequestGameplayTag(TEXT("Player.Attack.ComboAttack")), EventData); // TODO: EventTag
-		
+		if (OtherActor->IsA(AMMOARPGCharacterBase::StaticClass()))
+		{
+			// Init and Send Gameplay Event
+			FGameplayEventData EventData;
+			EventData.Instigator = GetInstigator();
+			EventData.Target = OtherActor;
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), FGameplayTag::RequestGameplayTag(TEXT("Player.Attack.ComboAttack")), EventData); // TODO: EventTag
+		}
 	}
 }
 

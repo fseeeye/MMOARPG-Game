@@ -1,6 +1,8 @@
 #include "MMOARPGGameplayAbility.h"
 
 #include <Abilities/Tasks/AbilityTask_PlayMontageAndWait.h>
+#include <AbilitySystemComponent.h>
+
 #include "Tasks/AbilityTask_PMAWDamage.h"
 
 
@@ -32,7 +34,40 @@ void UMMOARPGGameplayAbility::OnCancelled()
 void UMMOARPGGameplayAbility::OnDamageGameplayEvent(FGameplayTag InGameplayTag, FGameplayEventData InPayload)
 {
 	// Damage Main logic
+	if (FMMOARPGGameplayEffects* AbilityEffects = EffectMap.Find(InGameplayTag))
+	{
+		FMMOARPGGameplayEffectSpec EffectSpec;
 
+		// Get TargetDataHandle
+		FGameplayAbilityTargetData_ActorArray* NewTargetData_ActorArray = new FGameplayAbilityTargetData_ActorArray();
+		NewTargetData_ActorArray->TargetActorArray.Add(const_cast<AActor*>(InPayload.Target)); // get target actor data
+		EffectSpec.TargetDataHandle.Add(NewTargetData_ActorArray);
+
+		// Get EffectSpecHandles from AbilityEffect Container
+		for (auto& AbilityEffectClass : AbilityEffects->TargetEffectClasses)
+		{
+			FGameplayEffectSpecHandle NewEffectSpecHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(AbilityEffectClass, 1, MakeEffectContext(CurrentSpecHandle, CurrentActorInfo)); // TODO: level
+
+			if (NewEffectSpecHandle.IsValid())
+			{
+				FGameplayAbilitySpec* AbilitySpec = GetAbilitySystemComponentFromActorInfo()->FindAbilitySpecFromHandle(CurrentSpecHandle);
+
+				if (AbilitySpec)
+				{
+					ApplyAbilityTagsToGameplayEffectSpec(*NewEffectSpecHandle.Data.Get(), AbilitySpec);
+					NewEffectSpecHandle.Data->SetByCallerTagMagnitudes = AbilitySpec->SetByCallerTagMagnitudes;
+
+					EffectSpec.EffectSpecHandles.Add(NewEffectSpecHandle);
+				}
+			}
+		}
+
+		// Apply effects
+		for (auto& EffectSpecHandle : EffectSpec.EffectSpecHandles)
+		{
+			TArray<FActiveGameplayEffectHandle> ActiveGameplayEffectHandles = K2_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, EffectSpec.TargetDataHandle);
+		}
+	}
 }
 
 UAbilityTask_PlayMontageAndWait* UMMOARPGGameplayAbility::CreatePlayMontageAndWaitProxy(
