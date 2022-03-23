@@ -1,6 +1,7 @@
 #include "MMOARPGGameplayAbility.h"
 
 #include <Abilities/Tasks/AbilityTask_PlayMontageAndWait.h>
+#include "Tasks/AbilityTask_PMAWDamage.h"
 
 
 UMMOARPGGameplayAbility::UMMOARPGGameplayAbility()
@@ -28,6 +29,12 @@ void UMMOARPGGameplayAbility::OnCancelled()
 	K2_OnCancelled();
 }
 
+void UMMOARPGGameplayAbility::OnDamageGameplayEvent(FGameplayTag InGameplayTag, FGameplayEventData InPayload)
+{
+	// Damage Main logic
+
+}
+
 UAbilityTask_PlayMontageAndWait* UMMOARPGGameplayAbility::CreatePlayMontageAndWaitProxy(
 	FName TaskInstanceName, 
 	UAnimMontage* InMontageToPlay,
@@ -37,17 +44,18 @@ UAbilityTask_PlayMontageAndWait* UMMOARPGGameplayAbility::CreatePlayMontageAndWa
 	float AnimRootMotionTranslationScale /*= 1.f*/, 
 	float StartTimeSeconds /*= 0.f*/)
 {
-	if (UAbilityTask_PlayMontageAndWait* AbilityTask_PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TaskInstanceName, InMontageToPlay, Rate, StartSection, bStopWhenAbilityEnds, AnimRootMotionTranslationScale, StartTimeSeconds))
+	if (UAbilityTask_PMAWDamage* AbilityTask_PMAWDamage = UAbilityTask_PMAWDamage::CreatePMAWDamageProxy(this, TaskInstanceName, InMontageToPlay, AbilityTags, Rate, StartSection, bStopWhenAbilityEnds, AnimRootMotionTranslationScale, StartTimeSeconds))
 	{
 		// Bind task delegates
-		AbilityTask_PlayMontageAndWait->OnCompleted.AddDynamic(this, &UMMOARPGGameplayAbility::OnCompleted);
-		AbilityTask_PlayMontageAndWait->OnBlendOut.AddDynamic(this, &UMMOARPGGameplayAbility::OnBlendOut);
-		AbilityTask_PlayMontageAndWait->OnInterrupted.AddDynamic(this, &UMMOARPGGameplayAbility::OnInterrupted);
-		AbilityTask_PlayMontageAndWait->OnCancelled.AddDynamic(this, &UMMOARPGGameplayAbility::OnCancelled);
+		AbilityTask_PMAWDamage->OnCompleted.AddDynamic(this, &UMMOARPGGameplayAbility::OnCompleted);
+		AbilityTask_PMAWDamage->OnBlendOut.AddDynamic(this, &UMMOARPGGameplayAbility::OnBlendOut);
+		AbilityTask_PMAWDamage->OnInterrupted.AddDynamic(this, &UMMOARPGGameplayAbility::OnInterrupted);
+		AbilityTask_PMAWDamage->OnCancelled.AddDynamic(this, &UMMOARPGGameplayAbility::OnCancelled);
+		AbilityTask_PMAWDamage->OnDamageEventReceived.AddDynamic(this, &UMMOARPGGameplayAbility::OnDamageGameplayEvent);
 
-		AbilityTask_PlayMontageAndWait->Activate();
+		AbilityTask_PMAWDamage->Activate();
 
-		return AbilityTask_PlayMontageAndWait;
+		return AbilityTask_PMAWDamage;
 	}
 
 	return nullptr;

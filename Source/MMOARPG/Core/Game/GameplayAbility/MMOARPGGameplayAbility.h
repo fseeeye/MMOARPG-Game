@@ -28,6 +28,9 @@ public:
 	UFUNCTION()
 	virtual void OnCancelled();
 
+	UFUNCTION()
+	virtual void OnDamageGameplayEvent(FGameplayTag InGameplayTag, FGameplayEventData InPayload);
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "UMMOARPGGameplayAbility|MontageAbility", DisplayName = "OnCompleted", meta = (ScriptName = "OnCompleted"))
 	void K2_OnCompleted();
 
