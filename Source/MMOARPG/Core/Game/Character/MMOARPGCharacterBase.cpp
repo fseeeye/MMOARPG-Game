@@ -132,6 +132,11 @@ UAbilitySystemComponent* AMMOARPGCharacterBase::GetAbilitySystemComponent() cons
 	return GASComponent;
 }
 
+void AMMOARPGCharacterBase::UpdateCharacterAttributesMulticast_Implementation(const FMMOARPGCharacterGameplayData& InCGD)
+{
+	CharacterAttributeSet->UpdateAttributes(InCGD);
+}
+
 void AMMOARPGCharacterBase::CallNormalAttack(const FName& InAbilityName)
 {
 	FightComponent->CallFightAbility(InAbilityName);

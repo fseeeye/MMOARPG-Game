@@ -14,6 +14,7 @@
 
 // Plugins
 #include "Interface/SimpleCombatInterface.h"
+#include "MMOARPGCommType.h"
 
 #include "MMOARPGCharacterBase.generated.h"
 
@@ -126,6 +127,9 @@ public:
 	FORCEINLINE UFightComponent* GetFightComponent() { return FightComponent; }
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void UpdateCharacterAttributesMulticast(const FMMOARPGCharacterGameplayData& InCGD);
 
 public:
 	void CallNormalAttack(const FName& InAbilityName) override;

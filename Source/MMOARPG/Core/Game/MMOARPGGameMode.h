@@ -39,6 +39,9 @@ protected:
 public:
 	// Get Kneading Data from Center Server
 	void UpdateKneadingDataRequest(int32 InUserID);
+	
+	// Get Gamepaly Data from Center Server (include: Gameplay Attributes)
+	void GetCharacterGameplayDataRequest(int32 InUserID, int32 InCharacterID);
 
 private:
 	void BindNetClientRcv();

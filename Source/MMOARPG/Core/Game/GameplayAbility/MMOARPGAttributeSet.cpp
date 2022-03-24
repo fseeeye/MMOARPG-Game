@@ -30,6 +30,14 @@ void UMMOARPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffec
 
 }
 
+void UMMOARPGAttributeSet::UpdateAttributes(const FMMOARPGCharacterGameplayData& InCGD)
+{
+	SET_ATTRIBUTE_SIMPLE(Health, InCGD.Health)
+	SET_ATTRIBUTE_SIMPLE(MaxHealth, InCGD.MaxHealth)
+	SET_ATTRIBUTE_SIMPLE(Mana, InCGD.Mana)
+	SET_ATTRIBUTE_SIMPLE(MaxMana, InCGD.MaxMana)
+}
+
 void UMMOARPGAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMMOARPGAttributeSet, Health, OldValue);

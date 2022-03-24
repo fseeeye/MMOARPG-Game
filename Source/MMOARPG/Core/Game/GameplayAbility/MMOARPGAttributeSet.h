@@ -4,6 +4,7 @@
 
 #include "MMOARPGGameplayAbilityMacro.h"
 #include <AbilitySystemComponent.h>
+#include <MMOARPGCommType.h>
 
 #include "MMOARPGAttributeSet.generated.h"
 
@@ -23,6 +24,9 @@ public:
 	 *	Note this is only called during an 'execute'. E.g., a modification to the 'base value' of an attribute. It is not called during an application of a GameplayEffect, such as a 5 ssecond +10 movement speed buff.
 	 */
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+public:
+	virtual void UpdateAttributes(const FMMOARPGCharacterGameplayData& InCGD);
 
 protected:
 	UFUNCTION()

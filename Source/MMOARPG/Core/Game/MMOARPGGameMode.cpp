@@ -94,6 +94,11 @@ void AMMOARPGGameMode::UpdateKneadingDataRequest(int32 InUserID)
 	SEND_DATA(SP_GetLoggedCharacterCaRequests, InUserID);
 }
 
+void AMMOARPGGameMode::GetCharacterGameplayDataRequest(int32 InUserID, int32 InCharacterID)
+{
+	SEND_DATA(SP_GetCharacterGameplayDataRequests, InUserID, InCharacterID);
+}
+
 void AMMOARPGGameMode::BindNetClientRcv()
 {
 	// Wait for Game Instance complete creation, and then, bind client recv channel
@@ -158,7 +163,7 @@ void AMMOARPGGameMode::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 
 			if (UserID != INDEX_NONE && !CAJson.IsEmpty())
 			{
-				// Traverse Pawns
+				// Traverse Pawns to find Character
 				MethodUnit::CallAllPlayerControllersOnServer<AMMOARPGPlayerController>(GetWorld(), [&](AMMOARPGPlayerController* InPlayerController) -> MethodUnit::EServerCallResult
 				{
 					if (AMMOARPGPlayerCharacter* PlayerCharacter = InPlayerController->GetPawn<AMMOARPGPlayerCharacter>())
@@ -179,6 +184,38 @@ void AMMOARPGGameMode::RecvProtocol(uint32 ProtocolNumber, FSimpleChannel* Chann
 						}
 					}
 					
+					return MethodUnit::EServerCallResult::INPROGRESS;
+				});
+			}
+
+			break;
+		}
+		case SP_GetCharacterGameplayDataResponses:
+		{
+			int32 UserID = INDEX_NONE;
+			FString CharacterGameplayDataJson;
+			SIMPLE_PROTOCOLS_RECEIVE(SP_GetCharacterGameplayDataResponses, UserID, CharacterGameplayDataJson);
+
+			if (UserID != INDEX_NONE && !CharacterGameplayDataJson.IsEmpty())
+			{
+				// Traverse Pawns to find Character
+				MethodUnit::CallAllPlayerControllersOnServer<AMMOARPGPlayerController>(GetWorld(), [&](AMMOARPGPlayerController* InPlayerController) -> MethodUnit::EServerCallResult
+				{
+					if (AMMOARPGPlayerCharacter* PlayerCharacter = InPlayerController->GetPawn<AMMOARPGPlayerCharacter>())
+					{
+						if (PlayerCharacter->GetUserID() == UserID) // Found
+						{
+							// Deserialize character data json
+							FMMOARPGCharacterGameplayData CharacterGameplayData;
+							NetDataParser::JsonToCharacterGameplayData(CharacterGameplayDataJson, CharacterGameplayData);
+
+							// Update character attributes
+							PlayerCharacter->UpdateCharacterAttributesMulticast(CharacterGameplayData);
+
+							return MethodUnit::EServerCallResult::PROGRESS_COMPLETE;
+						}
+					}
+
 					return MethodUnit::EServerCallResult::INPROGRESS;
 				});
 			}
