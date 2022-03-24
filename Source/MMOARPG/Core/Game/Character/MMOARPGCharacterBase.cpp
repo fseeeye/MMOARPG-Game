@@ -13,6 +13,7 @@
 #include "../../Components/FlyComponent.h"
 #include "../../Components/SwimComponent.h"
 #include "../../Components/FightComponent.h"
+#include "../GameplayAbility/MMOARPGAttributeSet.h"
 
 
 // Sets default values
@@ -39,6 +40,9 @@ AMMOARPGCharacterBase::AMMOARPGCharacterBase()
 	// Init MMOARPG GAS Component
 	GASComponent = CreateDefaultSubobject<UMMOARPGAbilitySystemComponent>(TEXT("MMOARPGAbilitySystemComponent"));
 	GASComponent->SetIsReplicated(true);
+
+	// Init Attribute Set
+	CharacterAttributeSet = CreateDefaultSubobject<UMMOARPGAttributeSet>(TEXT("MMOARPGCharacterAttributeSet"));
 }
 
 void AMMOARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -77,6 +81,11 @@ void AMMOARPGCharacterBase::BeginPlay()
 			}
 		}
 	}
+
+	// Register Attributes (need?)
+	TArray<UAttributeSet*> NewAttributeSets;
+	NewAttributeSets.Add(CharacterAttributeSet);
+	GASComponent->SetSpawnedAttributes(NewAttributeSets);
 }
 
 // Called every frame

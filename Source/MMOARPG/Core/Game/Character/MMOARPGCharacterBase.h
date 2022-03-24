@@ -24,6 +24,7 @@ class UFightComponent;
 class UCameraComponent;
 class UAbilitySystemComponent;
 class UGameplayAbility;
+class UMMOARPGAttributeSet;
 
 UCLASS()
 class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleCombatInterface, public IAbilitySystemInterface
@@ -33,20 +34,24 @@ class MMOARPG_API AMMOARPGCharacterBase : public ACharacter, public ISimpleComba
 	friend class AMMOARPGGameMode;
 
 	/* Fly Component */
-	UPROPERTY()
+	UPROPERTY(Category = "MMOARPGCharacterBase", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UFlyComponent> FlyComponent;
 
 	/* Swim Component */
-	UPROPERTY()
+	UPROPERTY(Category = "MMOARPGCharacterBase", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USwimComponent> SwimComponent;
 
 	/* Fight Component */
-	UPROPERTY()
+	UPROPERTY(Category = "MMOARPGCharacterBase", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UFightComponent> FightComponent;
 
 	/* MMOARPG GAS Component */
-	UPROPERTY()
+	UPROPERTY(Category = "MMOARPGCharacterBase", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UMMOARPGAbilitySystemComponent> GASComponent;
+
+	/* Gameplay Attribute Set */
+	UPROPERTY(Category = "MMOARPGCharacterBase", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UMMOARPGAttributeSet> CharacterAttributeSet;
 
 public:
 	// Sets default values for this character's properties
