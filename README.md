@@ -32,6 +32,39 @@ Associated UE5 code: [Github - fseeeye/UE5EA](https://github.com/fseeeye/UE5EA/t
   - [x] FootIK
   - [x] Switch Player & Partner
   - [x] Fly action state
-  - [ ] Swim action state
+  - [x] Swim action state
   - [ ] Climb action state
- - [ ] Combat
+- [ ] Combat
+  - [x]  Combo Attack Ability
+  - [x]  Sprint & Dodge Ability
+  - [ ]  Gameplay AttributeSet sync with Center Server
+  - [ ]  Apply Gameplay Effect
+
+## Achievement Exhibition
+
+> Tips: click picture to view video
+
+### Login and KneadFace
+
+[![LoginAndCrateCharacter](Media/KneadFace.png)](https://fseeeye.me/gamemedia/LoginAndCreateCharacter.mp4)
+
+### IdleRun
+
+[IdleRun video](https://fseeeye.me/gamemedia/IdleRun.mp4)
+
+### FootIK
+
+[![FootIK](Media/FootIK2.png)](https://fseeeye.me/gamemedia/FootIK.mp4)
+
+### Switch Character
+
+[Switch Character video](https://fseeeye.me/gamemedia/SwitchCharacter.mp4)
+
+### Fly
+
+[![FlyActionState](Media/FlyActionState.png)](https://fseeeye.me/gamemedia/FlyActionState.mp4)
+
+### Combat
+
+[ComboAttack & Sprint & Dodge Ability video](https://fseeeye.me/gamemedia/SwitchCharacter.mp4)
+
