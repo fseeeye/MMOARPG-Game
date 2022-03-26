@@ -50,6 +50,9 @@
 # Binaries folder
 !Binaries/**
 
+# Media folder
+!Media/**
+
 # Ignore VS / VS Code settings directory
 .vs
 .vscode

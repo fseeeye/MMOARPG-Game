@@ -78,6 +78,7 @@ void UAnimNotify_Attack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	}
 }
 
+#if WITH_EDITOR
 void UAnimNotify_Attack::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -114,3 +115,4 @@ void UAnimNotify_Attack::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 		}
 	}
 }
+#endif

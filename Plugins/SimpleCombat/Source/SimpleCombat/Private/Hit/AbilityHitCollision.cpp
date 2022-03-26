@@ -26,7 +26,7 @@ void AAbilityHitCollision::BeginPlay()
 
 	if (UPrimitiveComponent* HitComponent = GetHitComponent())
 	{
-		HitComponent->SetHiddenInGame(false); // TMP
+		// HitComponent->SetHiddenInGame(false); // TMP
 		HitComponent->OnComponentBeginOverlap.AddDynamic(this, &AAbilityHitCollision::HandleDamage); // bind hit callback func
 	}
 }
